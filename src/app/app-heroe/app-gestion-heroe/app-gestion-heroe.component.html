@@ -1,0 +1,65 @@
+<div class="gestion-heroes">
+  <h2>Gestión de Héroes</h2>
+
+  <button (click)="addHero()" class="btn-agregar">Agregar Héroe</button>
+
+  <div class="cards-container">
+    <div class="hero-card" *ngFor="let hero of heros">
+      <img [src]="hero.image" alt="{{ hero.name }}" class="hero-image" />
+
+      <div class="hero-info">
+        <h3>{{ hero.name }}</h3>
+        <p><strong>Tipo:</strong> {{ hero.heroType }}</p>
+        <p><strong>Nivel:</strong> {{ hero.level }}</p>
+        <p><strong>Poder:</strong> {{ hero.power }}</p>
+        <p><strong>Salud:</strong> {{ hero.health }}</p>
+        <p><strong>Defensa:</strong> {{ hero.defense }}</p>
+        <p><strong>Ataque:</strong> {{ hero.attack }}</p>
+        <p>
+          <strong>Status:</strong>
+          <span [ngClass]="{ activo: hero.status, inactivo: !hero.status }">
+            {{ hero.status ? "Desactivar" : "Activar" }}
+          </span>
+        </p>
+
+        <div class="special-actions">
+          <h3>Acciones Especiales:</h3>
+          <div *ngFor="let action of hero.specialActions" class="action-card">
+            <ul>
+              <li><strong>Nombre:</strong> {{ action.name }}</li>
+              <li><strong>Tipo:</strong> {{ action.actionType }}</li>
+              <li><strong>Costo de Poder:</strong> {{ action.powerCost }}</li>
+              <li><strong>Cooldown:</strong> {{ action.cooldown }}</li>
+              <li>
+                <strong>Disponible:</strong>
+                {{ action.isAvailable ? "Sí" : "No" }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="effects">
+          <h5>Efectos:</h5>
+          <div
+            *ngFor="let effect of hero.specialActions[0].effects"
+            class="effect-card"
+          >
+            <ul>
+              <li><strong>Tipo:</strong> {{ effect.effectType }}</li>
+              <li><strong>Valor:</strong> {{ effect.value }}</li>
+              <li>
+                <strong>Duración:</strong> {{ effect.durationTurns }} turnos
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button (click)="modifyHero(hero.id)">Modificar</button>
+        <button (click)="changeStatus(hero.id)">
+          {{ hero.status ? "Desactivar" : "Activar" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+import { Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import Hero from '../../domain/heroe.model';
+import { HeroesService } from '../../services/heroes.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-app-register-heroe',
+  imports: [FormsModule, CommonModule, RouterModule],
+  templateUrl: './app-register-heroe.component.html',
+  styleUrl: './app-register-heroe.component.css'
+})
+export class AppRegisterHeroeComponent {
+  hero: Hero = new Hero(
+    '', // image
+    '', // name
+    '', // heroType
+    '', // description
+    1,  // level
+    0,  // power
+    0,  // health
+    0,  // defense
+    true,
+    0,  // attack
+    { min: 0, max: 0 }, // attackBoost
+    { min: 0, max: 0 }, // damage
+    [
+      { 
+        name: '', 
+        actionType: '', 
+        powerCost: 0, 
+        effects: [{ effectType: '', value: 0, durationTurns: 0 }], 
+        cooldown: 0, 
+        isAvailable: true 
+      }
+    ],
+    0 // id
+  );
+
+  selectedFile?: File;
+
+  constructor(private heroesService: HeroesService, private router: Router) {}
+
+  // Captura el archivo seleccionado
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
+  validate(): boolean {
+    const { name, description, heroType, level, attack, health, defense, power, specialActions } = this.hero;
+
+    if (!name || !description || !heroType || level <= 0 || attack <= 0 || health <= 0 || defense < 0 || power < 0) {
+      return false;
+    }
+
+    if (!specialActions?.length) return false;
+
+    for (const action of specialActions) {
+      if (!action.name || !action.actionType || action.powerCost < 0 || !action.effects?.length) {
+        return false;
+      }
+      for (const effect of action.effects) {
+        if (!effect.effectType || effect.value === null || effect.durationTurns <= 0) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  onSubmit(): void {
+    if (!this.validate()) {
+      alert('Todos los campos son obligatorios y deben ser válidos');
+    } else {
+      const heroToCreate = { ...this.hero, id: 0 };
+
+      this.heroesService.createHero(heroToCreate, this.selectedFile).subscribe({
+        next: (newHero) => {
+          console.log('Heroe creado con éxito:', newHero);
+          this.router.navigate(['/heroes']);
+        },
+        error: (err) => {
+          console.error('Error al crear heroe:', err);
+        },
+      });
+    }
+  }
+}

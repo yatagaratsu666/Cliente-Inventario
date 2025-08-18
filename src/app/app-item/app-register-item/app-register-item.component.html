@@ -1,0 +1,78 @@
+<main class="container">
+  <div class="content-box">
+    <form id="register-form" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="register-container">
+        <h2>Registro de Item</h2>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Nombre"
+            [(ngModel)]="item.name"
+            name="name"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Descripción"
+            [(ngModel)]="item.description"
+            name="description"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Tipo"
+            [(ngModel)]="item.heroType"
+            name="heroType"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            placeholder="Drop Rate"
+            [(ngModel)]="item.dropRate"
+            name="dropRate"
+            min="0"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Selecciona imagen:</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+
+        <div class="effect-group" *ngIf="item.effects && item.effects.length">
+          <h3>Efecto</h3>
+          <input
+            type="text"
+            placeholder="Tipo de efecto"
+            [(ngModel)]="item.effects[0].effectType"
+            name="effectType"
+          />
+          <input
+            type="number"
+            placeholder="Valor"
+            [(ngModel)]="item.effects[0].value"
+            name="effectValue"
+          />
+          <input
+            type="number"
+            placeholder="Duración (turnos)"
+            [(ngModel)]="item.effects[0].durationTurns"
+            name="effectDuration"
+          />
+        </div>
+
+        <button class="register-btn" type="submit">Registrar Item</button>
+      </div>
+    </form>
+  </div>
+</main>

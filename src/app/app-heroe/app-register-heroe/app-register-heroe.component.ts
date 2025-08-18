@@ -30,7 +30,7 @@ export class AppRegisterHeroeComponent {
         name: '', 
         actionType: '', 
         powerCost: 0, 
-        effects: [{ effectType: '', value: 0, durationTurns: 0 }], 
+        effects: [{ effectType: 'default', value: 0, durationTurns: 0 }], 
         cooldown: 0, 
         isAvailable: true 
       }

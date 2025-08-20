@@ -42,8 +42,8 @@ textarea,
 select {
   padding: 14px 18px;
   font-size: 20px;
-  border: none;
-  border-radius: 10px;
+  border: black 1px solid;
+  border-radius: 2px;
   background: #e0e0e0;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
   font-weight: bold;
@@ -74,11 +74,12 @@ select {
   font-weight: bold;
   border: none;
   border-radius: 12px;
-  background: #4cff4c;
+  background: #629762;
   cursor: pointer;
   transition: background-color .3s;
 }
 
 .button:hover {
-  background: #3acc3a;
+  background: #5f593e;
+  color: #c5a253;
 }

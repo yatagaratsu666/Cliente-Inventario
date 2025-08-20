@@ -1,7 +1,7 @@
 <header>
   <div class="logo">Panel Gestión</div>
-  
-  <button *ngIf="loginService.isLoggedIn()" (click)="logout()">
+
+  <button class="logout-button" *ngIf="loginService.isLoggedIn()" (click)="logout()">
     Cerrar sesión
   </button>
 </header>

@@ -1,105 +1,79 @@
 <div class="hero-form">
   <h2>Modificar Héroe</h2>
   <form (ngSubmit)="onSubmit()">
-    <div>
-      <label for="image">Imagen:</label>
-      <input type="file" id="image" (change)="readImage($event)" />
-      <div *ngIf="hero.image">
-        <img [src]="hero.image" alt="Imagen del héroe" width="150" />
-      </div>
-    </div>
+    <div class="form-wrapper">
 
-    <div>
-      <label for="name">Nombre:</label>
-      <input type="text" id="name" [(ngModel)]="hero.name" name="name" required />
-    </div>
+      <!-- Columna izquierda -->
+      <div class="form-col">
 
-    <div>
-      <label for="heroType">Tipo de Héroe:</label>
-      <input type="text" id="heroType" [(ngModel)]="hero.heroType" name="heroType" required />
-    </div>
-
-    <div>
-      <label for="description">Descripción:</label>
-      <textarea id="description" [(ngModel)]="hero.description" name="description" required></textarea>
-    </div>
-
-    <div>
-      <label for="power">Poder:</label>
-      <input type="number" id="power" [(ngModel)]="hero.power" name="power" min="0" required />
-    </div>
-
-    <div>
-      <label for="health">Salud:</label>
-      <input type="number" id="health" [(ngModel)]="hero.health" name="health" min="0" required />
-    </div>
-
-    <div>
-      <label for="defense">Defensa:</label>
-      <input type="number" id="defense" [(ngModel)]="hero.defense" name="defense" min="0" required />
-    </div>
-
-    <div>
-      <label for="attack">Ataque:</label>
-      <input type="number" id="attack" [(ngModel)]="hero.attack" name="attack" min="0" required />
-    </div>
-
-    <div>
-      <label>Attack Boost:</label>
-      <input type="number" [(ngModel)]="hero.attackBoost.min" name="attackBoostMin" placeholder="Min" required />
-      <input type="number" [(ngModel)]="hero.attackBoost.max" name="attackBoostMax" placeholder="Max" required />
-    </div>
-
-    <div>
-      <label>Damage:</label>
-      <input type="number" [(ngModel)]="hero.damage.min" name="damageMin" placeholder="Min" required />
-      <input type="number" [(ngModel)]="hero.damage.max" name="damageMax" placeholder="Max" required />
-    </div>
-
-    <!-- Special Actions -->
-    <div *ngFor="let action of hero.specialActions; let i = index">
-      <h4>Acción Especial {{ i + 1 }}</h4>
-      <div>
-        <label>Nombre:</label>
-        <input type="text" [(ngModel)]="action.name" name="actionName{{i}}" required />
-      </div>
-      <div>
-        <label>Tipo:</label>
-        <input type="text" [(ngModel)]="action.actionType" name="actionType{{i}}" required />
-      </div>
-      <div>
-        <label>Costo de Poder:</label>
-        <input type="number" [(ngModel)]="action.powerCost" name="powerCost{{i}}" min="0" required />
-      </div>
-
-      <!-- Efectos -->
-      <div *ngFor="let effect of action.effects; let j = index">
-        <h5>Efecto {{ j + 1 }}</h5>
-        <div>
-          <label>Tipo de efecto:</label>
-          <input type="text" [(ngModel)]="effect.effectType" name="effectType{{i}}{{j}}" required />
+        <div class="form-group">
+          <label for="image">Imagen:</label>
+          <input type="file" id="image" (change)="readImage($event)" />
+          <div *ngIf="hero.image">
+            <img [src]="hero.image" alt="Imagen del héroe" width="150" />
+          </div>
         </div>
-        <div>
-          <label>Valor:</label>
-          <input type="text" [(ngModel)]="effect.value" name="effectValue{{i}}{{j}}" required />
+
+        <div class="form-group">
+          <label for="heroType">Tipo de Héroe:</label>
+          <input type="text" id="heroType" [(ngModel)]="hero.heroType" name="heroType" required />
         </div>
-        <div>
-          <label>Duración (turnos):</label>
-          <input type="number" [(ngModel)]="effect.durationTurns" name="effectDuration{{i}}{{j}}" min="1" required />
+
+        <div class="form-group">
+          <label for="power">Poder:</label>
+          <input type="number" id="power" [(ngModel)]="hero.power" name="power" min="0" required />
         </div>
+
+        <div class="form-group">
+          <label for="defense">Defensa:</label>
+          <input type="number" id="defense" [(ngModel)]="hero.defense" name="defense" min="0" required />
+        </div>
+
+        <div class="form-group">
+          <label>Attack Boost:</label>
+          <div class="row">
+            <input type="number" [(ngModel)]="hero.attackBoost.min" name="attackBoostMin" placeholder="Min" required />
+            <input type="number" [(ngModel)]="hero.attackBoost.max" name="attackBoostMax" placeholder="Max" required />
+          </div>
+        </div>
+
       </div>
 
-      <div>
-        <label>Cooldown:</label>
-        <input type="number" [(ngModel)]="action.cooldown" name="cooldown{{i}}" min="0" required />
+      <!-- Columna derecha -->
+      <div class="form-col">
+
+        <div class="form-group">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" [(ngModel)]="hero.name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descripción:</label>
+          <textarea id="description" [(ngModel)]="hero.description" name="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="health">Salud:</label>
+          <input type="number" id="health" [(ngModel)]="hero.health" name="health" min="0" required />
+        </div>
+
+        <div class="form-group">
+          <label for="attack">Ataque:</label>
+          <input type="number" id="attack" [(ngModel)]="hero.attack" name="attack" min="0" required />
+        </div>
+
+        <div class="form-group">
+          <label>Damage:</label>
+          <div class="row">
+            <input type="number" [(ngModel)]="hero.damage.min" name="damageMin" placeholder="Min" required />
+            <input type="number" [(ngModel)]="hero.damage.max" name="damageMax" placeholder="Max" required />
+          </div>
+        </div>
+
       </div>
-      <div>
-        <label>Disponible:</label>
-        <input type="checkbox" [(ngModel)]="action.isAvailable" name="isAvailable{{i}}" />
-      </div>
+
     </div>
 
-    <button type="submit">Guardar Cambios</button>
+    <button type="submit" class="submit-btn">Guardar Cambios</button>
   </form>
 </div>
-

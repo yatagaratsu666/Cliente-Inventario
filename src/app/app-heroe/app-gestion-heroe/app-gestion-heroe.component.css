@@ -1,7 +1,5 @@
 h2 {
     display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
     font-size: 2rem;
     font-weight: bold;
@@ -12,11 +10,19 @@ h2 {
     padding-bottom: 5px;
 }
 
+.hero-image {
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  object-fit: cover;
+}
+
 /* Botón agregar héroe */
 .btn-agregar {
     display: block;
     margin-left: auto;
     margin-right: 10px;
+    margin-bottom: 15px;
     padding: 12px 25px;
     font-size: 16px;
     font-weight: bold;

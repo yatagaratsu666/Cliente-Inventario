@@ -113,7 +113,7 @@ export class AppModifyHeroeComponent {
     this.heroService.updateHero(this.heroId, itemToUpdate).subscribe({
       next: () => {
         console.log('Héroe actualizado correctamente.');
-        this.router.navigate(['/heroes']);
+        this.router.navigate(['/heroes/control']);
       },
       error: (error) => {
         console.error('Error al actualizar héroe:', error);

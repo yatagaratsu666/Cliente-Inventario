@@ -37,7 +37,7 @@
         <div class="input-group">
           <input
             type="number"
-            placeholder="Drop Rate"
+            placeholder="Porcentaje de caida"
             [(ngModel)]="item.dropRate"
             name="dropRate"
             min="0"
@@ -51,18 +51,21 @@
 
         <div class="effect-group" *ngIf="item.effects && item.effects.length">
           <h3>Efecto</h3>
+          <label>Tipo de efecto:</label>
           <input
             type="text"
             placeholder="Tipo de efecto"
             [(ngModel)]="item.effects[0].effectType"
             name="effectType"
           />
+          <label>valor:</label>
           <input
             type="number"
             placeholder="Valor"
             [(ngModel)]="item.effects[0].value"
             name="effectValue"
           />
+          <label>Duración (turnos):</label>
           <input
             type="number"
             placeholder="Duración (turnos)"

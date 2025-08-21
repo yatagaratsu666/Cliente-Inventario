@@ -21,7 +21,7 @@ export class AppRegisterItemComponent {
     name: '',
     status: true,
     effects: [
-      { effectType: '', value: 0, durationTurns: 0 }, // 👈 inicialización
+      { effectType: '', value: 0, durationTurns: 0 },
     ],
     dropRate: 0,
   };
@@ -30,7 +30,6 @@ export class AppRegisterItemComponent {
 
   constructor(private itemsService: ItemsService, private router: Router) {}
 
-  // Captura el archivo seleccionado
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -62,7 +61,7 @@ export class AppRegisterItemComponent {
       this.itemsService.createItem(itemConId, this.selectedFile).subscribe({
         next: (newItem) => {
           console.log('Item creado con éxito:', newItem);
-          this.router.navigate(['/items']);
+          this.router.navigate(['/items/control']);
         },
         error: (err) => {
           console.error('Error al crear item:', err);

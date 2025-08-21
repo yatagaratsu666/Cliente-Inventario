@@ -84,7 +84,7 @@ export class AppRegisterHeroeComponent {
       this.heroesService.createHero(heroToCreate, this.selectedFile).subscribe({
         next: (newHero) => {
           console.log('Heroe creado con éxito:', newHero);
-          this.router.navigate(['/heroes']);
+          this.router.navigate(['/heroes/control']);
         },
         error: (err) => {
           console.error('Error al crear heroe:', err);

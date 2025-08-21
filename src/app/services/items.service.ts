@@ -102,7 +102,7 @@ private convertToBase64(file: File): Observable<string> {
         'Authorization': `Bearer ${this.getAuthToken()}`
       });
 
-      return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers }).pipe(
+      return this.http.put<void>(`${this.apiUrl}/delete/${id}`, { headers }).pipe(
         catchError(this.handleError)
       );
   }

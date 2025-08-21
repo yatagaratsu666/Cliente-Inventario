@@ -86,7 +86,7 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
-    updateItem(id: number, hero: Hero): Observable<void> {
+    updateHero(id: number, hero: Hero): Observable<void> {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -97,12 +97,13 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
+
   changeStatus(id: number): Observable<void> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
       });
 
-      return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers }).pipe(
+      return this.http.put<void>(`${this.apiUrl}/delete/${id}`, { headers }).pipe(
         catchError(this.handleError)
       );
   }

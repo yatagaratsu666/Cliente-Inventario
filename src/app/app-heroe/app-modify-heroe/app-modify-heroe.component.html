@@ -56,49 +56,6 @@
       <input type="number" [(ngModel)]="hero.damage.max" name="damageMax" placeholder="Max" required />
     </div>
 
-    <!-- Special Actions -->
-    <div *ngFor="let action of hero.specialActions; let i = index">
-      <h4>Acción Especial {{ i + 1 }}</h4>
-      <div>
-        <label>Nombre:</label>
-        <input type="text" [(ngModel)]="action.name" name="actionName{{i}}" required />
-      </div>
-      <div>
-        <label>Tipo:</label>
-        <input type="text" [(ngModel)]="action.actionType" name="actionType{{i}}" required />
-      </div>
-      <div>
-        <label>Costo de Poder:</label>
-        <input type="number" [(ngModel)]="action.powerCost" name="powerCost{{i}}" min="0" required />
-      </div>
-
-      <!-- Efectos -->
-      <div *ngFor="let effect of action.effects; let j = index">
-        <h5>Efecto {{ j + 1 }}</h5>
-        <div>
-          <label>Tipo de efecto:</label>
-          <input type="text" [(ngModel)]="effect.effectType" name="effectType{{i}}{{j}}" required />
-        </div>
-        <div>
-          <label>Valor:</label>
-          <input type="text" [(ngModel)]="effect.value" name="effectValue{{i}}{{j}}" required />
-        </div>
-        <div>
-          <label>Duración (turnos):</label>
-          <input type="number" [(ngModel)]="effect.durationTurns" name="effectDuration{{i}}{{j}}" min="1" required />
-        </div>
-      </div>
-
-      <div>
-        <label>Cooldown:</label>
-        <input type="number" [(ngModel)]="action.cooldown" name="cooldown{{i}}" min="0" required />
-      </div>
-      <div>
-        <label>Disponible:</label>
-        <input type="checkbox" [(ngModel)]="action.isAvailable" name="isAvailable{{i}}" />
-      </div>
-    </div>
-
     <button type="submit">Guardar Cambios</button>
   </form>
 </div>

@@ -29,10 +29,10 @@ export class AppModifyHeroeComponent {
     { min: 0, max: 0 }, // damage
     [
       { 
-        name: '', 
-        actionType: '', 
+        name: 'default', 
+        actionType: 'default', 
         powerCost: 0, 
-        effects: [{ effectType: '', value: 0, durationTurns: 0 }], 
+        effects: [{ effectType: 'default', value: 0, durationTurns: 0 }], 
         cooldown: 0, 
         isAvailable: true 
       }
@@ -108,8 +108,9 @@ export class AppModifyHeroeComponent {
       alert('Todos los campos son requeridos.');
       return;
     }
+    const { _id, ...itemToUpdate } = this.hero as any;
 
-    this.heroService.updateItem(this.heroId, this.hero).subscribe({
+    this.heroService.updateHero(this.heroId, itemToUpdate).subscribe({
       next: () => {
         console.log('Héroe actualizado correctamente.');
         this.router.navigate(['/heroes']);

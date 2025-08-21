@@ -1,0 +1,73 @@
+<main class="container"> 
+  <div class="content-box">
+    <form id="edit-form" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="register-container">
+        <h2>Modificar Arma</h2>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Nombre"
+            [(ngModel)]="armor.name"
+            name="name"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Descripción"
+            [(ngModel)]="armor.description"
+            name="description"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            placeholder="Drop Rate"
+            [(ngModel)]="armor.dropRate"
+            name="dropRate"
+            min="0"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Selecciona imagen:</label>
+          <input type="file" (change)="readImage($event)" accept="image/*" />
+          <img *ngIf="armor.image" [src]="armor.image" alt="Imagen del item" class="preview-img">
+        </div>
+
+        <div class="effect-group" *ngIf="armor.effects?.length">
+          <h3>Efectos</h3>
+          <div *ngFor="let effect of armor.effects; let i = index">
+            <label></label>
+            <input
+              type="text"
+              placeholder="Tipo de efecto"
+              [(ngModel)]="effect.effectType"
+              [name]="'effectType' + i"
+            />
+            <input
+              type="number"
+              placeholder="Valor"
+              [(ngModel)]="effect.value"
+              [name]="'effectValue' + i"
+            />
+            <input
+              type="number"
+              placeholder="Duración (turnos)"
+              [(ngModel)]="effect.durationTurns"
+              [name]="'effectDuration' + i"
+            />
+          </div>
+        </div>
+
+        <button class="register-btn" type="submit">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</main>

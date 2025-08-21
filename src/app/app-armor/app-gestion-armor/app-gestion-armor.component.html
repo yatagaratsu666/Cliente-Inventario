@@ -1,0 +1,37 @@
+<div class="armor-list">
+  <h2>Lista de Armas</h2>
+
+  <div *ngFor="let armor of armor" class="armor-card">
+    <img
+      *ngIf="armor.image"
+      [src]="armor.image"
+      alt="{{ armor.name }}"
+      class="armor-image"
+    />
+
+    <div class="armor-info">
+      <p>Nombre: {{ armor.name }}</p>
+      <p>Descripción:{{ armor.description }}</p>
+      <p>Estado: {{ armor.status ? 'Activo' : 'Inactivo' }}</p>
+      <p>dropRate: {{ armor.dropRate }}</p>
+
+      <div *ngIf="armor.effects?.length">
+        <p>Efectos:</p>
+        <div *ngFor="let effect of armor.effects" class="armor-effect">
+          <p>
+            Tipo: {{ effect.effectType }},
+            Valor: {{ effect.value }},
+            Duración: {{ effect.durationTurns }} turnos
+          </p>
+        </div>
+      </div>
+
+      <div class="armor-actions">
+        <button (click)="changeStatus(armor.id)">
+          {{ armor.status ? 'Desactivar' : 'Activar' }}
+        </button>
+        <button (click)="modifyArmor(armor.id)">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>

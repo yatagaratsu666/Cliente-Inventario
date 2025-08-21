@@ -1,0 +1,71 @@
+<main class="container">
+  <div class="content-box">
+    <form id="register-form" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="register-container">
+        <h2>Registro de Armaduras</h2>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Nombre"
+            [(ngModel)]="armor.name"
+            name="name"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Descripción"
+            [(ngModel)]="armor.description"
+            name="description"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            placeholder="Porcentaje de caida"
+            [(ngModel)]="armor.dropRate"
+            name="dropRate"
+            min="0"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Selecciona imagen:</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+
+        <div class="effect-group" *ngIf="armor.effects && armor.effects.length">
+          <h3>Efecto</h3>
+          <label>Tipo de efecto:</label>
+          <input
+            type="text"
+            placeholder="Tipo de efecto"
+            [(ngModel)]="armor.effects[0].effectType"
+            name="effectType"
+          />
+          <label>valor:</label>
+          <input
+            type="number"
+            placeholder="Valor"
+            [(ngModel)]="armor.effects[0].value"
+            name="effectValue"
+          />
+          <label>Duración (turnos):</label>
+          <input
+            type="number"
+            placeholder="Duración (turnos)"
+            [(ngModel)]="armor.effects[0].durationTurns"
+            name="effectDuration"
+          />
+        </div>
+
+        <button class="register-btn" type="submit">Registrar Arma</button>
+      </div>
+    </form>
+  </div>
+</main>

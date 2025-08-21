@@ -1,0 +1,37 @@
+<div class="weapon-list">
+  <h2>Lista de Armas</h2>
+
+  <div *ngFor="let weapon of weapon" class="weapon-card">
+    <img
+      *ngIf="weapon.image"
+      [src]="weapon.image"
+      alt="{{ weapon.name }}"
+      class="weapon-image"
+    />
+
+    <div class="weapon-info">
+      <p>Nombre: {{ weapon.name }}</p>
+      <p>Descripción:{{ weapon.description }}</p>
+      <p>Estado: {{ weapon.status ? 'Activo' : 'Inactivo' }}</p>
+      <p>dropRate: {{ weapon.dropRate }}</p>
+
+      <div *ngIf="weapon.effects?.length">
+        <p>Efectos:</p>
+        <div *ngFor="let effect of weapon.effects" class="weapon-effect">
+          <p>
+            Tipo: {{ effect.effectType }},
+            Valor: {{ effect.value }},
+            Duración: {{ effect.durationTurns }} turnos
+          </p>
+        </div>
+      </div>
+
+      <div class="weapon-actions">
+        <button (click)="changeStatus(weapon.id)">
+          {{ weapon.status ? 'Desactivar' : 'Activar' }}
+        </button>
+        <button (click)="modifyWeapon(weapon.id)">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>

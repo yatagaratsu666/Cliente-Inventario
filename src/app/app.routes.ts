@@ -11,6 +11,15 @@ import { AppModifyHeroeComponent } from './app-heroe/app-modify-heroe/app-modify
 import { AppGestionComponent } from './app-gestion/app-gestion.component';
 import { AppLoginComponent } from './app-login/app-login.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AppRegisterWeaponComponent } from './app-weapon/app-register-weapon/app-register-weapon.component';
+import { AppGestionWeaponComponent } from './app-weapon/app-gestion-weapon/app-gestion-weapon.component';
+import { AppModifyWeaponComponent } from './app-weapon/app-modify-weapon/app-modify-weapon.component';
+import { AppRegisterArmorComponent } from './app-armor/app-register-armor/app-register-armor.component';
+import { AppGestionArmorComponent } from './app-armor/app-gestion-armor/app-gestion-armor.component';
+import { AppModifyArmorComponent } from './app-armor/app-modify-armor/app-modify-armor.component';
+import { AppRegisterEpicaComponent } from './app-epica/app-register-epica/app-register-epica.component';
+import { AppGestionEpicaComponent } from './app-epica/app-gestion-epica/app-gestion-epica.component';
+import { AppModifyEpicaComponent } from './app-epica/app-modify-epica/app-modify-epica.component';
 
 const routeConfig: Routes = [
   {
@@ -55,6 +64,51 @@ const routeConfig: Routes = [
   {
     path: 'heroes/modify/:id',
     component: AppModifyHeroeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'weapons/create',
+    component: AppRegisterWeaponComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'weapons/control',
+    component: AppGestionWeaponComponent,
+    canActivate: [AuthGuard]
+  },
+      {
+    path: 'weapons/modify/:id',
+    component: AppModifyWeaponComponent,
+    canActivate: [AuthGuard]
+  },
+    {
+    path: 'armors/create',
+    component: AppRegisterArmorComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'armors/control',
+    component: AppGestionArmorComponent,
+    canActivate: [AuthGuard]
+  },
+      {
+    path: 'armors/modify/:id',
+    component: AppModifyArmorComponent,
+    canActivate: [AuthGuard]
+  },
+      {
+    path: 'epics/create',
+    component: AppRegisterEpicaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'epics/control',
+    component: AppGestionEpicaComponent,
+    canActivate: [AuthGuard]
+  },
+      {
+    path: 'epics/modify/:id',
+    component: AppModifyEpicaComponent,
     canActivate: [AuthGuard]
   },
   {

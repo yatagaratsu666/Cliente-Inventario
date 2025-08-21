@@ -1,0 +1,94 @@
+<main class="container"> 
+  <div class="content-box">
+    <form id="edit-form" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="register-container">
+        <h2>Modificar Epica</h2>
+
+        <!-- Nombre -->
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Nombre"
+            [(ngModel)]="epic.name"
+            name="name"
+            required
+          />
+        </div>
+
+        <!-- Descripción -->
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Descripción"
+            [(ngModel)]="epic.description"
+            name="description"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="heroType"
+            [(ngModel)]="epic.heroType"
+            name="heroType"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            placeholder="cooldown"
+            [(ngModel)]="epic.cooldown"
+            name="cooldown"
+            required
+          />
+        </div>
+
+                <div class="input-group">
+          <input
+            type="number"
+            placeholder="masterChance"
+            [(ngModel)]="epic.masterChance"
+            name="masterChance"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Selecciona imagen:</label>
+          <input type="file" (change)="readImage($event)" accept="image/*" />
+          <img *ngIf="epic.image" [src]="epic.image" alt="Imagen del item" class="preview-img">
+        </div>
+
+        <div class="effect-group" *ngIf="epic.effects?.length">
+          <h3>Efectos</h3>
+          <div *ngFor="let effect of epic.effects; let i = index">
+            <label></label>
+            <input
+              type="text"
+              placeholder="Tipo de efecto"
+              [(ngModel)]="effect.effectType"
+              [name]="'effectType' + i"
+            />
+            <input
+              type="number"
+              placeholder="Valor"
+              [(ngModel)]="effect.value"
+              [name]="'effectValue' + i"
+            />
+            <input
+              type="number"
+              placeholder="Duración (turnos)"
+              [(ngModel)]="effect.durationTurns"
+              [name]="'effectDuration' + i"
+            />
+          </div>
+        </div>
+
+        <button class="register-btn" type="submit">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</main>

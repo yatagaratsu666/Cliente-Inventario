@@ -5,14 +5,17 @@
         <h2>Registro de Armas</h2>
 
         <div class="input-group">
+          <label>Nombre:</label>
           <input type="text" placeholder="Nombre" [(ngModel)]="weapon.name" name="name" required />
         </div>
 
         <div class="input-group">
+          <label>Descripción:</label>
           <input type="text" placeholder="Descripción" [(ngModel)]="weapon.description" name="description" required />
         </div>
 
         <div class="input-group">
+          <label>dropRate:</label>
           <input type="number" placeholder="Porcentaje de caida" [(ngModel)]="weapon.dropRate" name="dropRate"
             min="0" />
         </div>

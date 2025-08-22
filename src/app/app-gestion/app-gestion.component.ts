@@ -18,4 +18,16 @@ export class AppGestionComponent {
   goToItems(): void {
     this.router.navigate(['/items/control']);
   }
+
+  goToEpics(): void {
+    this.router.navigate(['/epics/control']);
+  }
+
+  goToArmors(): void {
+    this.router.navigate(['/armors/control']);
+  }
+
+  goToWeapons(): void {
+    this.router.navigate(['/weapons/control']);
+  }
 }

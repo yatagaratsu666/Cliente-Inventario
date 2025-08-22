@@ -1,0 +1,75 @@
+
+
+/* Título */
+.login-container h2 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+/* Estilo del formulario y sus grupos */
+.login-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.login-container form div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Labels */
+.login-container label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+/* Inputs */
+.login-container input {
+  padding: 14px 18px;
+  font-size: 18px;
+  border: black 1px solid;
+  border-radius: 4px;
+  background: #e0e0e0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+  font-weight: bold;
+  color: #444;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Botón */
+.login-container button {
+  background-color: #4d8b4d;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #3c6d3c;
+}
+
+/* Mensaje de error */
+.error {
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}

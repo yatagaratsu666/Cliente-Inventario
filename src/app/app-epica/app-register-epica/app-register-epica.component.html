@@ -5,24 +5,29 @@
                 <h2>Registro de Epicas</h2>
 
                 <div class="input-group">
+                    <label for="name">Nombre:</label>
                     <input type="text" placeholder="Nombre" [(ngModel)]="epic.name" name="name" required />
                 </div>
 
                 <div class="input-group">
+                    <label for="description">Descripción:</label>
                     <input type="text" placeholder="Descripción" [(ngModel)]="epic.description" name="description"
                         required />
                 </div>
 
                 <div class="input-group">
-                    <input type="text" placeholder="Descripción" [(ngModel)]="epic.heroType" name="description"
+                    <label for="heroType">Tipo de Héroe:</label>
+                    <input type="text" placeholder="heroType" [(ngModel)]="epic.heroType" name="heroType"
                         required />
                 </div>
 
                 <div class="input-group">
+                    <label for="cooldown">Cooldown:</label>
                     <input type="number" placeholder="cooldown" [(ngModel)]="epic.cooldown" name="cooldown" />
                 </div>
 
                 <div class="input-group">
+                    <label for="masterChance">Master Chance:</label>
                     <input type="number" placeholder="masterChance" [(ngModel)]="epic.masterChance"
                         name="masterChance" />
                 </div>
@@ -47,7 +52,7 @@
                         name="effectDuration" />
                 </div>
 
-                <button class="register-btn" type="submit">Registrar Arma</button>
+                <button class="register-btn" type="submit">Registrar Epica</button>
             </div>
         </form>
     </div>

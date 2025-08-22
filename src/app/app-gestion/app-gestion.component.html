@@ -2,7 +2,19 @@
   <h2>Panel de Gestión Principal</h2>
 
   <div class="button-group">
-    <button (click)="goToHeroes()">Gestión de Héroes</button>
-    <button (click)="goToItems()">Gestión de Items</button>
+    <div class="card" onclick="goToHeroes()">
+      <button (click)="goToHeroes()">Gestión de Héroes</button>
+    </div>
+    <div class="card" onclick="goToItems()">
+      <button (click)="goToItems()">Gestión de Items</button>
+    </div>
+    <div class="card" onclick="goToEpics()">
+      <button (click)="goToEpics()">Gestión de Épicas</button>
+    </div>
+    <div class="card" onclick="goToArmors()">
+      <button (click)="goToArmors()">Gestión de Armaduras</button>
+    </div>
+    <div class="card" onclick="goToWeapons()">
+      <button (click)="goToWeapons()">Gestión de Armas</button>
+    </div>
   </div>
-</div>

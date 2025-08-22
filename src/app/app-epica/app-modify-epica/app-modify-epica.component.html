@@ -6,23 +6,28 @@
 
         <!-- Nombre -->
         <div class="input-group">
+          <label for="name">Nombre:</label>
           <input type="text" placeholder="Nombre" [(ngModel)]="epic.name" name="name" required />
         </div>
 
         <!-- Descripción -->
         <div class="input-group">
+          <label for="description">Descripción:</label>
           <input type="text" placeholder="Descripción" [(ngModel)]="epic.description" name="description" required />
         </div>
 
         <div class="input-group">
+          <label for="heroType">Tipo de Héroe:</label>
           <input type="text" placeholder="heroType" [(ngModel)]="epic.heroType" name="heroType" required />
         </div>
 
         <div class="input-group">
+          <label for="cooldown">Cooldown:</label>
           <input type="number" placeholder="cooldown" [(ngModel)]="epic.cooldown" name="cooldown" required />
         </div>
 
         <div class="input-group">
+          <label for="masterChance">Master Chance:</label>
           <input type="number" placeholder="masterChance" [(ngModel)]="epic.masterChance" name="masterChance"
             required />
         </div>
@@ -42,7 +47,9 @@
                 {{ type }}
               </option>
             </select>
+            <label>Valor:</label>
             <input type="number" placeholder="Valor" [(ngModel)]="effect.value" [name]="'effectValue' + i" />
+            <label>Duración (turnos):</label>
             <input type="number" placeholder="Duración (turnos)" [(ngModel)]="effect.durationTurns"
               [name]="'effectDuration' + i" />
           </div>

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ItemsService } from '../../services/items.service';
-import { Item } from '../../domain/item.model';
-import { Effect } from '../../domain/effect.model';
+import { Item, HeroType } from '../../domain/item.model';
+import { Effect, EffectType } from '../../domain/effect.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -13,15 +13,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app-register-item.component.css',
 })
 export class AppRegisterItemComponent {
+  heroTypes = Object.values(HeroType);
+  effectTypes = Object.values(EffectType);
   item: Item = {
     id: 0,
     image: '',
-    heroType: '',
+    heroType: HeroType.TANK,
     description: '',
     name: '',
     status: true,
     effects: [
-      { effectType: '', value: 0, durationTurns: 0 },
+      { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
     ],
     dropRate: 0,
   };

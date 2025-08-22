@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ItemsService } from '../../services/items.service';
-import { Item } from '../../domain/item.model';
+import { Item, HeroType } from '../../domain/item.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-modify-item',
@@ -12,16 +13,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app-modify-item.component.css',
 })
 export class AppModifyItemComponent {
+  heroTypes = Object.values(HeroType);
+  effectTypes = Object.values(EffectType);
   itemId: number = 0;
   item: Item = {
     id: 0,
     name: '',
     description: '',
-    heroType: '',
+    heroType: HeroType.TANK,
     dropRate: 0,
     image: '',
     status: false,
-    effects: [{ effectType: '', value: 0, durationTurns: 0 }],
+    effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
   };
 
   constructor(
@@ -51,9 +54,6 @@ export class AppModifyItemComponent {
   loadItem(id: number): void {
     this.itemService.getItemById(id).subscribe({
       next: (data) => {
-        if (!data.effects || data.effects.length === 0) {
-          data.effects = [{ effectType: '', value: 0, durationTurns: 0 }];
-        }
         this.item = data;
       },
       error: (error) => {

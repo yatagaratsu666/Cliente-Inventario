@@ -4,6 +4,8 @@ import { HeroesService } from '../../services/heroes.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Hero from '../../domain/heroe.model';
+import { EffectType } from '../../domain/effect.model';
+import { HeroType } from '../../domain/heroe.model';
 
 @Component({
   selector: 'app-app-modify-heroe',
@@ -12,12 +14,13 @@ import Hero from '../../domain/heroe.model';
   styleUrl: './app-modify-heroe.component.css'
 })
 export class AppModifyHeroeComponent {
+  heroTypes = Object.values(HeroType);
   heroId: number = 0;
-
+  effectTypes = Object.values(EffectType);
   hero: Hero = new Hero(
     '', // image
     '', // name
-    '', // heroType
+    HeroType.TANK, // heroType
     '', // description
     1,  // level
     0,  // power
@@ -32,7 +35,7 @@ export class AppModifyHeroeComponent {
         name: 'default', 
         actionType: 'default', 
         powerCost: 0, 
-        effects: [{ effectType: 'default', value: 0, durationTurns: 0 }], 
+        effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }], 
         cooldown: 0, 
         isAvailable: true 
       }
@@ -58,18 +61,6 @@ export class AppModifyHeroeComponent {
   loadHero(id: number): void {
     this.heroService.getHeroById(id).subscribe({
       next: (data) => {
-        if (!data.specialActions || data.specialActions.length === 0) {
-          data.specialActions = [
-            { 
-              name: '', 
-              actionType: '', 
-              powerCost: 0, 
-              effects: [{ effectType: '', value: 0, durationTurns: 0 }], 
-              cooldown: 0, 
-              isAvailable: true 
-            }
-          ];
-        }
         this.hero = data;
       },
       error: (error) => {

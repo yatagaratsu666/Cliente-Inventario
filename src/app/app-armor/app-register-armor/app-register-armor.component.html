@@ -41,13 +41,12 @@
 
         <div class="effect-group" *ngIf="armor.effects && armor.effects.length">
           <h3>Efecto</h3>
-          <label>Tipo de efecto:</label>
-          <input
-            type="text"
-            placeholder="Tipo de efecto"
-            [(ngModel)]="armor.effects[0].effectType"
-            name="effectType"
-          />
+            <select [(ngModel)]="armor.effects[0].effectType" name="effectType" required>
+              <option value="" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let type of effectTypes" [value]="type">
+                {{ type }}
+              </option>
+            </select>
           <label>valor:</label>
           <input
             type="number"

@@ -4,23 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Weapon } from '../../domain/weapon.model';
 import { WeaponsService } from '../../services/weapons.service';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-register-weapon',
   imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './app-register-weapon.component.html',
-  styleUrl: './app-register-weapon.component.css'
+  styleUrl: './app-register-weapon.component.css',
 })
 export class AppRegisterWeaponComponent {
+  effectTypes = Object.values(EffectType);
   weapon: Weapon = {
     id: 0,
     image: '',
     description: '',
     name: '',
     status: true,
-    effects: [
-      { effectType: '', value: 0, durationTurns: 0 },
-    ],
+    effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
     dropRate: 0,
   };
 
@@ -55,15 +55,17 @@ export class AppRegisterWeaponComponent {
     } else {
       const weaponConId = { ...this.weapon, id: 0 };
 
-      this.weaponService.createWeapon(weaponConId, this.selectedFile).subscribe({
-        next: (newWeapon) => {
-          console.log('Arma creada con éxito:', newWeapon);
-          this.router.navigate(['/weapons/control']);
-        },
-        error: (err) => {
-          console.error('Error al crear arma:', err);
-        },
-      });
+      this.weaponService
+        .createWeapon(weaponConId, this.selectedFile)
+        .subscribe({
+          next: (newWeapon) => {
+            console.log('Arma creada con éxito:', newWeapon);
+            this.router.navigate(['/weapons/control']);
+          },
+          error: (err) => {
+            console.error('Error al crear arma:', err);
+          },
+        });
     }
   }
 }

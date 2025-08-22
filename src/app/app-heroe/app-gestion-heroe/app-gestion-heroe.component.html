@@ -8,28 +8,29 @@
       <img [src]="hero.image" alt="{{ hero.name }}" class="hero-image" />
 
       <div class="hero-info">
-        <h3>{{ hero.name }}</h3>
-        <p>Tipo:{{ hero.heroType }}</p>
-        <p>Nivel:{{ hero.level }}</p>
-        <p>Poder: {{ hero.power }}</p>
-        <p>Salud: {{ hero.health }}</p>
-        <p>Defensa: {{ hero.defense }}</p>
-        <p>Ataque: {{ hero.attack }}</p>
-        <p>Ataque Max: {{ hero.attackBoost.max }}</p>
-        <p>Ataque Min: {{ hero.attackBoost.min }}</p>
+        <p><span class="variable">Nombre:</span> {{ hero.name }}</p>
+        <p><span class="variable">Tipo:</span> {{ hero.heroType }}</p>
+        <p><span class="variable">Nivel:</span> {{ hero.level }}</p>
+        <p><span class="variable">Poder:</span> {{ hero.power }}</p>
+        <p><span class="variable">Salud:</span> {{ hero.health }}</p>
+        <p><span class="variable">Defensa:</span> {{ hero.defense }}</p>
         <p>
-          Status:
-          <span [ngClass]="{ activo: hero.status, inactivo: !hero.status }">
-            {{ hero.status ? "Activo" : "Inactivo" }}
-          </span>
+          <span class="variable" [ngClass]="{ activo: hero.status, inactivo: !hero.status }">
+            Status:
+          </span> {{ hero.status ? "Activo" : "Inactivo" }}
         </p>
+        <p><span class="variable">Ataque:</span> {{ hero.attack }}</p>
+        <div class="hero-effects">
+          <p>Ataque Max: {{ hero.attackBoost.max }}</p>
+          <p>Ataque Min:{{ hero.attackBoost.min }}</p>
+        </div>
 
-      <div class="hero-actions">
-        <button (click)="modifyHero(hero.id)">Modificar</button>
-        <button (click)="changeStatus(hero.id)">
-          {{ hero.status ? "Desactivar" : "Activar" }}
-        </button>
+        <div class="hero-actions">
+          <button (click)="modifyHero(hero.id)">Modificar</button>
+          <button (click)="changeStatus(hero.id)">
+            {{ hero.status ? "Desactivar" : "Activar" }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>

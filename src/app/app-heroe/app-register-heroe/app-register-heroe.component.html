@@ -12,7 +12,11 @@
 
         <div class="form-group">
           <label for="heroType">Tipo de Héroe:</label>
-          <input type="text" id="heroType" [(ngModel)]="hero.heroType" name="heroType" required />
+          <select id="heroType" [(ngModel)]="hero.heroType" name="heroType" required>
+            <option *ngFor="let type of heroTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
         </div>
 
         <div class="form-group">

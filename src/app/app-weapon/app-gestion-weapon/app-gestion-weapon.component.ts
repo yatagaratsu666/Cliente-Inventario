@@ -20,6 +20,10 @@ export class AppGestionWeaponComponent {
     this.showWeapons();
   }
 
+  addWeapon(): void {
+    this.router.navigate(['/weapons/create']);
+  }
+
   showWeapons(): void {
     this.weaponService.showAllIWeapon().subscribe({
       next: (data) => {

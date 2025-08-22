@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Armor } from '../../domain/armor.model';
 import { ArmorsService } from '../../services/armors.service';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-register-armor',
@@ -12,6 +13,7 @@ import { ArmorsService } from '../../services/armors.service';
   styleUrl: './app-register-armor.component.css'
 })
 export class AppRegisterArmorComponent {
+  effectTypes = Object.values(EffectType);
   armor: Armor = {
     id: 0,
     image: '',
@@ -19,7 +21,7 @@ export class AppRegisterArmorComponent {
     name: '',
     status: true,
     effects: [
-      { effectType: '', value: 0, durationTurns: 0 },
+      { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
     ],
     dropRate: 0,
   };

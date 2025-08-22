@@ -1,5 +1,7 @@
 <div class="armor-list">
-  <h2>Lista de Armas</h2>
+  <h2>Lista de Armaduras</h2>
+
+    <button (click)="addArmor()" class="btn-agregar">Agregar Armadura</button>
 
   <div *ngFor="let armor of armor" class="armor-card">
     <img
@@ -10,13 +12,13 @@
     />
 
     <div class="armor-info">
-      <p>Nombre: {{ armor.name }}</p>
-      <p>Descripción:{{ armor.description }}</p>
-      <p>Estado: {{ armor.status ? 'Activo' : 'Inactivo' }}</p>
-      <p>dropRate: {{ armor.dropRate }}</p>
+      <p><span class="variable">Nombre:</span> {{ armor.name }}</p>
+      <p><span class="variable">Descripción:</span> {{ armor.description }}</p>
+      <p><span class="variable">Estado:</span> {{ armor.status ? 'Activo' : 'Inactivo' }}</p>
+      <p><span class="variable">dropRate:</span> {{ armor.dropRate }}</p>
 
       <div *ngIf="armor.effects?.length">
-        <p>Efectos:</p>
+        <p><span class="variable">Efectos:</span></p>
         <div *ngFor="let effect of armor.effects" class="armor-effect">
           <p>
             Tipo: {{ effect.effectType }},

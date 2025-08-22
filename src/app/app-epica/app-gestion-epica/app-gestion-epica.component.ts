@@ -22,6 +22,10 @@ export class AppGestionEpicaComponent {
     this.showEpics();
   }
 
+  addEpic(): void {
+    this.router.navigate(['/epics/create']);
+  }
+
   showEpics(): void {
     this.epicService.showAllIEpics().subscribe({
       next: (data) => {

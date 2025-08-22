@@ -22,6 +22,10 @@ export class AppGestionArmorComponent {
     this.showArmors();
   }
 
+   addArmor(): void {
+    this.router.navigate(['/armors/create']);
+  }
+
   showArmors(): void {
     this.armorService.showAllIArmors().subscribe({
       next: (data) => {

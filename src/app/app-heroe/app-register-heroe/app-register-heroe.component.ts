@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import Hero from '../../domain/heroe.model';
+import Hero, { HeroType } from '../../domain/heroe.model';
 import { HeroesService } from '../../services/heroes.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-register-heroe',
@@ -12,12 +13,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app-register-heroe.component.css'
 })
 export class AppRegisterHeroeComponent {
+  heroTypes = Object.values(HeroType);
   heroId: number = 0;
-
+  effectTypes = Object.values(EffectType);
   hero: Hero = new Hero(
     '', // image
     '', // name
-    '', // heroType
+    HeroType.TANK, // heroType
     '', // description
     1,  // level
     0,  // power
@@ -32,7 +34,7 @@ export class AppRegisterHeroeComponent {
         name: 'default', 
         actionType: 'default', 
         powerCost: 0, 
-        effects: [{ effectType: 'default', value: 0, durationTurns: 0 }], 
+        effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }], 
         cooldown: 0, 
         isAvailable: true 
       }

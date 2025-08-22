@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EpicsService } from '../../services/epics.service';
 import { Epic } from '../../domain/epic.model';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-register-epica',
@@ -12,6 +13,7 @@ import { Epic } from '../../domain/epic.model';
   styleUrl: './app-register-epica.component.css'
 })
 export class AppRegisterEpicaComponent {
+    effectTypes = Object.values(EffectType);
     epic: Epic = {
     id: 0,
     image: '',
@@ -20,7 +22,7 @@ export class AppRegisterEpicaComponent {
     heroType: '',
     status: true,
     effects: [
-      { effectType: '', value: 0, durationTurns: 0 },
+      { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
     ],
     cooldown: 0,
     isAvailable: true,

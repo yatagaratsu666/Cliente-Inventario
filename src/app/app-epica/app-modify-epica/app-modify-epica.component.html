@@ -1,4 +1,4 @@
-<main class="container"> 
+<main class="container">
   <div class="content-box">
     <form id="edit-form" (ngSubmit)="onSubmit()" autocomplete="off">
       <div class="register-container">
@@ -6,54 +6,25 @@
 
         <!-- Nombre -->
         <div class="input-group">
-          <input
-            type="text"
-            placeholder="Nombre"
-            [(ngModel)]="epic.name"
-            name="name"
-            required
-          />
+          <input type="text" placeholder="Nombre" [(ngModel)]="epic.name" name="name" required />
         </div>
 
         <!-- Descripción -->
         <div class="input-group">
-          <input
-            type="text"
-            placeholder="Descripción"
-            [(ngModel)]="epic.description"
-            name="description"
-            required
-          />
+          <input type="text" placeholder="Descripción" [(ngModel)]="epic.description" name="description" required />
         </div>
 
         <div class="input-group">
-          <input
-            type="text"
-            placeholder="heroType"
-            [(ngModel)]="epic.heroType"
-            name="heroType"
-            required
-          />
+          <input type="text" placeholder="heroType" [(ngModel)]="epic.heroType" name="heroType" required />
         </div>
 
         <div class="input-group">
-          <input
-            type="number"
-            placeholder="cooldown"
-            [(ngModel)]="epic.cooldown"
-            name="cooldown"
-            required
-          />
+          <input type="number" placeholder="cooldown" [(ngModel)]="epic.cooldown" name="cooldown" required />
         </div>
 
-                <div class="input-group">
-          <input
-            type="number"
-            placeholder="masterChance"
-            [(ngModel)]="epic.masterChance"
-            name="masterChance"
-            required
-          />
+        <div class="input-group">
+          <input type="number" placeholder="masterChance" [(ngModel)]="epic.masterChance" name="masterChance"
+            required />
         </div>
 
         <div class="input-group">
@@ -65,25 +36,15 @@
         <div class="effect-group" *ngIf="epic.effects?.length">
           <h3>Efectos</h3>
           <div *ngFor="let effect of epic.effects; let i = index">
-            <label></label>
-            <input
-              type="text"
-              placeholder="Tipo de efecto"
-              [(ngModel)]="effect.effectType"
-              [name]="'effectType' + i"
-            />
-            <input
-              type="number"
-              placeholder="Valor"
-              [(ngModel)]="effect.value"
-              [name]="'effectValue' + i"
-            />
-            <input
-              type="number"
-              placeholder="Duración (turnos)"
-              [(ngModel)]="effect.durationTurns"
-              [name]="'effectDuration' + i"
-            />
+            <select [(ngModel)]="epic.effects[0].effectType" name="effectType" required>
+              <option value="" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let type of effectTypes" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+            <input type="number" placeholder="Valor" [(ngModel)]="effect.value" [name]="'effectValue' + i" />
+            <input type="number" placeholder="Duración (turnos)" [(ngModel)]="effect.durationTurns"
+              [name]="'effectDuration' + i" />
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Weapon } from '../../domain/weapon.model';
 import { WeaponsService } from '../../services/weapons.service';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-modify-weapon',
@@ -12,6 +13,7 @@ import { WeaponsService } from '../../services/weapons.service';
   styleUrl: './app-modify-weapon.component.css'
 })
 export class AppModifyWeaponComponent {
+  effectTypes = Object.values(EffectType);
   weaponId: number = 0;
   weapon: Weapon = {
     id: 0,
@@ -20,7 +22,7 @@ export class AppModifyWeaponComponent {
     dropRate: 0,
     image: '',
     status: false,
-    effects: [{ effectType: '', value: 0, durationTurns: 0 }],
+    effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
   };
 
   constructor(
@@ -50,9 +52,6 @@ export class AppModifyWeaponComponent {
   loadWeapon(id: number): void {
     this.weaponService.getWeaponById(id).subscribe({
       next: (data) => {
-        if (!data.effects || data.effects.length === 0) {
-          data.effects = [{ effectType: '', value: 0, durationTurns: 0 }];
-        }
         this.weapon = data;
       },
       error: (error) => {

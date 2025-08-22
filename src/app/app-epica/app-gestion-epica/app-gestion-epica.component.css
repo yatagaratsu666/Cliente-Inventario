@@ -1,0 +1,107 @@
+.epic-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 25px;
+  background: #f8f0e3;
+  border-radius: 14px;
+}
+
+.epic-list h2 {
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 50px;
+  color: #2f3640;
+}
+
+.epic-card {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  border: 2px solid #2f3640;
+  border-radius: 14px;
+  background: #2f3640;
+  padding: 30px;
+  margin-bottom: 35px;
+}
+
+.epic-image {
+  width: 200px;
+  height: 200px;
+  border: 3px solid #f8f0e3;
+  border-radius: 10px;
+}
+
+.epic-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: #f8f0e3;
+}
+
+.epic-info p {
+  font-size: 20px;
+  margin: 0;
+}
+
+.variable {
+  font-weight: bold;
+}
+
+.epic-effect {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: rgba(248,240,227,0.2);
+  border-left: 5px solid #f8f0e3;
+  border-radius: 8px;
+  font-size: 18px;
+  color: #f8f0e3;
+  font-style: italic;
+}
+
+.epic-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 20px;
+}
+
+.epic-actions button {
+  padding: 14px 22px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background: #f8f0e3;
+  color: #2f3640;
+  cursor: pointer;
+  transition: background-color .3s, transform .2s;
+}
+
+.epic-actions button:hover {
+  background: #e6d8c2;
+  color: #2f3640;
+}
+
+.btn-agregar:hover {
+    background: #3ea053;
+
+}
+
+.btn-agregar:active {
+    transform: scale(0.95);
+}
+
+.btn-agregar {
+    margin-right: 10px;
+    margin-bottom: 15px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #36724a, #1e4b28);
+    border: black 1px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}

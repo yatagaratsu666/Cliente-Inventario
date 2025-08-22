@@ -1,6 +1,8 @@
 <div class="epic-list">
   <h2>Lista de Epicas</h2>
 
+  <button (click)="addEpic()" class="btn-agregar">Agregar Epica</button>
+
   <div *ngFor="let epic of epic" class="epic-card">
     <img
       *ngIf="epic.image"
@@ -10,15 +12,15 @@
     />
 
     <div class="epic-info">
-      <p>Nombre: {{ epic.name }}</p>
-      <p>Descripción:{{ epic.description }}</p>
-      <p>Estado: {{ epic.status ? 'Activo' : 'Inactivo' }}</p>
-      <p>heroType: {{ epic.heroType }}</p>
-      <p>coolDown: {{ epic.cooldown }}</p>
-      <p>masterChance: {{ epic.masterChance }}</p>
+      <p><span class="variable">Nombre:</span> {{ epic.name }}</p>
+      <p><span class="variable">Descripción:</span> {{ epic.description }}</p>
+      <p><span class="variable">Estado:</span> {{ epic.status ? 'Activo' : 'Inactivo' }}</p>
+      <p><span class="variable">HeroType:</span> {{ epic.heroType }}</p>
+      <p><span class="variable">CoolDown:</span> {{ epic.cooldown }}</p>
+      <p><span class="variable">MasterChance:</span> {{ epic.masterChance }}</p>
 
       <div *ngIf="epic.effects?.length">
-        <p>Efectos:</p>
+        <p><span class="variable">Efectos:</span></p>
         <div *ngFor="let effect of epic.effects" class="epic-effect">
           <p>
             Tipo: {{ effect.effectType }},

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Epic } from '../../domain/epic.model';
 import { EpicsService } from '../../services/epics.service';
+import { EffectType } from '../../domain/effect.model';
 
 @Component({
   selector: 'app-app-modify-epica',
@@ -12,6 +13,7 @@ import { EpicsService } from '../../services/epics.service';
   styleUrl: './app-modify-epica.component.css'
 })
 export class AppModifyEpicaComponent {
+  effectTypes = Object.values(EffectType);
   epicId: number = 0;
     epic: Epic = {
     id: 0,
@@ -21,7 +23,7 @@ export class AppModifyEpicaComponent {
     heroType: '',
     status: true,
     effects: [
-      { effectType: '', value: 0, durationTurns: 0 },
+      { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
     ],
     cooldown: 0,
     isAvailable: true,
@@ -55,9 +57,6 @@ export class AppModifyEpicaComponent {
   loadEpic(id: number): void {
     this.epicService.getEpicById(id).subscribe({
       next: (data) => {
-        if (!data.effects || data.effects.length === 0) {
-          data.effects = [{ effectType: '', value: 0, durationTurns: 0 }];
-        }
         this.epic = data;
       },
       error: (error) => {

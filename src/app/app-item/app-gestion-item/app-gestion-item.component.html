@@ -1,21 +1,17 @@
 <div class="item-list">
   <h2>Lista de Items</h2>
+  <button (click)="addItem()" class="btn-agregar">Agregar Item</button>
   <div *ngFor="let item of items" class="item-card">
-    <img
-      *ngIf="item.image"
-      [src]="item.image"
-      alt="{{ item.name }}"
-      class="item-image"
-    />
+    <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" class="item-image" />
     <div class="item-info">
-      <p>Nombre: {{ item.name }}</p>
-      <p>Tipo: {{ item.heroType }}</p>
-      <p>Descripción: {{ item.description }}</p>
-      <p>Estado: {{ item.status ? "Activo" : "Inactivo" }}</p>
-      <p>Drop Rate: {{ item.dropRate }}%</p>
+      <p><span class="variable">Nombre:</span> {{ item.name }}</p>
+      <p><span class="variable">Tipo:</span> {{ item.heroType }}</p>
+      <p><span class="variable">Descripción:</span> {{ item.description }}</p>
+      <p><span class="variable">Estado:</span> {{ item.status ? "Activo" : "Inactivo" }}</p>
+      <p><span class="variable">Drop Rate:</span> {{ item.dropRate }}%</p>
 
-      <div *ngIf="item.effects?.length">
-        <p>Efectos:</p>
+        <p><span class="variable">Efectos:</span></p>
+        <div class= "item-effects" *ngIf="item.effects?.length">
         <div *ngFor="let effect of item.effects">
           <p>
             Tipo: {{ effect.effectType }}, Valor: {{ effect.value }}, Duración:
@@ -24,14 +20,13 @@
         </div>
       </div>
 
-      <p>
+      <div class="item-actions">
         <button (click)="changeStatus(item.id)">
           {{ item.status ? "Desactivar" : "Activar" }}
         </button>
-      </p>
-      <p>
         <button (click)="modifyItem(item.id)">Modificar</button>
-      </p>
+      </div>
+
     </div>
   </div>
 </div>

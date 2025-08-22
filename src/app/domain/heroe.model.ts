@@ -1,10 +1,20 @@
 import { Effect } from "./effect.model";
 
+export enum HeroType {
+  TANK = 'TANK',
+  WEAPONS_PAL = 'WEAPONS_PAL',
+  FIRE_MAGE = 'FIRE_MAGE',
+  ICE_MAGE = 'ICE_MAGE',
+  POISON_ROGUE = 'POISON_ROGUE',
+  SHAMAN = 'SHAMAN',
+  MEDIC = 'MEDIC'
+}
+
 export default class Hero {
     image: string;
     id: number;
     name: string;
-    heroType: string;
+    heroType: HeroType;
     description: string;
     level: number;
     power: number;
@@ -26,7 +36,7 @@ export default class Hero {
     constructor(
         image: string = '',
         name: string = '',
-        heroType: string = '',
+        heroType: HeroType = HeroType.TANK,
         description: string = '',
         level: number = 1,
         power: number = 0,

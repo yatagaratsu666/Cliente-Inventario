@@ -32,7 +32,7 @@ export class AppGestionItemComponent {
     });
   }
 
-  agregarDescuento(): void {
+  addItem(): void {
     this.router.navigate(['/items/create']);
   }
 

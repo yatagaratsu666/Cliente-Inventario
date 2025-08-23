@@ -6,17 +6,35 @@
 
         <!-- Nombre -->
         <div class="input-group">
+          <label>Nombre:</label>
           <input type="text" placeholder="Nombre" [(ngModel)]="weapon.name" name="name" required />
         </div>
 
         <!-- Descripción -->
         <div class="input-group">
+          <label>Descripción:</label>
           <input type="text" placeholder="Descripción" [(ngModel)]="weapon.description" name="description" required />
+        </div>
+
+        <div class="input-group">
+          <label>Tipo Heroe:</label>
+          <select [(ngModel)]="weapon.heroType" name="heroType" required>
+            <option value="" disabled selected>Seleccione un tipo</option>
+            <option *ngFor="let type of heroTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
         </div>
 
         <!-- Drop Rate -->
         <div class="input-group">
+          <label>DropRate:</label>
           <input type="number" placeholder="Drop Rate" [(ngModel)]="weapon.dropRate" name="dropRate" min="0" required />
+        </div>
+
+        <div class="input-group">
+          <label>Stock:</label>
+          <input type="number" placeholder="stock" [(ngModel)]="weapon.stock" name="stock" min=-1 required/>
         </div>
 
         <!-- Imagen -->
@@ -30,6 +48,7 @@
         <!-- Efectos -->
         <div class="effect-group" *ngIf="weapon.effects?.length">
           <h3>Efectos</h3>
+          <label>Tipo Efecto:</label>
           <div *ngFor="let effect of weapon.effects; let i = index">
             <select [(ngModel)]="weapon.effects[0].effectType" name="effectType" required>
               <option value="" disabled selected>Seleccione un tipo</option>
@@ -37,7 +56,9 @@
                 {{ type }}
               </option>
             </select>
+            <label>Valor:</label>
             <input type="number" placeholder="Valor" [(ngModel)]="effect.value" [name]="'effectValue' + i" />
+            <label>Duración:</label>
             <input type="number" placeholder="Duración (turnos)" [(ngModel)]="effect.durationTurns"
               [name]="'effectDuration' + i" />
           </div>

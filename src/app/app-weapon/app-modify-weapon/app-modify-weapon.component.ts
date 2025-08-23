@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Weapon } from '../../domain/weapon.model';
 import { WeaponsService } from '../../services/weapons.service';
 import { EffectType } from '../../domain/effect.model';
+import { HeroType } from '../../domain/item.model';
 
 @Component({
   selector: 'app-app-modify-weapon',
@@ -14,14 +15,17 @@ import { EffectType } from '../../domain/effect.model';
 })
 export class AppModifyWeaponComponent {
   effectTypes = Object.values(EffectType);
+  heroTypes = Object.values(HeroType);
   weaponId: number = 0;
   weapon: Weapon = {
     id: 0,
     name: '',
     description: '',
+    heroType: HeroType.TANK,
     dropRate: 0,
     image: '',
     status: false,
+    stock: 0,
     effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
   };
 
@@ -62,12 +66,15 @@ export class AppModifyWeaponComponent {
   }
 
   validate(): boolean {
-    const { name, description, dropRate, effects } = this.weapon;
+    const { name, description, dropRate, heroType, stock, effects } = this.weapon;
 
     return !!(
       name &&
       description &&
       dropRate &&
+      heroType &&
+      stock &&
+      stock >= -1 &&
       effects?.length &&
       effects[0].durationTurns &&
       effects[0].effectType &&
@@ -86,7 +93,7 @@ export class AppModifyWeaponComponent {
 
   onSubmit(): void {
     if (!this.validate()) {
-      alert('Todos los campos son requeridos.');
+      alert('Todos los campos son requeridos y los números deben ser válidos.');
       return;
     } else {
       const { _id, ...itemToUpdate } = this.weapon as any;

@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Armor } from '../../domain/armor.model';
+import { Armor, ArmorType } from '../../domain/armor.model';
 import { ArmorsService } from '../../services/armors.service';
 import { EffectType } from '../../domain/effect.model';
+import { HeroType } from '../../domain/item.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-app-register-armor',
@@ -14,12 +16,17 @@ import { EffectType } from '../../domain/effect.model';
 })
 export class AppRegisterArmorComponent {
   effectTypes = Object.values(EffectType);
+  heroTypes = Object.values(HeroType);
+  armorTypes = Object.values(ArmorType);
   armor: Armor = {
     id: 0,
     image: '',
     description: '',
     name: '',
+    armorType: ArmorType.HELMET,
+    heroType: HeroType.TANK,
     status: true,
+    stock: 0,
     effects: [
       { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
     ],
@@ -38,12 +45,17 @@ export class AppRegisterArmorComponent {
   }
 
   validate(): boolean {
-    const { name, description, dropRate, effects } = this.armor;
+    if (!this.selectedFile) {
+      console.error('Debes seleccionar una imagen');
+      return false;
+    }
+    const { name, description, stock, dropRate, effects } = this.armor;
 
     return !!(
       name &&
       description &&
       dropRate &&
+      stock >= -1 &&
       effects?.length &&
       effects[0].durationTurns &&
       effects[0].effectType &&
@@ -51,18 +63,28 @@ export class AppRegisterArmorComponent {
     );
   }
 
+    private showAlert(
+      icon: any,
+      title: string,
+      text: string,
+      buttonColor: string = '#3085d6'
+    ) {
+      Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
+    }
+
   onSubmit(): void {
     if (!this.validate()) {
-      alert('Todos los campos deben ser obligatorios');
+      this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');
     } else {
       const armorConId = { ...this.armor, id: 0 };
 
       this.armorService.createArmor(armorConId, this.selectedFile).subscribe({
-        next: (newArmor) => {
-          console.log('Armadura creada con éxito:', newArmor);
+        next: () => {
+          this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
           this.router.navigate(['/armors/control']);
         },
         error: (err) => {
+          this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
           console.error('Error al crear armadura:', err);
         },
       });

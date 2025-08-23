@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Armor } from '../../domain/armor.model';
+import { Armor, ArmorType } from '../../domain/armor.model';
 import { ArmorsService } from '../../services/armors.service';
 import { EffectType } from '../../domain/effect.model';
+import { HeroType } from '../../domain/item.model';
 
 @Component({
   selector: 'app-app-modify-armor',
@@ -15,13 +16,18 @@ import { EffectType } from '../../domain/effect.model';
 export class AppModifyArmorComponent {
   armorId: number = 0;
   effectTypes = Object.values(EffectType);
+  heroTypes = Object.values(HeroType);
+  armorTypes = Object.values(ArmorType);
   armor: Armor = {
     id: 0,
     name: '',
     description: '',
+    armorType: ArmorType.HELMET,
+    heroType: HeroType.TANK,
     dropRate: 0,
     image: '',
     status: false,
+    stock: 0,
     effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
   };
 
@@ -62,12 +68,13 @@ export class AppModifyArmorComponent {
   }
 
   validate(): boolean {
-    const { name, description, dropRate, effects } = this.armor;
+    const { name, description, stock, dropRate, effects } = this.armor;
 
     return !!(
       name &&
       description &&
       dropRate &&
+      stock >= -1 &&
       effects?.length &&
       effects[0].durationTurns &&
       effects[0].effectType &&

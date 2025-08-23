@@ -6,16 +6,19 @@
 
         <!-- Nombre -->
         <div class="input-group">
+          <label>Nombre:</label>
           <input type="text" placeholder="Nombre" [(ngModel)]="item.name" name="name" required />
         </div>
 
         <!-- Descripción -->
         <div class="input-group">
+          <label>Descripción:</label>
           <input type="text" placeholder="Descripción" [(ngModel)]="item.description" name="description" required />
         </div>
 
         <!-- Tipo -->
         <div class="input-group">
+          <label>Tipo Heroe:</label>
           <select [(ngModel)]="item.heroType" name="heroType" required>
             <option value="" disabled selected>Seleccione un tipo</option>
             <option *ngFor="let type of heroTypes" [value]="type">
@@ -26,8 +29,14 @@
 
         <!-- Drop Rate -->
         <div class="input-group">
+          <label>Porcentaje de Caida:</label>
           <input type="number" placeholder="Drop Rate" [(ngModel)]="item.dropRate" name="dropRate" min="0" required />
         </div>
+
+        <div class="input-group">
+          <label>Stock:</label>
+          <input type="number" placeholder="stock" [(ngModel)]="item.stock" name="stock" min="-1" required/>
+        </div> 
 
         <!-- Imagen -->
         <div class="input-group">
@@ -41,7 +50,6 @@
         <div class="effect-group" *ngIf="item.effects?.length">
           <h3>Efectos</h3>
           <div *ngFor="let effect of item.effects; let i = index">
-            <label></label>
             <select [(ngModel)]="item.effects[0].effectType" name="effectType" required>
               <option value="" disabled selected>Seleccione un tipo</option>
               <option *ngFor="let type of effectTypes" [value]="type">

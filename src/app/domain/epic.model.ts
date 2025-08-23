@@ -7,6 +7,7 @@ export class Epic {
   heroType: string;
   description: string;
   status: boolean;
+  stock: number;
   effects: Effect[];
   cooldown: number;
   isAvailable: boolean;
@@ -19,6 +20,7 @@ constructor(
     description: string = '',
     name: string = '',
     status: boolean = true,
+    stock: number = 0,
     effects: Effect[] = [],
     cooldown: number =0,
     isAvailable: boolean = true,
@@ -34,5 +36,6 @@ constructor(
     this.isAvailable = isAvailable;
     this.status = status;
     this.masterChance = masterChance;
+    this.stock = stock;
   }
 }

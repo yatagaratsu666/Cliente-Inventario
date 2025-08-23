@@ -5,6 +5,13 @@
     padding: 40px 20px;
 }
 
+.effect-group label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
 /* Título principal */
 .register-container h2 {
     text-align: center;

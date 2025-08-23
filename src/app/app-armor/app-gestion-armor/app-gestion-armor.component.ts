@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { Weapon } from '../../domain/weapon.model';
-import { WeaponsService } from '../../services/weapons.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Armor } from '../../domain/armor.model';

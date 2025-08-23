@@ -6,35 +6,40 @@
 
         <div class="input-group">
           <label>nombre:</label>
-          <input
-            type="text"
-            placeholder="Nombre"
-            [(ngModel)]="armor.name"
-            name="name"
-            required
-          />
+          <input type="text" placeholder="Nombre" [(ngModel)]="armor.name" name="name" required />
         </div>
 
         <div class="input-group">
           <label>Descripción:</label>
-          <input
-            type="text"
-            placeholder="Descripción"
-            [(ngModel)]="armor.description"
-            name="description"
-            required
-          />
+          <input type="text" placeholder="Descripción" [(ngModel)]="armor.description" name="description" required />
+        </div>
+
+        <div class="input-group">
+          <label>ArmorType:</label>
+          <select id="armorType" [(ngModel)]="armor.armorType" name="armorType" required>
+            <option *ngFor="let type of armorTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>HeroType:</label>
+          <select id="heroType" [(ngModel)]="armor.heroType" name="heroType" required>
+            <option *ngFor="let type of heroTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Stock:</label>
+          <input type="number" placeholder="stock" [(ngModel)]="armor.stock" name="stock" min="-1" required />
         </div>
 
         <div class="input-group">
           <label>Porcentaje de caída:</label>
-          <input
-            type="number"
-            placeholder="Porcentaje de caida"
-            [(ngModel)]="armor.dropRate"
-            name="dropRate"
-            min="0"
-          />
+          <input type="number" placeholder="Porcentaje de caida" [(ngModel)]="armor.dropRate" name="dropRate" min="0" />
         </div>
 
         <div class="input-group">
@@ -44,26 +49,18 @@
 
         <div class="effect-group" *ngIf="armor.effects && armor.effects.length">
           <h3>Efecto</h3>
-            <select [(ngModel)]="armor.effects[0].effectType" name="effectType" required>
-              <option value="" disabled selected>Seleccione un tipo</option>
-              <option *ngFor="let type of effectTypes" [value]="type">
-                {{ type }}
-              </option>
-            </select>
-          <label>valor:</label>
-          <input
-            type="number"
-            placeholder="Valor"
-            [(ngModel)]="armor.effects[0].value"
-            name="effectValue"
-          />
+          <label>Tipo Efecto</label>
+          <select [(ngModel)]="armor.effects[0].effectType" name="effectType" required>
+            <option value="" disabled selected>Seleccione un tipo</option>
+            <option *ngFor="let type of effectTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+          <label>Valor:</label>
+          <input type="number" placeholder="Valor" [(ngModel)]="armor.effects[0].value" name="effectValue" />
           <label>Duración (turnos):</label>
-          <input
-            type="number"
-            placeholder="Duración (turnos)"
-            [(ngModel)]="armor.effects[0].durationTurns"
-            name="effectDuration"
-          />
+          <input type="number" placeholder="Duración (turnos)" [(ngModel)]="armor.effects[0].durationTurns"
+            name="effectDuration" />
         </div>
 
         <button class="register-btn" type="submit">Registrar Armadura</button>

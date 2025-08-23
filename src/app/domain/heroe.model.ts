@@ -21,6 +21,7 @@ export default class Hero {
     health: number;
     defense: number;
     status: boolean;
+    stock: number;
     attack: number;
     attackBoost: { min: number; max: number };
     damage: { min: number; max: number };
@@ -43,6 +44,7 @@ export default class Hero {
         health: number = 0,
         defense: number = 0,
         status: boolean = true,
+        stock: number = 0,
         attack: number = 0,
         attackBoost: { min: number; max: number } = { min: 0, max: 0 },
         damage: { min: number; max: number } = { min: 0, max: 0 },
@@ -65,6 +67,7 @@ export default class Hero {
         this.health = health;
         this.defense = defense;
         this.status = status;
+        this.stock = stock;
         this.attack = attack;
         this.attackBoost = attackBoost;
         this.damage = damage;

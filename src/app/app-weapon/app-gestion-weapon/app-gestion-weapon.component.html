@@ -14,8 +14,10 @@
     <div class="weapon-info">
       <p><span class="variable">Nombre:</span> {{ weapon.name }}</p>
       <p><span class="variable">Descripción:</span> {{ weapon.description }}</p>
+      <p><span class="variable">HeroType:</span> {{ weapon.heroType }}</p>
       <p><span class="variable">Estado:</span> {{ weapon.status ? 'Activo' : 'Inactivo' }}</p>
       <p><span class="variable">DropRate:</span> {{ weapon.dropRate }}</p>
+      <p><span class="variable">Stock:</span> {{ weapon.stock }}</p>
 
       <div *ngIf="weapon.effects?.length">
         <p><span class="variable">Efectos:</span></p>

@@ -22,14 +22,10 @@ import { AppGestionEpicaComponent } from './app-epica/app-gestion-epica/app-gest
 import { AppModifyEpicaComponent } from './app-epica/app-modify-epica/app-modify-epica.component';
 
 const routeConfig: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     component: AppLoginComponent,
-  },
-  {
-    path: 'items',
-    component: AppItemComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: 'items/create',
@@ -44,11 +40,6 @@ const routeConfig: Routes = [
   {
     path: 'items/modify/:id',
     component: AppModifyItemComponent,
-    canActivate: [AuthGuard]
-  },
-    {
-    path: 'heroes',
-    component: AppHeroeComponent,
     canActivate: [AuthGuard]
   },
   {

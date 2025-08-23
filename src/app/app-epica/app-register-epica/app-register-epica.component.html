@@ -17,8 +17,16 @@
 
                 <div class="input-group">
                     <label for="heroType">Tipo de Héroe:</label>
-                    <input type="text" placeholder="heroType" [(ngModel)]="epic.heroType" name="heroType"
-                        required />
+                    <select id="heroType" [(ngModel)]="epic.heroType" name="heroType" required>
+                        <option *ngFor="let type of heroTypes" [value]="type">
+                            {{ type }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Stock:</label>
+                    <input type="number" placeholder="stock" [(ngModel)]="epic.stock" name="stock" min="-1" required />
                 </div>
 
                 <div class="input-group">
@@ -39,6 +47,7 @@
 
                 <div class="effect-group" *ngIf="epic.effects && epic.effects.length">
                     <h3>Efecto</h3>
+                    <label>Tipo Efecto</label>
                     <select [(ngModel)]="epic.effects[0].effectType" name="effectType" required>
                         <option value="" disabled selected>Seleccione un tipo</option>
                         <option *ngFor="let type of effectTypes" [value]="type">

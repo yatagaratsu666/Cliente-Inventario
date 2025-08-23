@@ -5,6 +5,8 @@ import { HeroesService } from '../../services/heroes.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EffectType } from '../../domain/effect.model';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-app-register-heroe',
@@ -26,6 +28,7 @@ export class AppRegisterHeroeComponent {
     0,  // health
     0,  // defense
     true,
+    0,
     0,  // attack
     { min: 0, max: 0 }, // attackBoost
     { min: 0, max: 0 }, // damage
@@ -55,9 +58,14 @@ export class AppRegisterHeroeComponent {
   }
 
   validate(): boolean {
-    const { name, description, heroType, level, attack, health, defense, power, specialActions } = this.hero;
 
-    if (!name || !description || !heroType || level < 0 || attack < 0 || health < 0 || defense < 0 || power < 0) {
+    if (!this.selectedFile) {
+    console.log(`Debes seleccionar una imagen`);
+    return false;
+  }
+    const { name, description, heroType, level, stock, attack, health, defense, power, specialActions } = this.hero;
+
+    if (!name || !description || !heroType || level < 0 || stock < -1|| attack < 0 || health < 0 || defense < 0 || power < 0) {
       return false;
     }
 
@@ -77,18 +85,23 @@ export class AppRegisterHeroeComponent {
     return true;
   }
 
+  private showAlert(icon: any, title: string, text: string, buttonColor: string = '#3085d6') {
+    Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
+  }
+
   onSubmit(): void {
     if (!this.validate()) {
-      alert('Todos los campos son obligatorios y deben ser válidos');
+      this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');
     } else {
       const heroToCreate = { ...this.hero, id: 0 };
 
       this.heroesService.createHero(heroToCreate, this.selectedFile).subscribe({
-        next: (newHero) => {
-          console.log('Heroe creado con éxito:', newHero);
+        next: () => {
+          this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
           this.router.navigate(['/heroes/control']);
         },
         error: (err) => {
+          this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
           console.error('Error al crear heroe:', err);
         },
       });

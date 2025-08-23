@@ -15,7 +15,10 @@
       <p><span class="variable">Nombre:</span> {{ armor.name }}</p>
       <p><span class="variable">Descripción:</span> {{ armor.description }}</p>
       <p><span class="variable">Estado:</span> {{ armor.status ? 'Activo' : 'Inactivo' }}</p>
-      <p><span class="variable">dropRate:</span> {{ armor.dropRate }}</p>
+      <p><span class="variable">Tipo de Armadura:</span> {{ armor.armorType }}</p>
+      <p><span class="variable">Tipo de Heroe:</span> {{ armor.heroType }}</p>
+      <p><span class="variable">DropRate:</span> {{ armor.dropRate }}</p>
+      <p><span class="variable">Stock:</span> {{ armor.stock }}</p>
 
       <div *ngIf="armor.effects?.length">
         <p><span class="variable">Efectos:</span></p>

@@ -17,6 +17,7 @@ export class Item {
   description: string;
   name: string;
   status: boolean;
+  stock: number;
   effects: Effect[];
   dropRate: number;
 
@@ -27,6 +28,7 @@ export class Item {
     description: string = '',
     name: string = '',
     status: boolean = true,
+    stock: number = 0,
     effects: Effect[] = [],
     dropRate: number = 0,
   ) {
@@ -38,5 +40,6 @@ export class Item {
     this.effects = effects;
     this.dropRate = dropRate;
     this.status = status
+    this.stock = stock;
   }
 }

@@ -27,6 +27,7 @@ export class AppModifyHeroeComponent {
     0,  // health
     0,  // defense
     true,
+    0,
     0,  // attack
     { min: 0, max: 0 }, // attackBoost
     { min: 0, max: 0 }, // damage
@@ -80,18 +81,26 @@ export class AppModifyHeroeComponent {
   }
 
   validate(): boolean {
-    const { name, description, heroType, specialActions } = this.hero;
+    const { name, description, heroType, level, stock, attack, health, defense, power, specialActions } = this.hero;
 
-    return !!(
-      name &&
-      description &&
-      heroType &&
-      specialActions?.length &&
-      specialActions[0].effects?.length &&
-      specialActions[0].effects[0].durationTurns !== undefined &&
-      specialActions[0].effects[0].effectType &&
-      specialActions[0].effects[0].value !== undefined
-    );
+    if (!name || !description || !heroType || level < 0 || stock < -1|| attack < 0 || health < 0 || defense < 0 || power < 0) {
+      return false;
+    }
+
+    if (!specialActions?.length) return false;
+
+    for (const action of specialActions) {
+      if (!action.name || !action.actionType || action.powerCost < 0 || !action.effects?.length) {
+        return false;
+      }
+      for (const effect of action.effects) {
+        if (!effect.effectType || effect.value === null || effect.durationTurns < 0) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   onSubmit(): void {

@@ -24,6 +24,7 @@ export class AppModifyItemComponent {
     dropRate: 0,
     image: '',
     status: false,
+    stock: 0,
     effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
   };
 
@@ -64,13 +65,14 @@ export class AppModifyItemComponent {
   }
 
   validate(): boolean {
-    const { name, description, dropRate, heroType, effects } = this.item;
+    const { name, description, stock, dropRate, heroType, effects } = this.item;
 
     return !!(
       name &&
       description &&
       dropRate &&
       heroType &&
+      stock >= -1 &&
       effects?.length &&
       effects[0].durationTurns &&
       effects[0].effectType &&

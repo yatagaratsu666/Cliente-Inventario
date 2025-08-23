@@ -9,6 +9,7 @@
       <p><span class="variable">Descripción:</span> {{ item.description }}</p>
       <p><span class="variable">Estado:</span> {{ item.status ? "Activo" : "Inactivo" }}</p>
       <p><span class="variable">Drop Rate:</span> {{ item.dropRate }}%</p>
+      <p><span class="variable">Stock:</span> {{ item.stock }}</p>
 
         <p><span class="variable">Efectos:</span></p>
         <div class= "item-effects" *ngIf="item.effects?.length">

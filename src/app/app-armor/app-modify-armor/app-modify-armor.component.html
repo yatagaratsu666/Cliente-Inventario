@@ -5,6 +5,7 @@
         <h2>Modificar Armadura</h2>
 
         <div class="input-group">
+          <label>Nombre:</label>
           <input
             type="text"
             placeholder="Nombre"
@@ -15,6 +16,7 @@
         </div>
 
         <div class="input-group">
+          <label>Descripción:</label>
           <input
             type="text"
             placeholder="Descripción"
@@ -25,6 +27,30 @@
         </div>
 
         <div class="input-group">
+          <label>ArmorType:</label>
+          <select id="armorType" [(ngModel)]="armor.armorType" name="armorType" required>
+            <option *ngFor="let type of armorTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>HeroType:</label>
+          <select id="heroType" [(ngModel)]="armor.heroType" name="heroType" required>
+            <option *ngFor="let type of heroTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Stock:</label>
+          <input type="number" placeholder="stock" [(ngModel)]="armor.stock" name="stock" min="-1" required />
+        </div>
+
+        <div class="input-group">
+          <label>DropRate:</label>
           <input
             type="number"
             placeholder="Drop Rate"
@@ -43,6 +69,7 @@
 
         <div class="effect-group" *ngIf="armor.effects?.length">
           <h3>Efectos</h3>
+          <label>TIpo Efecto:</label>
           <div *ngFor="let effect of armor.effects; let i = index">
             <select [(ngModel)]="armor.effects[0].effectType" name="effectType" required>
               <option value="" disabled selected>Seleccione un tipo</option>
@@ -57,6 +84,7 @@
               [(ngModel)]="effect.value"
               [name]="'effectValue' + i"
             />
+            <label>Duración (Turnos):</label>
             <input
               type="number"
               placeholder="Duración (turnos)"

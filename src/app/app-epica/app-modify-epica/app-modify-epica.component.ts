@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Epic } from '../../domain/epic.model';
 import { EpicsService } from '../../services/epics.service';
 import { EffectType } from '../../domain/effect.model';
+import { HeroType } from '../../domain/item.model';
 
 @Component({
   selector: 'app-app-modify-epica',
@@ -14,14 +15,16 @@ import { EffectType } from '../../domain/effect.model';
 })
 export class AppModifyEpicaComponent {
   effectTypes = Object.values(EffectType);
+  heroTypes = Object.values(HeroType);
   epicId: number = 0;
     epic: Epic = {
     id: 0,
     image: '',
     description: '',
     name: '',
-    heroType: '',
+    heroType: HeroType.TANK,
     status: true,
+    stock: 0,
     effects: [
       { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
     ],
@@ -67,7 +70,7 @@ export class AppModifyEpicaComponent {
   }
 
   validate(): boolean {
-    const { name, description, heroType, effects, masterChance, cooldown } = this.epic;
+    const { name, description, heroType, stock, effects, masterChance, cooldown } = this.epic;
 
     return !!(
       name &&
@@ -75,6 +78,7 @@ export class AppModifyEpicaComponent {
       heroType &&
       masterChance &&
       cooldown &&
+      stock >= -1 &&
       effects?.length &&
       effects[0].durationTurns &&
       effects[0].effectType &&

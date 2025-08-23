@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { Weapon } from '../../domain/weapon.model';
 import { WeaponsService } from '../../services/weapons.service';
 import { EffectType } from '../../domain/effect.model';
+import { HeroType } from '../../domain/item.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-app-register-weapon',
@@ -14,13 +16,18 @@ import { EffectType } from '../../domain/effect.model';
 })
 export class AppRegisterWeaponComponent {
   effectTypes = Object.values(EffectType);
+  heroTypes = Object.values(HeroType);
   weapon: Weapon = {
     id: 0,
     image: '',
     description: '',
     name: '',
+    heroType: HeroType.TANK,
     status: true,
-    effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
+    stock: 0,
+    effects: [
+      { effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 },
+    ],
     dropRate: 0,
   };
 
@@ -36,12 +43,20 @@ export class AppRegisterWeaponComponent {
   }
 
   validate(): boolean {
-    const { name, description, dropRate, effects } = this.weapon;
+    if (!this.selectedFile) {
+      console.error('Debes seleccionar una imagen');
+      return false;
+    }
+    const { name, description, dropRate, heroType, stock, effects } =
+      this.weapon;
 
     return !!(
       name &&
       description &&
       dropRate &&
+      heroType &&
+      stock &&
+      stock >= -1 &&
       effects?.length &&
       effects[0].durationTurns &&
       effects[0].effectType &&
@@ -49,20 +64,30 @@ export class AppRegisterWeaponComponent {
     );
   }
 
+  private showAlert(
+    icon: any,
+    title: string,
+    text: string,
+    buttonColor: string = '#3085d6'
+  ) {
+    Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
+  }
+
   onSubmit(): void {
     if (!this.validate()) {
-      alert('Todos los campos deben ser obligatorios');
+      this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');
     } else {
       const weaponConId = { ...this.weapon, id: 0 };
 
       this.weaponService
         .createWeapon(weaponConId, this.selectedFile)
         .subscribe({
-          next: (newWeapon) => {
-            console.log('Arma creada con éxito:', newWeapon);
+          next: () => {
+            this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
             this.router.navigate(['/weapons/control']);
           },
           error: (err) => {
+            this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
             console.error('Error al crear arma:', err);
           },
         });

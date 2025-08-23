@@ -15,9 +15,24 @@
         </div>
 
         <div class="input-group">
+          <label>Tipo Heroe:</label>
+          <select [(ngModel)]="weapon.heroType" name="heroType" required>
+            <option value="" disabled selected>Seleccione un tipo</option>
+            <option *ngFor="let type of heroTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-group">
           <label>dropRate:</label>
           <input type="number" placeholder="Porcentaje de caida" [(ngModel)]="weapon.dropRate" name="dropRate"
-            min="0" />
+            min="0" required/>
+        </div>
+
+        <div class="input-group">
+          <label>Stock:</label>
+          <input type="number" placeholder="stock" [(ngModel)]="weapon.stock" name="stock" min=-1 required/>
         </div>
 
         <div class="input-group">
@@ -27,6 +42,7 @@
 
         <div class="effect-group" *ngIf="weapon.effects && weapon.effects.length">
           <h3>Efecto</h3>
+          <label>Tipo Efecto:</label>
           <select [(ngModel)]="weapon.effects[0].effectType" name="effectType" required>
             <option value="" disabled selected>Seleccione un tipo</option>
             <option *ngFor="let type of effectTypes" [value]="type">

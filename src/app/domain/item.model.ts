@@ -7,7 +7,8 @@ export enum HeroType {
   ICE_MAGE = 'ICE_MAGE',
   POISON_ROGUE = 'POISON_ROGUE',
   SHAMAN = 'SHAMAN',
-  MEDIC = 'MEDIC'
+  MEDIC = 'MEDIC',
+  MACHETE = 'MACHETE'
 }
 
 export class Item {

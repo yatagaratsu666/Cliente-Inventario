@@ -30,10 +30,10 @@ export default class Hero {
         name: string;
         actionType: string;
         powerCost: number;
-        effects: Effect[];
         cooldown: number;
         isAvailable: boolean;
     }[];
+    effects: Effect[];
 
     constructor(
         image: string = '',
@@ -53,11 +53,11 @@ export default class Hero {
             name: string;
             actionType: string;
             powerCost: number;
-            effects: Effect[];
             cooldown: number;
             isAvailable: boolean;
         }[] = [],
-        id: number = 0
+        id: number = 0,
+        effects: Effect[] = []
     ) {
         this.image = image;
         this.name = name;
@@ -74,5 +74,6 @@ export default class Hero {
         this.damage = damage;
         this.specialActions = specialActions;
         this.id = id;
+        this.effects = effects;
     }
 }

@@ -1,6 +1,6 @@
 header {
-  background: radial-gradient(circle, #3A506B, #1C1C1C);
-  color: rgb(0, 0, 0);
+  background: radial-gradient(circle, #5a3e1b, #1c1208); /* marrón cuero a negro hierro */
+  color: #d4af37; /* dorado medieval */
   padding: 40px;
   width: 100%;
   text-align: center;
@@ -11,11 +11,10 @@ header {
   position: relative;
 }
 
-
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(to right, #fcf1e2, #f6efd3);
+  background: linear-gradient(to right, #f5deb3, #cdb88c); /* pergamino claro a pergamino oscuro */
   font-size: 120%;
   margin-bottom: 20px;
 }

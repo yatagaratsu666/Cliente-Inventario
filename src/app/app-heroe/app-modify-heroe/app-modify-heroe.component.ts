@@ -36,12 +36,12 @@ export class AppModifyHeroeComponent {
         name: 'default', 
         actionType: 'default', 
         powerCost: 0, 
-        effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }], 
         cooldown: 0, 
         isAvailable: true 
       }
     ],
-    0 // id
+    0,
+    [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
   );
 
   constructor(
@@ -81,22 +81,23 @@ export class AppModifyHeroeComponent {
   }
 
   validate(): boolean {
-    const { name, description, heroType, level, stock, attack, health, defense, power, specialActions } = this.hero;
+    const { name, description, heroType, level, stock, attack, health, defense, power, specialActions} = this.hero;
 
     if (!name || !description || !heroType || level < 0 || stock < -1|| attack < 0 || health < 0 || defense < 0 || power < 0) {
       return false;
     }
 
-    if (!specialActions?.length) return false;
-
-    for (const action of specialActions) {
-      if (!action.name || !action.actionType || action.powerCost < 0 || !action.effects?.length) {
-        return false;
-      }
-      for (const effect of action.effects) {
+    for (const effect of this.hero.effects) {
         if (!effect.effectType || effect.value === null || effect.durationTurns < 0) {
           return false;
         }
+    }
+
+    if (!specialActions?.length) return false;
+
+    for (const action of specialActions) {
+      if (!action.name || !action.actionType || action.powerCost < 0) {
+        return false;
       }
     }
 

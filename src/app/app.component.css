@@ -9,18 +9,20 @@ header {
 }
 
 button.logout-button {
-  background-color: #6B1E1E;
-  border-radius: 10px;
-  border: none;
-  color: white;
+  padding: 12px 20px;
   font-size: 16px;
-  margin: 4px 2px;
-  padding: 8px 12px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background: #cdb88c; /* pergamino */
+  color: #2f1f0f; /* marrón hierro */
   cursor: pointer;
+  transition: background-color .3s, transform .2s;
 }
 
 button.logout-button:hover {
-  background-color: #b42323;
+  background: #bda76d; /* pergamino más oscuro */
+  color: #4b2e05; /* marrón madera */
 }
 
 .logo {

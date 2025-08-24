@@ -46,20 +46,20 @@
           <img *ngIf="item.image" [src]="item.image" alt="Imagen del item" class="preview-img">
         </div>
 
-        <!-- Efectos -->
-        <div class="effect-group" *ngIf="item.effects?.length">
-          <h3>Efectos</h3>
-          <div *ngFor="let effect of item.effects; let i = index">
-            <select [(ngModel)]="item.effects[0].effectType" name="effectType" required>
-              <option value="" disabled selected>Seleccione un tipo</option>
-              <option *ngFor="let type of effectTypes" [value]="type">
-                {{ type }}
-              </option>
-            </select>
-            <input type="number" placeholder="Valor" [(ngModel)]="effect.value" [name]="'effectValue' + i" />
-            <input type="number" placeholder="Duración (turnos)" [(ngModel)]="effect.durationTurns"
-              [name]="'effectDuration' + i" />
-          </div>
+        <div class="effect-group" *ngIf="item.effects && item.effects.length">
+          <h3>Efecto</h3>
+          <label>Tipo de efecto:</label>
+          <select [(ngModel)]="item.effects[0].effectType" name="effectType" required>
+            <option value="" disabled selected>Seleccione un tipo</option>
+            <option *ngFor="let type of effectTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+          <label>valor:</label>
+          <input type="number" placeholder="Valor" [(ngModel)]="item.effects[0].value" name="effectValue" />
+          <label>Duración (turnos):</label>
+          <input type="number" placeholder="Duración (turnos)" [(ngModel)]="item.effects[0].durationTurns"
+            name="effectDuration" />
         </div>
 
         <button class="register-btn" type="submit">Guardar Cambios</button>

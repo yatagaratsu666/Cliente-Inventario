@@ -23,6 +23,7 @@ import { AppModifyEpicaComponent } from './app-epica/app-modify-epica/app-modify
 import { Component } from '@angular/core';
 import { RoomsListComponent } from './rooms-list/rooms-list.component';
 import { RoomLobbyComponent } from './rooms-lobby/rooms-lobby.component';
+import { BattleComponent } from './battle/battle.component';
 
 const routeConfig: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -118,6 +119,11 @@ const routeConfig: Routes = [
   {
     path: 'rooms/:id',
     component: RoomLobbyComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'battle/:id',
+    component: BattleComponent,
     canActivate: [AuthGuard]
   }
 ];

@@ -2,11 +2,27 @@
 <h2>Sala {{ roomId }}</h2>
 
 <ul>
-  <li *ngFor="let p of players">
-    {{ p.name }} - Estado: {{ p.ready ? '✔️ Listo' : '⏳ Esperando' }}
-  </li>
+    <div>
+      <strong>{{ heroStats.name }}</strong> 
+    </div>
+    <div>
+      <span>Clase: {{ heroStats.hero.heroType }}</span> |
+      <span>Nivel: {{ heroStats.hero.level }}</span> |
+      <span>Poder: {{ heroStats.hero.power }}</span> |
+      <span>Vida: {{ heroStats.hero.health }}</span> |
+      <span>Defensa: {{ heroStats.hero.defense }}</span> |
+      <span>Ataque: {{ heroStats.hero.attack }}</span>
+    </div>
+    <div>
+      <span>Boost: {{ heroStats.hero.attackBoost.min }} - {{ heroStats.hero.attackBoost.max }}</span> |
+      <span>Daño: {{ heroStats.hero.damage.min }} - {{ heroStats.hero.damage.max }}</span>
+    </div>
+    <label>Equipo:</label>
+    <select [(ngModel)]="team">
+      <option value="A">A</option>
+      <option value="B">B</option>
+    </select>
 </ul>
 
-<button >Listo</button>
 
-<button *ngIf="isHost" >Iniciar Batalla</button>
+<button (click)="onReady()">Listo</button>

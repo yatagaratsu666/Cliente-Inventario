@@ -1,0 +1,12 @@
+<!-- rooms-list.component.html -->
+<h2>Salas disponibles</h2>
+
+<button (click)="createRoom()">➕ Crear sala</button>
+
+<ul>
+  <li *ngFor="let room of rooms">
+    <span>ID: {{ room.config.id }} | Jugadores: {{ room.players.length }}/{{ getMaxPlayers(room.config.mode) }} | Nivel requerido: {{room.config.heroLevel}}
+    </span>
+    <button (click)="joinRoom(room.config.id)">Unirse</button>
+  </li>
+</ul>

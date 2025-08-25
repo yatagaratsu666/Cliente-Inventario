@@ -1,0 +1,12 @@
+<!-- room-lobby.component.html -->
+<h2>Sala {{ roomId }}</h2>
+
+<ul>
+  <li *ngFor="let p of players">
+    {{ p.name }} - Estado: {{ p.ready ? '✔️ Listo' : '⏳ Esperando' }}
+  </li>
+</ul>
+
+<button >Listo</button>
+
+<button *ngIf="isHost" >Iniciar Batalla</button>

@@ -20,6 +20,10 @@ import { AppModifyArmorComponent } from './app-armor/app-modify-armor/app-modify
 import { AppRegisterEpicaComponent } from './app-epica/app-register-epica/app-register-epica.component';
 import { AppGestionEpicaComponent } from './app-epica/app-gestion-epica/app-gestion-epica.component';
 import { AppModifyEpicaComponent } from './app-epica/app-modify-epica/app-modify-epica.component';
+import { Component } from '@angular/core';
+import { RoomsListComponent } from './rooms-list/rooms-list.component';
+import { RoomLobbyComponent } from './rooms-lobby/rooms-lobby.component';
+import { BattleComponent } from './battle/battle.component';
 
 const routeConfig: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -105,6 +109,21 @@ const routeConfig: Routes = [
   {
     path: 'gestion',
     component: AppGestionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'battles',
+    component: RoomsListComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'rooms/:id',
+    component: RoomLobbyComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'battle/:id',
+    component: BattleComponent,
     canActivate: [AuthGuard]
   }
 ];

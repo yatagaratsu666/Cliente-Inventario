@@ -1,0 +1,39 @@
+<h2>Salas disponibles</h2>
+
+<button (click)="toggleForm()">➕ Crear sala</button>
+
+<div *ngIf="showForm">
+  <form [formGroup]="roomForm" (ngSubmit)="createRoomSubmit()">
+    <label>ID:</label>
+    <input type="text" formControlName="id">
+
+    <label>Modo:</label>
+    <select formControlName="mode">
+      <option value="1v1">1v1</option>
+      <option value="2v2">2v2</option>
+      <option value="3v3">3v3</option>
+    </select>
+
+    <label>Permitir IA:</label>
+    <input type="checkbox" formControlName="allowAI">
+
+    <label>Créditos:</label>
+    <input type="number" formControlName="credits">
+
+    <label>Nivel requerido:</label>
+    <input type="number" formControlName="heroLevel">
+
+    <button type="submit">Crear</button>
+  </form>
+</div>
+
+<ul>
+  <li *ngFor="let room of rooms">
+    <span>
+      ID: {{ room.config.id }} |
+      Jugadores: {{ room.players.length }}/{{ getMaxPlayers(room.config.mode) }} |
+      Nivel requerido: {{ room.config.heroLevel }}
+    </span>
+    <button (click)="joinRoom(room.config.id)">Unirse</button>
+  </li>
+</ul>

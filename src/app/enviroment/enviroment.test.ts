@@ -5,5 +5,8 @@ export const environment = {
   production: true,
 
   /** URL base de la API utilizada en testeo. */
-  apiUrl: 'http://localhost:1882'
+  apiUrl: 'http://localhost:1882',
+
+  /** URL base del servicio de batallas. */
+  battleUrl: 'http://localhost:3000'
 };

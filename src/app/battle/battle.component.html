@@ -1,0 +1,15 @@
+<!-- battle.component.html -->
+<h2>Batalla en sala {{ roomId }}</h2>
+
+<div *ngFor="let p of players">
+  <h3>{{ p.name }}</h3>
+  <div style="width:200px; border:1px solid black;">
+    <div 
+      [style.width.%]="p.hp" 
+      [style.background]="p.hp > 60 ? 'green' : (p.hp > 40 ? 'yellow' : 'red')"
+      style="height:20px;">
+    </div>
+  </div>
+  <p>HP: {{ p.hp }}%</p>
+  <button>⚔️ Atacar</button>
+</div>

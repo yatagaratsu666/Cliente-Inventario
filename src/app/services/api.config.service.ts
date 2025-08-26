@@ -7,9 +7,14 @@ import { environment } from '../enviroment/enviroment.test';
 export class ApiConfigService {
 
   private readonly apiUrl: string = environment.apiUrl;
+  private readonly battleUrl: string = environment.battleUrl;
 
   getApiUrl(): string {
     return this.apiUrl;
+  }
+
+  getBattleUrl(): string {
+    return this.battleUrl;
   }
 }
 

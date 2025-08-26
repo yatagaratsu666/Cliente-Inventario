@@ -7,12 +7,19 @@ import { Observable, of, throwError } from 'rxjs';
 export class LoginService {
   private readonly USERNAME = 'admin';
   private readonly PASSWORD = '1234';
+  private readonly USERNAME2 = 'user2';
+  private readonly PASSWORD2 = '5678';
 
   constructor() {}
 
   login(username: string, password: string): Observable<boolean> {
     if (username === this.USERNAME && password === this.PASSWORD) {
-      localStorage.setItem('loggedIn', 'true'); // Guardar estado
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', username);
+      return of(true);
+    } else if (username === this.USERNAME2 && password === this.PASSWORD2) {
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', username);
       return of(true);
     } else {
       return throwError(() => new Error('Usuario o contraseña incorrectos'));

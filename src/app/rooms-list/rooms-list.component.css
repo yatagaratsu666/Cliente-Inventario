@@ -1,0 +1,125 @@
+h2 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+button {
+  background-color: #7c6262;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background-color: #6b5555;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #5a3e1b;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+form label {
+  font-weight: bold;
+}
+
+.check-wrap {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.check-wrap input {
+  display: none; 
+}
+
+.check-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #555;
+  border-radius: 4px; 
+  margin-right: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.check-wrap input:checked + .check-custom {
+  background-color: #c5a253; 
+  border-color:  #c5a253;
+}
+
+.check-wrap input:checked + .check-custom::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+form input,
+form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #7c6262;
+  color: #fff;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+li span {
+  font-size: 14px;
+}
+
+li button {
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+li button:hover {
+  transform: scale(1.05);
+  background: #ddd;
+}

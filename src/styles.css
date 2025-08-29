@@ -1,5 +1,5 @@
 header {
-  background: radial-gradient(circle, #5a3e1b, #1c1208); 
+  background: #662424; 
   color: #d4af37; /* dorado medieval */
   padding: 40px;
   width: 100%;
@@ -14,7 +14,7 @@ header {
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(to right, #f5deb3, #cdb88c); /* pergamino claro a pergamino oscuro */
+  background: #2C1A1A; /* pergamino claro a pergamino oscuro */
   font-size: 120%;
   margin-bottom: 20px;
 }

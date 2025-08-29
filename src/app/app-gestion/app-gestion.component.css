@@ -9,7 +9,7 @@ h2 {
   font-weight: bold;
   margin-bottom: 25px;
   margin-top: 25px;
-  color: #4b2e05; /* marrón oscuro medieval */
+  color: #F5E6C4; /* marrón oscuro medieval */
 }
 
 .button-group {
@@ -21,8 +21,8 @@ h2 {
 }
 
 .card {
-  background: #8b5e3c;
-  border: 1px solid #5a3c2a;
+  background: #8B2E2E;
+  border: 1px solid #D4A017;
   border-radius: 8px;
   padding: 12px;
   text-align: center;
@@ -31,17 +31,17 @@ h2 {
 
 .card:hover {
   transform: scale(1.05);
-  color: #c19a6b;  
-  background: #c19a6b;   /* marrón claro */
+  color: #D4A017;  
+  background: #D4A017;   /* marrón claro */
 }
 
 .card button {
-  background: #8b5e3c;   /* marrón medio */
+  background: #8B2E2E;   /* marrón medio */
   border: none;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  color: #fff8dc;        /* un blanco crema */
+  color: #F5E6C4;        /* un blanco crema */
   width: 220px; 
   height: 30px;
   border-radius: 6px;

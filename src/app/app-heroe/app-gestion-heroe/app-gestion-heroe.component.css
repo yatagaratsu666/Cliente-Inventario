@@ -49,7 +49,7 @@
   align-items: flex-start;
   border: 2px solid #2f3640;
   border-radius: 14px;
-  background: #2f3640;
+  background: #27374d;
   padding: 30px;
 }
 
@@ -89,14 +89,15 @@
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  background: #f8f0e3;
-  color: #2f3640;
+  background: linear-gradient(to right, #6A1B9A, #55197a);
+  color: #f8f0e3;
   cursor: pointer;
   transition: background-color .3s, transform .2s;
 }
 
 .hero-actions button:hover {
-  background: #e6d8c2;
+  background: linear-gradient(to right, #9a4dca, #9c63be);
+  color: #2f3640;
 }
 
 .hero-effects {
@@ -106,7 +107,7 @@
   border-left: 4px solid #f8f0e3;
   border-radius: 8px;
   display: flex;
-  gap: 30px;       /* espacio entre Max y Min */
+  gap: 30px;      
   font-size: 18px;
   color: #f8f0e3;
 }

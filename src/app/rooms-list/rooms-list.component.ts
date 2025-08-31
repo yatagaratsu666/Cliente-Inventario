@@ -65,8 +65,15 @@ export class RoomsListComponent implements OnInit {
 
   joinRoom(roomId: string) {
     const hero = this.battleService.getHeroStatsByPlayerId(this.playerId);
-    this.battleService.joinRoom(roomId, this.playerId, hero.hero.level, hero).subscribe(() => {
-      this.router.navigate(['/rooms', roomId]);
+    this.battleService.joinRoom(roomId, this.playerId, hero.hero.level, hero).subscribe({
+      next: () => {
+        this.router.navigate(['/rooms', roomId]);
+      },
+      error: (err) => {
+        console.error("Error al unirse a la sala:", err);
+        const message = err.error?.error || "Ocurrió un error inesperado";
+        alert(message);
+      }
     });
   }
 

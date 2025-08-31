@@ -33,6 +33,7 @@
 </div>
 
 <ul>
+  <button (click)="loadRooms()">Actualizar</button>
   <li *ngFor="let room of rooms">
     <span>
       ID: {{ room.config.id }} |

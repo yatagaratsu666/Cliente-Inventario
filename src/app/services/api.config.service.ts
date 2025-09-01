@@ -8,6 +8,7 @@ export class ApiConfigService {
 
   private readonly apiUrl: string = environment.apiUrl;
   private readonly battleUrl: string = environment.battleUrl;
+  private readonly chatUrl: string = environment.chatUrl;
 
   getApiUrl(): string {
     return this.apiUrl;
@@ -15,6 +16,10 @@ export class ApiConfigService {
 
   getBattleUrl(): string {
     return this.battleUrl;
+  }
+
+  getChatUrl(): string {
+    return this.chatUrl;
   }
 }
 

@@ -8,5 +8,7 @@ export const environment = {
   apiUrl: 'http://localhost:1882',
 
   /** URL base del servicio de batallas. */
-  battleUrl: 'http://localhost:3000'
+  battleUrl: 'http://localhost:3000',
+
+  chatUrl: 'http://localhost:4000'
 };

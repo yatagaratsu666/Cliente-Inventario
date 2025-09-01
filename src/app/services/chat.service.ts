@@ -1,16 +1,17 @@
 // socket.service.ts
 import { Injectable } from "@angular/core";
 import { io, Socket } from "socket.io-client";
-import { environment } from "../enviroment/enviroment.test";
 import { Observable } from "rxjs";
-
+import { ApiConfigService } from './api.config.service';
 @Injectable({ providedIn: "root" })
 export class ChatService {
   private socket: Socket | null = null;
 
+  constructor(private apiConfigService: ApiConfigService) {}
+
   connect() {
     if (!this.socket) {
-      this.socket = io(environment.chatUrl);
+      this.socket = io(this.apiConfigService.getChatUrl());
     }
     return this.socket;
   }

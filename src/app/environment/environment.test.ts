@@ -10,5 +10,7 @@ export const environment = {
   /** URL base del servicio de batallas. */
   battleUrl: 'http://speedorz.bucaramanga.upb.edu.co:3000',
 
-  battleSocket: 'http://speedorz.bucaramanga.upb.edu.co:3000'
+  battleSocket: 'http://speedorz.bucaramanga.upb.edu.co:3000',
+
+  chatUrlSocket: 'http://speedorz.bucaramanga.upb.edu.co:4000'
 };

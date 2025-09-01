@@ -4,8 +4,8 @@
     padding: 12px 25px;
     font-size: 16px;
     font-weight: bold;
-    color: #f5deb3;
-    background: #6b532f;
+    color: #F5E6C4;
+    background: #8B2E2E;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color .3s, color .3s;
@@ -23,12 +23,12 @@
   border-left: 5px solid #cdb88c;
   border-radius: 8px;
   font-size: 18px;
-  color: #f5deb3;
+  color: #F5E6C4;
   font-style: italic;
 }
 
 .btn-agregar:hover {
-    background: #372715;
+    background: #D4A017;
 }
 
 .btn-agregar:active {
@@ -47,7 +47,7 @@
   font-size: 40px;
   font-weight: bold;
   margin-bottom: 40px;
-  color: #4b2e05;
+  color: #F5E6C4;
 }
 
 .item-card {
@@ -56,7 +56,7 @@
   align-items: flex-start;
   border: 2px solid #3e2a14;
   border-radius: 14px;
-  background: #2f1f0f;
+  background: #3B2A1F;
   padding: 30px;
   margin-bottom: 35px;
 }
@@ -94,13 +94,14 @@
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  background: #cdb88c;
+  background: #D4A017;
   cursor: pointer;
   transition: background-color .3s, transform .2s;
 }
 
 .item-actions button:hover {
   color: #4b2e05;
+  filter: brightness(1.2);
 }
 
 .item-actions button:active {

@@ -1,6 +1,7 @@
 .panel-container {
   padding: 20px;
   align-items: center;
+  
 }
 
 h2 {
@@ -9,7 +10,7 @@ h2 {
   font-weight: bold;
   margin-bottom: 25px;
   margin-top: 25px;
-  color: #4b2e05; /* marrón oscuro medieval */
+  color: #3E2723; 
 }
 
 .button-group {
@@ -21,8 +22,8 @@ h2 {
 }
 
 .card {
-  background: #8b5e3c;
-  border: 1px solid #5a3c2a;
+  background: linear-gradient(to right, #3b4e64, #356397);
+  border: 1px solid #D4A017;
   border-radius: 8px;
   padding: 12px;
   text-align: center;
@@ -31,18 +32,19 @@ h2 {
 
 .card:hover {
   transform: scale(1.05);
-  color: #c19a6b;  
-  background: #c19a6b;   /* marrón claro */
+  color: #D4A017;  
+  background: #356397;   
 }
 
 .card button {
-  background: #8b5e3c;   /* marrón medio */
+  background: linear-gradient(to right, #3b4e64, #356397);
   border: none;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  color: #fff8dc;        /* un blanco crema */
+  color: #F5E6C4;       
   width: 220px; 
   height: 30px;
   border-radius: 6px;
 }
+

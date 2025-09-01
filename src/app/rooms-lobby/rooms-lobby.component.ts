@@ -28,12 +28,15 @@ export class RoomLobbyComponent implements OnInit, OnDestroy {
     this.heroStats = this.battleService.getHeroStatsByPlayerId(this.id)
 
     const battleSub = this.battleService.listen<any>("battleStarted").subscribe(event => {
+      this.battleService.setCurrentBattle(event);
       this.battleService.joinBattle(this.roomId, this.id);
       this.router.navigate([`/battle/${this.roomId}`]);
     });
 
     this.subs.push(battleSub);
   }
+
+  
 
   onReady() {
     this.battleService.onReady(this.roomId, this.id, this.heroStats, this.team);

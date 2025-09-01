@@ -85,7 +85,7 @@ export class BattleService {
     private apiConfigService: ApiConfigService
   ) {
     this.apiUrl = `${apiConfigService.getBattleUrl()}/api/rooms`;
-    this.socketUrl = `${apiConfigService.getBattleUrl()}`;
+    this.socketUrl = `${apiConfigService.getBattleSocket()}`;
   }
 
 setCurrentBattle(battleData: any) {
@@ -113,7 +113,17 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
   ).pipe(
     tap(() => {
       // Solo conectas el socket si la llamada fue exitosa
-      this.socket = io(this.socketUrl);
+      this.socket = io(this.socketUrl, {
+          withCredentials: true,
+          autoConnect: true,
+          transports: ['polling'],
+          upgrade: false,
+          rejectUnauthorized: false,
+          reconnectionDelay: 1000,
+          reconnection: true,
+          reconnectionAttempts: 10,
+          agent: false,
+      });
       this.socket.emit("joinRoom", { roomId, player: { id: playerId, heroLevel } });
     }),
     catchError((error: HttpErrorResponse) => {

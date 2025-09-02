@@ -196,6 +196,15 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
     });
   }
 
+  getImageById(playerId: string){
+    if (playerId === "admin") {
+      return "https://i.ibb.co/Q3K7wHkK/guerrero-armas.png";
+    } else {
+      return "https://i.ibb.co/Q3K7wHkK/guerrero-armas.png";
+    }
+  }
+
+
   getHeroStatsByPlayerId(playerId: string) {
     if (playerId === 'admin') {
       /** ---------- Habilidades Especiales (Specials) ---------- */

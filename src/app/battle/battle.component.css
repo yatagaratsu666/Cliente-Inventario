@@ -1,43 +1,76 @@
 .battle-container {
   display: flex;
+  flex-direction: column;        /* primero equipos, luego barra */
   justify-content: space-between;
+  align-items: center;
   padding: 1rem;
+  position: relative;            /* para posicionar hijos absolutos */
+  height: 100vh;                 /* ocupa toda la pantalla */
 }
 
+/* Cola de turnos */
 .turn-queue {
   position: absolute;
   top: 10px;
   right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: #fff;
 }
 
-.turn-queue .active {
-  font-weight: bold;
-  color: blue;
-}
-
+/* Equipos */
 .teams {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
+  max-width: 900px;              /* que no se separen infinito */
+  padding-top: 2rem;
 }
 
+/* Cada team */
 .team {
   flex: 1;
   margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* separa jugadores */
 }
 
+/* Jugador */
 .player {
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
 }
 
+
+/* Vida */
 .health-bar {
   padding: 5px;
   border-radius: 4px;
   color: white;
   font-weight: bold;
   width: 150px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.4);
+  margin-top: 0.3rem;
 }
 
+/* Stats */
+.player-stats {
+  font-size: 0.85rem;
+  line-height: 1.2rem;
+  margin-top: 0.3rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+}
+
+/* Overlay de fin de partida */
 .overlay {
   position: fixed;
   top: 0;
@@ -70,3 +103,56 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
+/* Barra de acciones */
+.actions-panel {
+  position: absolute;
+  bottom: 20%;                   /* la sube desde el fondo */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(124, 104, 50, 0.651);
+  padding: 1rem 2rem;
+  border-top: 2px solid #c2b97f;
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.actions-panel label {
+  color: #fff;
+  font-weight: bold;
+}
+
+.actions-panel select,
+.actions-panel button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background: #eee;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.actions-panel button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.actions-panel button:hover {
+  background: #45a049;
+}
+
+.imagen-B{
+  transform: scaleX(-1);
+}
+
+.activePlayer {
+  color: gray;
+  transition: all 0.3s ease;
+}
+
+.activePlayer.active{
+  color: white; 
+}

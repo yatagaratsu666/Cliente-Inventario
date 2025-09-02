@@ -3,7 +3,7 @@
   <div class="turn-queue">
     <h3>Turnos</h3>
     <div *ngFor="let player of turnQueue">
-      <span [class.active]="player === currentTurn">{{ player }}</span>
+      <span class="activePlayer" [class.active]="player === currentTurn">{{ player }}</span>
     </div>
   </div>
 
@@ -14,30 +14,31 @@
       <h2>Equipo A</h2>
       <div *ngFor="let p of teamA" class="player">
         <p>{{ p.username }}</p>
-        <div class="health-bar" 
-             [style.backgroundColor]="getHealthColor(p.heroStats.hero.health, p.username)">
+        <img [src]="getImageById(p.username)" alt="Imagen del jugador" />
+
+        <div class="health-bar" [style.backgroundColor]="getHealthColor(p.heroStats.hero.health, p.username)">
           Vida: {{ p.heroStats.hero.health }}
         </div>
+
         <div class="player-stats">
-          Poder: {{ p.heroStats.hero.power }}
-          Ataque: {{ p.heroStats.hero.attack }} + {{ p.heroStats.hero.attackBoost.min }}d{{ p.heroStats.hero.attackBoost.max }}
-          Defensa: {{ p.heroStats.hero.defense }}
+          Poder: {{ p.heroStats.hero.power }}<br>
+          Ataque: {{ p.heroStats.hero.attack }} + {{ p.heroStats.hero.attackBoost.min }}d{{
+          p.heroStats.hero.attackBoost.max }}<br>
+          Defensa: {{ p.heroStats.hero.defense }}<br>
           Daño: {{ p.heroStats.hero.damage.min }}d{{ p.heroStats.hero.damage.max }}
         </div>
 
         <!-- Acciones si es mi turno -->
-        <div *ngIf="isMyTurn() && p.username === myPlayerId">
+        <div *ngIf="isMyTurn() && p.username === myPlayerId" class="actions-panel">
           <h4>Acciones</h4>
-
-          <!-- Selector de habilidad -->
           <label for="skill">Habilidad:</label>
-          <select (change)="onSkillSelected($event)" [(ngModel)]="selectedSkill" [compareWith]="compareSkills">
+          <select class="skill-selector" (change)="onSkillSelected($event)" [(ngModel)]="selectedSkill"
+            [compareWith]="compareSkills">
             <option *ngFor="let skill of getMySkills()" [ngValue]="skill">
               {{ skill.name }}
             </option>
           </select>
 
-          <!-- Selector de objetivo -->
           <label for="target">Objetivo:</label>
           <select id="target" [(ngModel)]="selectedTarget">
             <option *ngFor="let enemy of getEnemyTeam()" [value]="enemy.username">
@@ -45,9 +46,9 @@
             </option>
           </select>
 
-          <!-- Botón para atacar -->
           <button (click)="performAction()">Atacar</button>
         </div>
+      </div>
     </div>
 
     <!-- Equipo B -->
@@ -55,49 +56,49 @@
       <h2>Equipo B</h2>
       <div *ngFor="let p of teamB" class="player">
         <p>{{ p.username }}</p>
-        <div class="health-bar" 
-             [style.backgroundColor]="getHealthColor(p.heroStats.hero.health, p.username)">
+        <img [src]="getImageById(p.username)" alt="Imagen del jugador" class="imagen-B" />
+
+        <div class="health-bar" [style.backgroundColor]="getHealthColor(p.heroStats.hero.health, p.username)">
           Vida: {{ p.heroStats.hero.health }}
         </div>
+
         <div class="player-stats">
-          Poder: {{ p.heroStats.hero.power }}
-          Ataque: {{ p.heroStats.hero.attack }} + {{ p.heroStats.hero.attackBoost.min }}d{{ p.heroStats.hero.attackBoost.max }}
-          Defensa: {{ p.heroStats.hero.defense }}
+          Poder: {{ p.heroStats.hero.power }}<br>
+          Ataque: {{ p.heroStats.hero.attack }} + {{ p.heroStats.hero.attackBoost.min }}d{{
+          p.heroStats.hero.attackBoost.max }}<br>
+          Defensa: {{ p.heroStats.hero.defense }}<br>
           Daño: {{ p.heroStats.hero.damage.min }}d{{ p.heroStats.hero.damage.max }}
         </div>
 
         <!-- Acciones si es mi turno -->
-        <div *ngIf="isMyTurn() && p.username === myPlayerId">
+        <div class="actions-panel-container" *ngIf="isMyTurn() && p.username === myPlayerId">
           <h4>Acciones</h4>
+          <div class="actions-panel">
+            <label for="skill">Habilidad:</label>
+            <select (change)="onSkillSelected($event)" [(ngModel)]="selectedSkill" [compareWith]="compareSkills">
+              <option *ngFor="let skill of getMySkills()" [ngValue]="skill">
+                {{ skill.name }}
+              </option>
+            </select>
 
-          <!-- Selector de habilidad -->
-          <label for="skill">Habilidad:</label>
-          <select (change)="onSkillSelected($event)" [(ngModel)]="selectedSkill" [compareWith]="compareSkills">
-            <option *ngFor="let skill of getMySkills()" [ngValue]="skill">
-              {{ skill.name }}
-            </option>
-          </select>
+            <label for="target">Objetivo:</label>
+            <select id="target" [(ngModel)]="selectedTarget">
+              <option *ngFor="let enemy of getEnemyTeam()" [value]="enemy.username">
+                {{ enemy.username }} ({{ enemy.heroStats.hero.health }} HP)
+              </option>
+            </select>
 
-
-          <!-- Selector de objetivo -->
-          <label for="target">Objetivo:</label>
-          <select id="target" [(ngModel)]="selectedTarget">
-          <option *ngFor="let enemy of getEnemyTeam()" [value]="enemy.username">
-            {{ enemy.username }} ({{ enemy.heroStats.hero.health }} HP)
-          </option>
-          </select>
-
-          <!-- Botón para atacar -->
-          <button (click)="performAction()">Atacar</button>
+            <button (click)="performAction()">Atacar</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Overlay de resultado -->
   <div *ngIf="showResult" class="overlay">
-  <h1 [ngClass]="{'victory': isWinner, 'defeat': !isWinner}">
-    {{ isWinner ? '¡VICTORIA!' : 'DERROTA' }}
-  </h1>
+    <h1 [ngClass]="{ 'victory': isWinner, 'defeat': !isWinner }">
+      {{ isWinner ? '¡VICTORIA!' : 'DERROTA' }}
+    </h1>
+  </div>
 </div>
-
-</div>
-

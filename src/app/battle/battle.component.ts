@@ -70,6 +70,8 @@ export class BattleComponent implements OnInit {
       console.log('Battle Ended Event:', event);
         this.isWinner = event.winner === this.myTeam;
         this.showResult = true;
+        this.initialTeamALife = new Map()
+        this.initialTeamBLife = new Map()
 
         // Redirigir después de 3 segundos
         setTimeout(() => {
@@ -119,6 +121,11 @@ export class BattleComponent implements OnInit {
     console.log("Skill seleccionada:", this.selectedSkill);
   }
 
+  getImageById(playerId: string) {
+    return this.battleService.getImageById(playerId);
+  }
+
+
   getEnemyTeam(): any[] {
     return this.teamA.some(p => p.username === this.myPlayerId) ? this.teamB : this.teamA;
   }
@@ -166,7 +173,7 @@ export class BattleComponent implements OnInit {
 
   // Cambiar color de barra de vida
   getHealthColor(health: number, username: string): string {
-    const maxHealth = this.initialTeamALife.get(username) || 100;
+    const maxHealth = this.initialTeamALife.get(username) || this.initialTeamBLife.get(username) || 100;
     const percent = (health / maxHealth) * 100;
     if (percent > 60) return 'green';
     if (percent > 40) return 'yellow';

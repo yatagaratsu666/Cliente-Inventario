@@ -1,44 +1,71 @@
-h2 {
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 20px;
-  font-weight: bold;
+/* room-list.component.css */
+
+/* Contenedor general */
+:host {
+  display: block;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #c2b97f;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  color: #1b1b1b;
 }
 
+/* Título */
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #000;
+  text-align: center;
+}
+
+/* Botón Crear Sala (el de arriba) */
 button {
-  background-color: #7c6262;
-  color: #fff;
-  padding: 10px 16px;
+  background-color: #c2b97f;
+  color: #000;
   border: none;
-  border-radius: 8px;
   font-size: 16px;
+  border-radius: 8px;
+  padding: 0.4rem 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin: 10px 0;
-  transition: transform 0.2s, background-color 0.2s;
+  transition: background-color 0.2s ease-in-out;
+  margin-bottom: 1rem;
 }
 
 button:hover {
-  transform: scale(1.05);
-  background-color: #6b5555;
+  background-color: #a99f64;
 }
 
+/* Formulario */
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: #5a3e1b;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 400px;
-  margin: 0 auto 20px auto;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1rem;
+  padding: 1rem;
+  background-color: rgba(255,255,255,0.15);
+  border: 1px solid #5a3e1b;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 form label {
+  grid-column: span 2;
   font-weight: bold;
 }
+
+form input,
+form select {
+  grid-column: span 2;
+  padding: 0.4rem;
+  border: 1px solid #c2b97f;
+  border-radius: 5px;
+  font-size: 16px;
+  font-style: bold;
+}
+
 
 .check-wrap {
   display: flex;
@@ -77,20 +104,27 @@ form label {
   transform: rotate(45deg);
 }
 
-
-form input,
-form select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
+/* Lista de salas */
 ul {
   list-style: none;
   padding: 0;
-  max-width: 600px;
-  margin: 0 auto;
+  margin: 1rem 0 0 0;
+}
+
+li button {
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  padding: 6px 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+li button:hover {
+  transform: scale(1.2);
 }
 
 li {
@@ -105,21 +139,5 @@ li {
 }
 
 li span {
-  font-size: 14px;
-}
-
-li button {
-  background: #fff;
-  color: #333;
-  font-size: 14px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-li button:hover {
-  transform: scale(1.05);
-  background: #ddd;
+  font-weight: 500;
 }

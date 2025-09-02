@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05); /* semitransparente sobre el BG */
+  border: 2px solid #c2b97f; /* tono dorado suave (como el borde superior de tu header) */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  color: #1b1b1b; /* contraste con el fondo */
+}
+
+/* Título de la sala */
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #141414;
+}
+
+/* Lista de stats como bloque informativo */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+ul span {
+  background-color: rgb(190, 182, 128); 
+  border: 1px solid #e9e5cb; 
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1b1b1b;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Nombre del héroe destacado */
+ul div strong {
+  font-size: 1.2rem;
+  color: #2e2e2e;
+}
+
+/* Etiqueta Equipo */
+label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* Selector de equipo */
+select {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #c2b97f;
+  border-radius: 5px;
+  background-color: #f5f5dc;
+  cursor: pointer;
+}
+
+/* Botón listo */
+button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  background-color: #c2b97f;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #a99f64;
+}

@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-room-lobby',
   templateUrl: './rooms-lobby.component.html',
+  styleUrls: ['./rooms-lobby.component.css'],
   imports: [CommonModule, FormsModule]
 })
 export class RoomLobbyComponent implements OnInit, OnDestroy {

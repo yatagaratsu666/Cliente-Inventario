@@ -1,0 +1,52 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #F5E6C4;
+  padding: 2px;
+}
+
+.logo {
+    margin-top: 2px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.button-group .play {
+  background-color: #ac3bb4; 
+  color: #fac342; 
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.button-group .login {
+  background-color: #fac342; 
+  color: #ac3bb4; 
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #c79b9b; 
+}

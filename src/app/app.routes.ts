@@ -24,9 +24,11 @@ import { Component } from '@angular/core';
 import { RoomsListComponent } from './rooms-list/rooms-list.component';
 import { RoomLobbyComponent } from './rooms-lobby/rooms-lobby.component';
 import { BattleComponent } from './battle/battle.component';
+import { AppLandingComponent } from './app-landing/app-landing.component';
 
 const routeConfig: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '',  
+    component: AppLandingComponent },
   {
     path: 'login',
     component: AppLoginComponent,

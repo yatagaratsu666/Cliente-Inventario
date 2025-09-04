@@ -4,23 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-app-landing',
-  standalone: true,
+  selector: 'app-app-menu',
   imports: [CommonModule, FormsModule],
-  templateUrl: './app-landing.component.html',
-  styleUrls: ['./app-landing.component.css']
+  templateUrl: './app-menu.component.html',
+  styleUrls: ['./app-menu.component.css']
 })
-
-export class AppLandingComponent {
+export class AppMenuComponent {
 
   constructor(private router: Router) { }
 
-  onLogin() {
-    this.router.navigate(['/login']);
-  }
-
   onPlay() {
-    this.router.navigate(['/menu']);
+    this.router.navigate(['/battles']);
   }
-
 }

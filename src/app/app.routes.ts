@@ -25,6 +25,7 @@ import { RoomsListComponent } from './rooms-list/rooms-list.component';
 import { RoomLobbyComponent } from './rooms-lobby/rooms-lobby.component';
 import { BattleComponent } from './battle/battle.component';
 import { AppLandingComponent } from './app-landing/app-landing.component';
+import { AppMenuComponent } from './app-menu/app-menu.component';
 
 const routeConfig: Routes = [
   { path: '',  
@@ -36,6 +37,11 @@ const routeConfig: Routes = [
   {
     path: 'items/create',
     component: AppRegisterItemComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'menu',
+    component: AppMenuComponent,
     canActivate: [AuthGuard]
   },
   {

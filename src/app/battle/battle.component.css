@@ -1,11 +1,12 @@
 .battle-container {
   display: flex;
-  flex-direction: column;        /* primero equipos, luego barra */
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  position: relative;            /* para posicionar hijos absolutos */
-  height: 100vh;                 /* ocupa toda la pantalla */
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(160deg, #0d1b2a, #1b4332); /* Fondo azul-verdoso serio */
 }
 
 /* Cola de turnos */
@@ -13,10 +14,12 @@
   position: absolute;
   top: 10px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(86, 207, 225, 0.1); /* Azul suave transparente */
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  color: #fff;
+  color: #56cfe1; /* Azul brillante */
+  font-weight: bold;
+  border: 1px solid rgba(86, 207, 225, 0.3);
 }
 
 /* Equipos */
@@ -25,7 +28,7 @@
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  max-width: 900px;              /* que no se separen infinito */
+  max-width: 900px;
   padding-top: 2rem;
 }
 
@@ -35,7 +38,7 @@
   margin: 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 2rem; /* separa jugadores */
+  gap: 2rem;
 }
 
 /* Jugador */
@@ -44,9 +47,8 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  color: #fff;
+  color: #eaf6f6; /* Texto claro sobre fondo oscuro */
 }
-
 
 /* Vida */
 .health-bar {
@@ -56,8 +58,9 @@
   font-weight: bold;
   width: 150px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(to right, #145252, #1f7a7a); /* Verde-azulado health */
   margin-top: 0.3rem;
+  border: 1px solid rgba(86, 207, 225, 0.3);
 }
 
 /* Stats */
@@ -68,6 +71,7 @@
   background: rgba(255, 255, 255, 0.05);
   padding: 0.3rem 0.5rem;
   border-radius: 6px;
+  color: #d4f1f4;
 }
 
 /* Overlay de fin de partida */
@@ -85,17 +89,19 @@
 }
 
 .victory {
-  color: #4CAF50;
+  color: #56cfe1; /* Victoria en azul elegante */
   font-size: 5rem;
   font-weight: bold;
   animation: fadeIn 0.5s ease-in-out;
+  text-shadow: 0 0 15px rgba(86, 207, 225, 0.5);
 }
 
 .defeat {
-  color: #F44336;
+  color: #48bfe3; /* Derrota en azul más frío */
   font-size: 5rem;
   font-weight: bold;
   animation: fadeIn 0.5s ease-in-out;
+  text-shadow: 0 0 15px rgba(72, 191, 227, 0.4);
 }
 
 @keyframes fadeIn {
@@ -106,45 +112,48 @@
 /* Barra de acciones */
 .actions-panel {
   position: absolute;
-  bottom: 20%;                   /* la sube desde el fondo */
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(124, 104, 50, 0.651);
+  background: rgba(15, 76, 117, 0.75); /* Azul serio translúcido */
   padding: 1rem 2rem;
-  border-top: 2px solid #c2b97f;
+  border-top: 2px solid #56cfe1; /* línea superior azul */
   border-radius: 8px;
   text-align: center;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 0 15px rgba(86, 207, 225, 0.2);
 }
 
 .actions-panel label {
-  color: #fff;
+  color: #eaf6f6;
   font-weight: bold;
 }
 
 .actions-panel select,
 .actions-panel button {
   padding: 0.5rem 1rem;
-  border: 1px solid #444;
+  border: 1px solid #56cfe1;
   border-radius: 6px;
-  background: #eee;
+  background: #eaf6f6;
   font-weight: bold;
   cursor: pointer;
 }
 
 .actions-panel button {
-  background: #4CAF50;
-  color: white;
+  background: linear-gradient(to right, #1f7a7a, #145252); /* Verde-azulado */
+  color: #eaf6f6;
   border: none;
 }
 
 .actions-panel button:hover {
-  background: #45a049;
+  background: linear-gradient(to right, #56cfe1, #48bfe3);
+  color: #1b262c;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.5);
 }
 
-.imagen-B{
+.imagen-B {
   transform: scaleX(-1);
 }
 
@@ -153,6 +162,6 @@
   transition: all 0.3s ease;
 }
 
-.activePlayer.active{
-  color: white; 
+.activePlayer.active {
+  color: #56cfe1; /* Azul brillante para jugador activo */
 }

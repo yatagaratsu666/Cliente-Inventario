@@ -1,51 +1,52 @@
-/* room-list.component.css */
-
-/* Contenedor general */
 :host {
   display: block;
   max-width: 700px;
   margin: 2rem auto;
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.05);
-  border: 2px solid #c2b97f;
+  border: 2px solid #c2b97f; 
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  color: #1b1b1b;
+  box-shadow: 0 4px 10px rgba(207, 192, 192, 0.4);
+  color: #f5e6c4; 
+  font-family: "Times New Roman", serif;
 }
 
-/* Título */
 h2 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
-  color: #000;
+  color: #d4af37; 
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   text-align: center;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
 }
 
-/* Botón Crear Sala (el de arriba) */
+
 button {
-  background-color: #c2b97f;
-  color: #000;
+  background: linear-gradient(to right, #b08d57, #c2b97f);
+  color: #1b1b1b; 
   border: none;
   font-size: 16px;
   border-radius: 8px;
   padding: 0.4rem 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background 0.3s ease, transform 0.2s ease;
   margin-bottom: 1rem;
 }
 
 button:hover {
-  background-color: #a99f64;
+  background: linear-gradient(to right, #9c814f, #a99f64);
+  transform: scale(1.05);
 }
 
-/* Formulario */
+
 form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem 1rem;
   padding: 1rem;
-  background-color: rgba(255,255,255,0.15);
+  background-color: #0f4c7565;
   border: 1px solid #5a3e1b;
   border-radius: 8px;
   margin-bottom: 1rem;
@@ -54,6 +55,7 @@ form {
 form label {
   grid-column: span 2;
   font-weight: bold;
+  color: #f5e6c4;
 }
 
 form input,
@@ -63,10 +65,12 @@ form select {
   border: 1px solid #c2b97f;
   border-radius: 5px;
   font-size: 16px;
-  font-style: bold;
+  font-weight: bold;
+  background: #ead7b7;
+  color: #3E2723;
 }
 
-
+/* Checkboxes custom */
 .check-wrap {
   display: flex;
   align-items: center;
@@ -111,33 +115,41 @@ ul {
   margin: 1rem 0 0 0;
 }
 
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to right, #3b4e64, #356397);
+  color: #f5e6c4;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #d4a017;
+  transition: transform 0.2s ease;
+}
+
+li:hover {
+  transform: scale(1.03);
+}
+
+li span {
+  font-weight: 500;
+}
+
+/* Botones dentro de la lista */
 li button {
-  background: #fff;
-  color: #333;
+  background: #f5e6c4;
+  color: #3E2723;
   font-size: 14px;
   padding: 6px 10px;
   margin-top: 10px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 li button:hover {
   transform: scale(1.2);
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #7c6262;
-  color: #fff;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-li span {
-  font-weight: 500;
+  background: #e0cfa8;
 }

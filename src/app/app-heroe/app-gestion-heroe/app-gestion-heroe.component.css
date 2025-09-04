@@ -1,6 +1,5 @@
 .btn-agregar:hover {
-    background: #3ea053;
-
+    background: #2b9c9c; /* Verde-azulado para hover */
 }
 
 .btn-agregar:active {
@@ -19,7 +18,7 @@
   font-size: 40px;
   font-weight: bold;
   margin-bottom: 40px;
-  color: #2f3640;
+  color: #bbe1fa; /* Azul profundo serio */
 }
 
 .btn-agregar {
@@ -29,12 +28,12 @@
     padding: 12px 25px;
     font-size: 16px;
     font-weight: bold;
-    color: #fff;
-    background: linear-gradient(to right, #36724a, #1e4b28);
-    border: black 1px;
+    color: #ffffff;
+    background: linear-gradient(to right, #1f7a7a, #145252); /* Gradiente verde-azulado */
+    border: 1px solid #0d2b2b;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.3s;
+    transition: transform 0.3s, background 0.3s;
 }
 
 .cards-container {
@@ -47,16 +46,16 @@
   display: flex;
   gap: 30px;
   align-items: flex-start;
-  border: 2px solid #2f3640;
+  border: 2px solid #0f4c75; /* Azul oscuro elegante */
   border-radius: 14px;
-  background: #27374d;
+  background: #1b262c; /* Azul-gris muy serio */
   padding: 30px;
 }
 
 .hero-image {
   width: 200px;
   height: 200px;
-  border: 3px solid #f8f0e3;
+  border: 3px solid #bbe1fa; /* Azul claro para contraste */
   border-radius: 10px;
 }
 
@@ -65,7 +64,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: #f8f0e3;
+  color: #d4f1f4; /* Azul-verde muy suave */
 }
 
 .hero-info p {
@@ -89,31 +88,30 @@
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(to right, #6A1B9A, #55197a);
-  color: #f8f0e3;
+  background: linear-gradient(to right, #3282b8, #0f4c75); /* Azul serio elegante */
+  color: #eaf6f6;
   cursor: pointer;
   transition: background-color .3s, transform .2s;
 }
 
 .hero-actions button:hover {
-  background: linear-gradient(to right, #9a4dca, #9c63be);
-  color: #2f3640;
+  background: linear-gradient(to right, #56cfe1, #48bfe3); /* Azul más vivo en hover */
+  color: #1b262c; /* Texto oscuro para contraste */
 }
 
 .hero-effects {
   margin-top: 12px;
   padding: 12px 16px;
-  background: rgba(248, 240, 227, 0.15);
-  border-left: 4px solid #f8f0e3;
+  background: rgba(212, 241, 244, 0.1); /* Azul-verde transparente */
+  border-left: 4px solid #56cfe1; /* Azul brillante para detalles */
   border-radius: 8px;
   display: flex;
   gap: 30px;      
   font-size: 18px;
-  color: #f8f0e3;
+  color: #d4f1f4;
 }
 
 .hero-effects p {
   margin: 0;
   font-size: 18px;
 }
-

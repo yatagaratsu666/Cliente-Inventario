@@ -1,0 +1,21 @@
+<header class="header">
+  <nav class="nav">
+    <a routerLink="/online">Jugar Online</a>
+    <a routerLink="/missions">Misiones</a>
+    <a routerLink="/auctions">Subastas</a>
+    <a routerLink="/tournament">Torneo</a>
+    <a routerLink="/inventory">Mi Inventario</a>
+    <a routerLink="/account">Mi cuenta</a>
+  </nav>
+</header>
+
+<main class="main">
+  <div class="left">
+    <button (click)="onPlay()" class="play-btn">JUGAR ONLINE</button>
+  </div>
+  <div class="right">
+    <div class="character-placeholder">
+      <span>Imagen del personaje</span>
+    </div>
+  </div>
+</main>

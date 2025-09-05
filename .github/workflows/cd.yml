@@ -1,31 +1,32 @@
-name: CD - Angular Deploy (Docker)
+name: CLIENTE-CD
 
 on:
   push:
-    branches:
-      - main   # Solo deploy cuando haces push a main
+    branches: [ "main" ]
 
 jobs:
-  docker-build-and-push:
+  build-and-push-docker-image:
     runs-on: ubuntu-latest
-    steps:
-      - name: Clonar repositorio
-        uses: actions/checkout@v3
 
-      - name: Iniciar sesion en Docker Hub
-        uses: docker/login-action@v2
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Iniciar sesión en Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Preparar el nombre de la imagen
-        id: prep
+        id: prep 
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2 | tr '[:upper:]' '[:lower:]')
           echo "repo_name=${REPO_NAME}" >> $GITHUB_OUTPUT
 
-      - name: Construir y subir imagen del Docker
-        uses: docker/build-push-action@v2
+
+      - name: Construir y subir la imagen de Docker
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true

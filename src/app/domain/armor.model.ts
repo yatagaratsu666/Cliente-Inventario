@@ -10,6 +10,8 @@ export enum ArmorType {
     PANTS = 'PANTS'
 }
 
+// data
+
 export class Armor {
   image: string;
   id: number;

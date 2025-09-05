@@ -11,6 +11,7 @@ import { switchMap} from 'rxjs/operators';
 import { Armor } from '../domain/armor.model';
 
 @Injectable({
+  // a
   providedIn: 'root'
 })
 export class ArmorsService {

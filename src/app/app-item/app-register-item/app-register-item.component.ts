@@ -23,8 +23,12 @@ import { CommonModule } from '@angular/common';
  * - Uso de `FormsModule` para el manejo del formulario
  * - Muestra dinámicamente los tipos de efecto y tipos de héroe a elegir
  * - Valida que todos los campos estén completos y que exista imagen antes de enviar
+ *
+ * @property {HeroType[]} heroTypes Lista de tipos de héroe disponibles para el select
+ * @property {EffectType[]} effectTypes Lista de tipos de efecto disponibles para el select
+ * @property {Item} item Objeto ítem que contiene los datos del formulario
+ * @property {File | undefined} selectedFile Archivo de imagen seleccionado por el usuario
  */
-
 @Component({
   selector: 'app-app-register-item',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -32,10 +36,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app-register-item.component.css',
 })
 export class AppRegisterItemComponent {
-  // Lista de tipos de héroes y efectos para los select del formulario
   heroTypes = Object.values(HeroType);
   effectTypes = Object.values(EffectType);
-  // Modelo de ítem inicializado con valores por defecto
   item: Item = {
     id: 0,
     image: '',
@@ -49,14 +51,14 @@ export class AppRegisterItemComponent {
     ],
     dropRate: 0,
   };
-
   selectedFile?: File;
 
   constructor(private itemsService: ItemsService, private router: Router) {}
 
-    /**
+  /**
    * Maneja el evento de selección de archivo para asociar una imagen al ítem.
    * @param event Evento emitido por el input file
+   * @returns {void}
    */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -65,10 +67,10 @@ export class AppRegisterItemComponent {
     }
   }
 
-    /**
+  /**
    * Valida que todos los campos obligatorios del formulario estén completos
    * y que se haya seleccionado una imagen.
-   * @returns true si los datos son válidos, false si falta algo
+   * @returns {boolean} true si los datos son válidos, false si falta algo
    */
   validate(): boolean {
     if (!this.selectedFile) {
@@ -96,33 +98,34 @@ export class AppRegisterItemComponent {
    * @param title Título de la alerta
    * @param text Mensaje descriptivo
    * @param buttonColor Color del botón de confirmación (por defecto azul)
+   * @returns {void}
    */
-private showAlert(icon: any, title: string, text: string, buttonColor: string = '#3085d6') {
-  Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
-}
+  private showAlert(icon: any, title: string, text: string, buttonColor: string = '#3085d6'): void {
+    Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
+  }
 
   /**
    * Envía los datos del formulario al backend para crear el ítem.
    * Si la validación falla, muestra advertencia.
    * Si el proceso es exitoso, notifica al usuario y redirige al listado de ítems.
+   * @returns {void}
    */
-onSubmit(): void {
-  if (!this.validate()) {
-    this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');
-  } else {
-    const itemConId = { ...this.item, id: 0 };
+  onSubmit(): void {
+    if (!this.validate()) {
+      this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');
+    } else {
+      const itemConId = { ...this.item, id: 0 };
 
-    this.itemsService.createItem(itemConId, this.selectedFile).subscribe({
-      next: () => {
-        this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
-        this.router.navigate(['/items/control']);
-      },
-      error: (err) => {
-        this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
-        console.error('Error al crear item:', err);
-      },
-    });
+      this.itemsService.createItem(itemConId, this.selectedFile).subscribe({
+        next: () => {
+          this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
+          this.router.navigate(['/items/control']);
+        },
+        error: (err) => {
+          this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
+          console.error('Error al crear item:', err);
+        },
+      });
+    }
   }
-}
-
 }

@@ -32,7 +32,7 @@ export class AppModifyEpicaComponent {
   effectTypes = Object.values(EffectType);
   heroTypes = Object.values(HeroType);
   epicId: number = 0;
-    epic: Epic = {
+  epic: Epic = {
     id: 0,
     image: '',
     description: '',
@@ -52,11 +52,11 @@ export class AppModifyEpicaComponent {
     private route: ActivatedRoute,
     private router: Router,
     private epicService: EpicsService
-  ) {}
+  ) { }
 
-    /**
-   * Recupera el ID desde la ruta y carga la información de la épica correspondiente.
-   */
+  /**
+ * Recupera el ID desde la ruta y carga la información de la épica correspondiente.
+ */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.epicId = id ? +id : 0;
@@ -79,10 +79,10 @@ export class AppModifyEpicaComponent {
     }
   }
 
-    /**
-   * Carga la información de una épica desde el backend por su ID.
-   * @param id Identificador único de la épica.
-   */
+  /**
+ * Carga la información de una épica desde el backend por su ID.
+ * @param id Identificador único de la épica.
+ */
   loadEpic(id: number): void {
     this.epicService.getEpicById(id).subscribe({
       next: (data) => {
@@ -95,10 +95,10 @@ export class AppModifyEpicaComponent {
     });
   }
 
-    /**
-   * Valida que todos los campos obligatorios de la épica estén completos.
-   * @returns `true` si los campos son válidos, de lo contrario `false`.
-   */
+  /**
+ * Valida que todos los campos obligatorios de la épica estén completos.
+ * @returns `true` si los campos son válidos, de lo contrario `false`.
+ */
   validate(): boolean {
     const { name, description, heroType, stock, effects, masterChance, cooldown } = this.epic;
 
@@ -116,10 +116,10 @@ export class AppModifyEpicaComponent {
     );
   }
 
-    /**
-   * Alternativa para asignar la imagen desde un archivo cargado.
-   * @param event Evento generado al seleccionar un archivo de imagen.
-   */
+  /**
+ * Alternativa para asignar la imagen desde un archivo cargado.
+ * @param event Evento generado al seleccionar un archivo de imagen.
+ */
   setImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -129,10 +129,10 @@ export class AppModifyEpicaComponent {
     }
   }
 
-    /**
-   * Envía los cambios al backend para actualizar la épica en la base de datos.
-   * Si la validación falla, se muestra una alerta al usuario.
-   */
+  /**
+ * Envía los cambios al backend para actualizar la épica en la base de datos.
+ * Si la validación falla, se muestra una alerta al usuario.
+ */
   onSubmit(): void {
     if (!this.validate()) {
       alert('Todos los campos son requeridos.');

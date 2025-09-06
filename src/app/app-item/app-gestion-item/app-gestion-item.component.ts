@@ -19,8 +19,9 @@ import { CommonModule } from '@angular/common';
  * - Uso de `ItemsService` para la comunicación con el backend
  * - Renderizado dinámico de la lista de ítems
  * - Navegación a rutas específicas para crear o modificar ítems
+ *
+ * @property {Item[]} items Lista de ítems obtenida desde el backend
  */
-
 @Component({
   selector: 'app-app-gestion-item',
   imports: [RouterModule, FormsModule, CommonModule],
@@ -28,21 +29,22 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app-gestion-item.component.css',
 })
 export class AppGestionItemComponent {
-  // Lista de ítems obtenida desde el backend
   items: Item[] = [];
 
   constructor(private router: Router, private itemService: ItemsService) {}
 
   /**
-   * Se ejecuta al iniciar el componente y carga los ítems.
+   * Inicializa el componente y carga todos los ítems.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.showItems();
   }
 
-    /**
+  /**
    * Obtiene todos los ítems desde el backend
    * y los asigna a la propiedad `items`.
+   * @returns {void}
    */
   showItems(): void {
     this.itemService.showAllItems().subscribe({
@@ -56,16 +58,18 @@ export class AppGestionItemComponent {
     });
   }
 
-    /**
+  /**
    * Redirige al formulario de creación de un nuevo ítem.
+   * @returns {void}
    */
   addItem(): void {
     this.router.navigate(['/items/create']);
   }
 
-    /**
+  /**
    * Cambia el estado (activo/inactivo) de un ítem específico.
-   * @param id ID del ítem cuyo estado se desea cambiar
+   * @param {number} id ID del ítem cuyo estado se desea cambiar
+   * @returns {void}
    */
   changeStatus(id: number): void {
     this.itemService.changeStatus(id).subscribe({
@@ -82,9 +86,10 @@ export class AppGestionItemComponent {
     });
   }
 
-    /**
+  /**
    * Redirige al formulario de modificación de un ítem existente.
-   * @param id ID del ítem a modificar
+   * @param {number} id ID del ítem a modificar
+   * @returns {void}
    */
   modifyItem(id: number): void {
     this.router.navigate(['/items/modify', id]);

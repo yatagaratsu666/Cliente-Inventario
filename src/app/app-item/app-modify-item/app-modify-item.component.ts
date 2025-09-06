@@ -23,6 +23,11 @@ import { EffectType } from '../../domain/effect.model';
  * - Manejo de formularios con `FormsModule`
  * - Selección dinámica de tipos de héroe y efectos
  * - Validación de campos requeridos y valores mínimos
+ *
+ * @property {HeroType[]} heroTypes Lista de tipos de héroe para el select
+ * @property {EffectType[]} effectTypes Lista de tipos de efecto para el select
+ * @property {number} itemId ID del ítem que se va a modificar
+ * @property {Item} item Modelo del ítem con sus datos actuales
  */
 @Component({
   selector: 'app-app-modify-item',
@@ -31,10 +36,8 @@ import { EffectType } from '../../domain/effect.model';
   styleUrl: './app-modify-item.component.css',
 })
 export class AppModifyItemComponent {
-  // Lista de tipos de efectos y héroes para los select del formulario
   heroTypes = Object.values(HeroType);
   effectTypes = Object.values(EffectType);
-  // Modelo de un arma inicializado con valores por defecto
   itemId: number = 0;
   item: Item = {
     id: 0,
@@ -54,10 +57,10 @@ export class AppModifyItemComponent {
     private itemService: ItemsService
   ) {}
 
-  
   /**
-   * Obtiene el ID desde los parámetros de la ruta
-   * y carga los datos del ítem correspondiente.
+   * Inicializa el componente obteniendo el ID desde los parámetros de la ruta
+   * y cargando los datos del ítem correspondiente.
+   * @returns {void}
    */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -68,12 +71,12 @@ export class AppModifyItemComponent {
     }
   }
 
-    /**
+  /**
    * Lee una imagen seleccionada desde un input file
    * y la asigna como `image` del ítem en formato Base64.
-   * @param event Evento de selección de archivo
+   * @param {Event} event Evento de selección de archivo
    */
-  readImage(event: Event) {
+  readImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const reader = new FileReader();
@@ -82,9 +85,9 @@ export class AppModifyItemComponent {
     }
   }
 
-    /**
+  /**
    * Carga un ítem específico desde el backend por su ID.
-   * @param id ID del ítem a cargar
+   * @param {number} id ID del ítem a cargar
    */
   loadItem(id: number): void {
     this.itemService.getItemById(id).subscribe({
@@ -98,10 +101,10 @@ export class AppModifyItemComponent {
     });
   }
 
-    /**
+  /**
    * Valida que los campos obligatorios del ítem estén completos
    * y que los valores ingresados sean coherentes.
-   * @returns true si la información es válida, false en caso contrario
+   * @returns {boolean} true si la información es válida, false en caso contrario
    */
   validate(): boolean {
     const { name, description, stock, dropRate, heroType, effects } = this.item;
@@ -119,10 +122,10 @@ export class AppModifyItemComponent {
     );
   }
 
-    /**
+  /**
    * Establece la imagen del ítem a partir de un archivo cargado.
-   * Similar a `readImage`, pero definida como método adicional.
-   * @param event Evento de selección de archivo
+   * Similar a `readImage`.
+   * @param {Event} event Evento de selección de archivo
    */
   setImage(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -133,10 +136,11 @@ export class AppModifyItemComponent {
     }
   }
 
-    /**
+  /**
    * Envía los cambios del ítem al backend para su actualización.
    * Si la validación falla, muestra una alerta.
    * Si la actualización es exitosa, redirige al listado de ítems.
+   * @returns {void}
    */
   onSubmit(): void {
     if (!this.validate()) {

@@ -10,22 +10,45 @@ import { ApiConfigService } from './api.config.service';
 import { switchMap} from 'rxjs/operators';
 import { Item } from '../domain/item.model';
 
+/** 
+ * itemsService
+ *
+ * Servicio Angular para manejar todas las operaciones relacionadas con los items del juego
+ * a través de peticiones HTTP hacia la API backend.
+ *
+ * Funcionalidades principales:
+ * - Crear items
+ * - Consultar todos los items
+ * - Consultar item por ID
+ * - Actualizar items
+ * - Cambiar estado entre activo/inactivo
+ *
+ */
+
 @Injectable({
   providedIn: 'root',
 })
+
 export class ItemsService {
+  // URL base de la API para el recurso items
   private apiUrl: string;
 
   constructor(
     private http: HttpClient,
     private apiConfigService: ApiConfigService
   ) {
+    // Construye la URL base combinando la URL de la API con el endpoint /items
     this.apiUrl = `${apiConfigService.getApiUrl()}/items`;
   }
-
+    // Obtiene el token de autenticación almacenado en localStorage
   private getAuthToken(): string {
     return localStorage.getItem('token') || '';
   }
+
+  /*
+  Crea un nuevo item
+  si se proporciona un archivo lo convierte a base64 e incluye en la petición
+  */
 
 createItem(item: Item, file?: File): Observable<Item> {
   const headers = new HttpHeaders({
@@ -53,7 +76,7 @@ createItem(item: Item, file?: File): Observable<Item> {
   }
 }
 
-// Método auxiliar para convertir File a Base64
+// Convierte un archivo a una cadena Base64
 private convertToBase64(file: File): Observable<string> {
   return new Observable<string>((observer) => {
     const reader = new FileReader();
@@ -65,7 +88,7 @@ private convertToBase64(file: File): Observable<string> {
     reader.readAsDataURL(file);
   });
 }
-
+  // Obtiene el listado de todos los items
   showAllItems(): Observable<Item[]> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -75,7 +98,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Obtiene un item por su ID
   getItemById(id: number): Observable<Item> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -86,7 +109,8 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
-    updateItem(id: number, item: Item): Observable<void> {
+  // Actualiza un item existente
+  updateItem(id: number, item: Item): Observable<void> {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -97,6 +121,7 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
+  // Cambia el estado de un item entre activo/inactivo
   changeStatus(id: number): Observable<void> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -106,7 +131,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Manejo de errores de las peticiones HTTP
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError('Something bad happened; please try again later.');

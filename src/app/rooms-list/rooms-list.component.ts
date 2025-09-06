@@ -8,6 +8,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 
+// ⬇️ NUEVO: importa el componente standalone del chat
+import { AppChatComponent } from '../app-chat/app-chat.component';
+
 /**
  * RoomsListComponent
  *
@@ -26,20 +29,30 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-rooms-list',
+  standalone: true, // ⬅️ NUEVO: marca el componente como standalone
   templateUrl: './rooms-list.component.html',
   styleUrls: ['./rooms-list.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+
+  // ⬇️ NUEVO: registra aquí los imports que usa este componente
+  // (CommonModule, ReactiveFormsModule y el AppChatComponent)
+  imports: [CommonModule, ReactiveFormsModule, AppChatComponent]
 })
 export class RoomsListComponent implements OnInit {
   // Lista de salas obtenidas del servicio
   rooms: any[] = [];
-  // ID del jugador actual 
-  playerId: string = localStorage.getItem('username') || '';
+
+  // ID del jugador actual (deja que TS infiera el tipo para evitar warnings)
+  public playerId = localStorage.getItem('username') ?? '';
+
   // Controla la visibilidad del formulario de creación de salas
   showForm = false;
   roomForm!: FormGroup;
 
-  constructor(private battleService: BattleService, private router: Router, private fb: FormBuilder) { }
+  constructor(
+    private battleService: BattleService,
+    private router: Router,
+    private fb: FormBuilder
+  ) { }
 
   // Inicializa el componente cargando las salas y configurando el formulario reactivo
   ngOnInit() {
@@ -68,10 +81,10 @@ export class RoomsListComponent implements OnInit {
   }
 
   /**
- * Envía el formulario para crear una nueva sala.
- * Si la creación es exitosa, refresca la lista de salas, reinicia el formulario
- * y automáticamente intenta unir al jugador a la sala recién creada.
- */
+   * Envía el formulario para crear una nueva sala.
+   * Si la creación es exitosa, refresca la lista de salas, reinicia el formulario
+   * y automáticamente intenta unir al jugador a la sala recién creada.
+   */
   createRoomSubmit() {
     if (this.roomForm.valid) {
       const roomId = this.roomForm.get('id')?.value;
@@ -91,10 +104,10 @@ export class RoomsListComponent implements OnInit {
   }
 
   /**
-  * Intenta unir al jugador a una sala existente, usando sus datos de héroe.
-  * Si el proceso es exitoso, navega a la vista de la sala.
-  * Si falla, muestra un error en consola y alerta al usuario.
-  */
+   * Intenta unir al jugador a una sala existente, usando sus datos de héroe.
+   * Si el proceso es exitoso, navega a la vista de la sala.
+   * Si falla, muestra un error en consola y alerta al usuario.
+   */
   joinRoom(roomId: string) {
     const hero = this.battleService.getHeroStatsByPlayerId(this.playerId);
     this.battleService.joinRoom(roomId, this.playerId, hero.hero.level, hero).subscribe({
@@ -109,22 +122,17 @@ export class RoomsListComponent implements OnInit {
     });
   }
 
-    /**
+  /**
    * Devuelve la cantidad máxima de jugadores según el modo seleccionado
    * @param mode Modo de juego (e.g. "1v1", "2v2", "3v3")
    * @returns Número máximo de jugadores permitido en ese modo
    */
   getMaxPlayers(mode: string): number {
     switch (mode) {
-      case "1v1":
-        return 2;
-      case "2v2":
-        return 4;
-      case "3v3":
-        return 6;
-      default:
-        return 0;
+      case "1v1": return 2;
+      case "2v2": return 4;
+      case "3v3": return 6;
+      default:    return 0;
     }
   }
-
 }

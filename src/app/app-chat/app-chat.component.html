@@ -1,12 +1,10 @@
-<!-- Panel lateral del chat general (lobby) -->
 <aside class="global-chat">
-  <!-- Cabecera -->
+
   <header class="chat-header">
     <h3>Chat general</h3>
     <span class="badge">{{ messages.length }} mensajes</span>
   </header>
 
-  <!-- Lista de mensajes -->
   <section class="chat-list" #listRef>
     <div *ngIf="messages.length === 0" class="empty">
       Aún no hay mensajes. ¡Saluda al lobby!
@@ -21,7 +19,7 @@
     </div>
   </section>
 
-  <!-- Barra de entrada -->
+ 
   <footer class="chat-input">
     <textarea
       [(ngModel)]="chatInput"

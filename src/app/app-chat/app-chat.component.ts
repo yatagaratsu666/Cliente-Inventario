@@ -10,15 +10,30 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { io, Socket } from 'socket.io-client';
 
+/** Rol visual de cada mensaje en el chat (para estilos/alineación) */
 type Role = 'me' | 'other' | 'system';
 
+/** Estructura de un mensaje del chat */
 interface ChatMessage {
-  user: string;
-  message: string;
-  ts: number;   // epoch ms
-  role: Role;
+  user: string;     // autor (apodo/username)
+  message: string;  // contenido del mensaje
+  ts: number;       // timestamp epoch (ms) para mostrar hora HH:mm
+  role: Role;       // rol de presentación (me/other/system)
 }
 
+/**
+ * AppChatComponent
+ *
+ * Componente standalone que implementa el **chat global** (lobby) como
+ * panel lateral. Se conecta vía **Socket.IO** al backend y:
+ * - Escucha `chat:global` para renderizar mensajes entrantes
+ * - Emite `chat:global` con `{ playerId, msg }` al enviar
+ *
+ * Notas:
+ * - No depende de servicios externos; maneja el socket dentro del componente
+ * - Usa `FormsModule` para el textarea [(ngModel)]
+ * - Implementa autoscroll al final cada vez que llega/manda un mensaje
+ */
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -27,24 +42,41 @@ interface ChatMessage {
   imports: [CommonModule, FormsModule],
 })
 export class AppChatComponent implements OnInit, OnDestroy {
-  /** URL del backend de sockets */
+  /** URL del backend de sockets (ajústala según tu entorno) */
   @Input() serverUrl = 'http://localhost:4000';
 
-  /** Usuario actual (si no se pasa, intenta leer de localStorage) */
+  /**
+   * Usuario actual. Si no se provee desde fuera, se intenta leer
+   * de `localStorage('username')`. Se usa para:
+   * - diferenciar rol 'me' vs 'other'
+   * - enviar `playerId` al backend al emitir `chat:global`
+   */
   @Input() myPlayerId: string = localStorage.getItem('username') || 'Anon';
 
-  /** Habilitar/deshabilitar la entrada de texto */
+  /** Bandera para habilitar/deshabilitar la entrada y el botón de enviar */
   @Input() canChat = true;
 
-  /** Ref para autoscroll del feed */
+  /**
+   * Referencia al contenedor scrollable de la lista de mensajes.
+   * Se usa para hacer **autoscroll** al final cuando cambian los mensajes.
+   */
   @ViewChild('listRef') listRef!: ElementRef<HTMLDivElement>;
 
+  /** Estado local del feed de mensajes (histórico + nuevos) */
   messages: ChatMessage[] = [];
+
+  /** Modelo del textarea (entrada de usuario) */
   chatInput = '';
 
+  /** Instancia de Socket.IO (cliente) */
   private socket!: Socket;
 
-  // Handlers para poder desuscribir en ngOnDestroy
+  /**
+   * Handlers centralizados para poder desuscribir fácilmente en `ngOnDestroy`.
+   * - connect: callback al conectarse
+   * - disconnect: callback al desconectarse
+   * - global: receptor de payloads de `chat:global` emitidos por el backend
+   */
   private handlers = {
     connect: () => this.onConnect(),
     disconnect: (_reason: string) => this.onDisconnect(),
@@ -57,23 +89,34 @@ export class AppChatComponent implements OnInit, OnDestroy {
       }),
   };
 
+  /**
+   * Ciclo de vida: OnInit
+   * - Asegura `myPlayerId`
+   * - Crea la conexión Socket.IO
+   * - Registra listeners a eventos del socket
+   */
   ngOnInit(): void {
     if (!this.myPlayerId) {
       this.myPlayerId = localStorage.getItem('username') || 'Anon';
     }
 
-    // Conexión Socket.IO
+    // Crear conexión Socket.IO (solo WebSocket; sin long polling)
     this.socket = io(this.serverUrl, {
       transports: ['websocket'],
       autoConnect: true,
     });
 
-    // Suscripción a eventos
+    // Suscripción a eventos del socket
     this.socket.on('connect', this.handlers.connect);
     this.socket.on('disconnect', this.handlers.disconnect);
     this.socket.on('chat:global', this.handlers.global);
   }
 
+  /**
+   * Ciclo de vida: OnDestroy
+   * - Desregistra listeners
+   * - Cierra la conexión del socket
+   */
   ngOnDestroy(): void {
     if (!this.socket) return;
     this.socket.off('connect', this.handlers.connect);
@@ -82,35 +125,56 @@ export class AppChatComponent implements OnInit, OnDestroy {
     this.socket.disconnect();
   }
 
-  // ---- Ciclo de socket ----
+  // ──────────────────────────────
+  //  Ciclo del socket / estado
+  // ──────────────────────────────
+
+  /** Callback al conectar. El backend ya realiza `socket.join('global')`. */
   private onConnect() {
-    // Tu backend ya hace socket.join('global') al conectar; no hay que emitir nada aquí.
+    // Aquí podrías setear estados de “online”, reintentos, etc.
   }
 
+  /** Callback al desconectar (placeholder para mostrar estado si se requiere). */
   private onDisconnect() {
-    // Podrías mostrar estado si quieres
+    // Aquí podrías notificar “desconectado” o intentar reconexión manual.
   }
 
-  // ---- UI handlers ----
+  // ──────────────────────────────
+  //  Interacción de UI
+  // ──────────────────────────────
+
+  /**
+   * Maneja la pulsación de teclas en el textarea.
+   * - Enter (sin Shift) → Enviar mensaje
+   * - Shift+Enter → salto de línea
+   */
   onKeydown(e: KeyboardEvent) {
-    // Enter envía; Shift+Enter hace salto de línea
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       this.send();
     }
   }
 
+  /**
+   * Envía el contenido del textarea al backend (`chat:global`) y
+   * agrega un **eco local** para feedback inmediato.
+   *
+   * Reglas:
+   * - No envía si `chatInput` está vacío/espacios
+   * - Respeta `canChat`
+   * - Verifica que el socket esté conectado
+   */
   send() {
     const text = (this.chatInput || '').trim();
     if (!text || !this.canChat || !this.socket?.connected) return;
 
-    // Emitir a global
+    // Emitir a global con la forma que espera tu backend
     this.socket.emit('chat:global', {
       playerId: this.myPlayerId,
       msg: text,
     });
 
-    // Eco local para feedback inmediato
+    // Eco local (permite ver el mensaje de inmediato)
     this.push({
       user: this.myPlayerId,
       message: text,
@@ -118,13 +182,23 @@ export class AppChatComponent implements OnInit, OnDestroy {
       role: 'me',
     });
 
+    // Limpiar el textarea
     this.chatInput = '';
   }
 
-  // ---- Helpers ----
+  // ──────────────────────────────
+  //  Utilidades internas
+  // ──────────────────────────────
+
+  /**
+   * Inserta un mensaje al final del feed y hace **autoscroll** al último.
+   * @param m Mensaje a insertar
+   */
   private push(m: ChatMessage) {
+    // Inmutabilidad simple para disparar detección de cambios
     this.messages = [...this.messages, m];
-    // Autoscroll
+
+    // Autoscroll al final en el siguiente tick de render
     setTimeout(() => {
       const el = this.listRef?.nativeElement;
       if (el) el.scrollTop = el.scrollHeight;

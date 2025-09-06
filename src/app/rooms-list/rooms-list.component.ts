@@ -7,8 +7,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-
-// ⬇️ NUEVO: importa el componente standalone del chat
 import { AppChatComponent } from '../app-chat/app-chat.component';
 
 /**
@@ -29,15 +27,13 @@ import { AppChatComponent } from '../app-chat/app-chat.component';
 
 @Component({
   selector: 'app-rooms-list',
-  standalone: true, // ⬅️ NUEVO: marca el componente como standalone
+  standalone: true, // Componente standalone para poder importar directamente otros standalone (AppChatComponent)
   templateUrl: './rooms-list.component.html',
   styleUrls: ['./rooms-list.component.css'],
-
-  // ⬇️ NUEVO: registra aquí los imports que usa este componente
-  // (CommonModule, ReactiveFormsModule y el AppChatComponent)
-  imports: [CommonModule, ReactiveFormsModule, AppChatComponent]
+  imports: [CommonModule, ReactiveFormsModule, AppChatComponent] // Se importa el chat global para usarlo en el template
 })
 export class RoomsListComponent implements OnInit {
+  
   // Lista de salas obtenidas del servicio
   rooms: any[] = [];
 

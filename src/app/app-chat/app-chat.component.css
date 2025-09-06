@@ -1,13 +1,13 @@
 .global-chat {
   position: fixed;
   right: 16px;
-  top: 90px;              /* ajusta si tu header es más alto */
+  top: 90px;              
   bottom: 16px;
-  width: 360px;           /* ancho del panel lateral */
+  width: 360px;          
   display: flex;
   flex-direction: column;
   background: #1B262C;
-  border: 2px solid #c2b97f;  /* dorado como tu card */
+  border: 2px solid #c2b97f;  
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(0,0,0,.35);
   overflow: hidden;
@@ -51,12 +51,10 @@
   box-shadow: 0 2px 8px rgba(0,0,0,.25);
 }
 
-/* Roles */
 .chat-item.me .bubble    { background: #3282B8; }
 .chat-item.other .bubble { background: #56CFE1; }
 .chat-item.system .bubble{ background: #1F7A7A; }
 
-/* Alineación del propio mensaje a la derecha */
 .chat-item.me { justify-items: end; }
 .chat-item.me .meta { justify-content: flex-end; }
 

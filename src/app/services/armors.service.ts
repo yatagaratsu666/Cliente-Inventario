@@ -26,6 +26,7 @@ import { Armor } from '../domain/armor.model';
  */
 
 @Injectable({
+  // a
   providedIn: 'root'
 })
 export class ArmorsService {

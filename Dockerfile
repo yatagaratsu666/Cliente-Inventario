@@ -1,25 +1,18 @@
-# Etapa 1: Build de Angular
-FROM node:18 AS build
+FROM node:18
 
 WORKDIR /app
 
+# Copiar package.json y package-lock.json
 COPY package*.json ./
+
+# Instalar dependencias
 RUN npm install
 
+# Copiar todo el proyecto
 COPY . .
-RUN npm run build -- --configuration production
 
-# Etapa 2: Servir con Nginx
-FROM nginx:stable-alpine
+# Exponer el puerto
+EXPOSE 1882
 
-# Borrar config por defecto de nginx
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copiar build de Angular
-COPY --from=build /app/dist/frontend-inv/browser /usr/share/nginx/html
-
-# Copiar config personalizada de nginx (opcional)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Ejecutar el JS compilado
+CMD ["node", "build/scr/Product.js"]

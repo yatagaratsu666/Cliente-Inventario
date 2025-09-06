@@ -35,6 +35,8 @@ export default class Hero {
     }[];
     effects: Effect[];
 
+    // adios
+
     constructor(
         image: string = '',
         name: string = '',

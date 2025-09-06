@@ -4,6 +4,22 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+/**
+ * AppLoginComponent
+ *
+ * Componente Angular para manejar el inicio de sesión de usuarios.
+ * Se encarga de:
+ * - Mostrar un formulario de login con usuario y contraseña
+ * - Validar que ambos campos estén diligenciados antes de enviar
+ * - Invocar el servicio de autenticación (`LoginService`) para validar credenciales
+ * - Manejar mensajes de error cuando la autenticación falla
+ * - Redirigir al usuario a la vista de gestión si el login es exitoso
+ *
+ * Características:
+ * - Uso de `FormsModule` para el manejo del formulario
+ * - Uso de `Router` para la navegación posterior al login
+ * - Feedback de error dinámico con `errorMessage`
+ */
 @Component({
   selector: 'app-app-login',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -18,6 +34,13 @@ export class AppLoginComponent {
 
 constructor(private loginService: LoginService, private router: Router) {}
 
+  /**
+   * onSubmit
+   *
+   * Valida los campos del formulario de login y realiza la autenticación.
+   * Si el login es exitoso, redirige al panel de gestión.
+   * Si falla, muestra el mensaje de error recibido.
+   */
 onSubmit(): void {
   if (!this.username || !this.password) {
     this.errorMessage = 'Por favor ingresa usuario y contraseña.';

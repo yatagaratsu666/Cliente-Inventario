@@ -1,3 +1,18 @@
+/**
+ * HeroStats
+ *
+ * Conjunto de enumeraciones, interfaces y clases que representan todo lo relacionado
+ * con héroes, sus atributos, equipamiento, acciones especiales, efectos y estados
+ * dentro del juego.
+ *
+ * - Define tipos base (HeroType, HeroState, ActionType, etc.) para estructurar la lógica de combate.
+ * - Representa entidades como Héroes, Ítems, Armaduras, Armas y Habilidades Épicas.
+ * - Maneja efectos de estado, acciones especiales y efectos aleatorios aplicables durante las batallas.
+ * - Incluye la clase HeroStats, que encapsula la información del héroe y su equipamiento actual,
+ *   con soporte para reconstruirse a partir de datos JSON.
+ *
+ */
+
 export enum HeroType {
     TANK,
     WEAPONS_PAL,
@@ -142,6 +157,16 @@ export class HeroStats {
     this.equipped = equipped;
   }
 
+   /**
+   * fromJSON
+   *
+   * Reconstruye un objeto HeroStats a partir de datos JSON.
+   * Mapea héroe, equipamiento, acciones especiales y efectos aleatorios,
+   * garantizando que todo cumpla la estructura tipada del modelo.
+   *
+   * @param parsed Objeto JSON con la estructura de HeroStats.
+   * @returns Nueva instancia de HeroStats con datos convertidos correctamente.
+   */
   static fromJSON(parsed: any): HeroStats {
     const hero: Hero = {
       heroType: parsed.hero.heroType,

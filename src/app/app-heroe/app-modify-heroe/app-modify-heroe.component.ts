@@ -7,6 +7,19 @@ import Hero from '../../domain/heroe.model';
 import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/heroe.model';
 
+/**
+ * Componente Angular encargado de la modificación de héroes dentro de la aplicación.
+ * Permite cargar la información de un héroe específico por su ID, mostrarla
+ * en un formulario y actualizar los datos validados en el backend.
+ *
+ * Características principales:
+ * - Carga los datos de un héroe desde el servicio `HeroesService`.
+ * - Valida la información antes de actualizarla.
+ * - Permite subir una imagen y asignarla al héroe.
+ * - Navega de regreso al panel de control tras actualizar.
+ *
+ */
+
 @Component({
   selector: 'app-app-modify-heroe',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -14,6 +27,7 @@ import { HeroType } from '../../domain/heroe.model';
   styleUrl: './app-modify-heroe.component.css'
 })
 export class AppModifyHeroeComponent {
+  // Lista de tipos de heroes disponibles
   heroTypes = Object.values(HeroType);
   heroId: number = 0;
   effectTypes = Object.values(EffectType);
@@ -50,6 +64,10 @@ export class AppModifyHeroeComponent {
     private heroService: HeroesService
   ) {}
 
+    /**
+   * Obtiene el ID del héroe desde la ruta y carga los datos si existe.
+   */
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.heroId = id ? +id : 0;
@@ -58,6 +76,12 @@ export class AppModifyHeroeComponent {
       this.loadHero(this.heroId);
     }
   }
+
+  
+  /**
+   * Carga los datos de un héroe desde el backend usando su ID.
+   * @param id ID del héroe a cargar.
+   */
 
   loadHero(id: number): void {
     this.heroService.getHeroById(id).subscribe({
@@ -71,6 +95,10 @@ export class AppModifyHeroeComponent {
     });
   }
 
+    /**
+   * Lee y asigna la imagen cargada desde un input file al héroe.
+   * @param event Evento de cambio en el input file.
+   */
   readImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -80,6 +108,10 @@ export class AppModifyHeroeComponent {
     }
   }
 
+    /**
+   * Valida los datos del héroe antes de enviarlos al backend.
+   * @returns `true` si todos los campos son válidos, `false` en caso contrario.
+   */
   validate(): boolean {
     const { name, description, heroType, level, stock, attack, health, defense, power, specialActions} = this.hero;
 
@@ -104,6 +136,11 @@ export class AppModifyHeroeComponent {
     return true;
   }
 
+  
+  /**
+   * Envía los datos actualizados del héroe al backend.
+   * Si la validación falla, muestra una alerta.
+   */
   onSubmit(): void {
     if (!this.validate()) {
       alert('Todos los campos son requeridos.');

@@ -8,6 +8,19 @@ import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/item.model';
 import Swal from 'sweetalert2';
 
+/**
+ * Componente encargado del registro de nuevas épicas en el sistema.
+ * Permite ingresar los datos de la épica, asociar efectos y guardar la información
+ * en el backend mediante el servicio `EpicsService`.
+ *
+ * Características principales:
+ * - Formulario reactivo para crear una épica.
+ * - Soporte para carga de imágenes desde archivo.
+ * - Validación de campos requeridos antes del envío.
+ * - Uso de SweetAlert2 para notificaciones visuales.
+ *
+ */
+
 @Component({
   selector: 'app-app-register-epica',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -15,6 +28,7 @@ import Swal from 'sweetalert2';
   styleUrl: './app-register-epica.component.css',
 })
 export class AppRegisterEpicaComponent {
+  // Lista de tipos de efectos disponibles
   effectTypes = Object.values(EffectType);
   heroTypes = Object.values(HeroType);
   epic: Epic = {
@@ -37,6 +51,10 @@ export class AppRegisterEpicaComponent {
 
   constructor(private epicService: EpicsService, private router: Router) {}
 
+    /**
+   * Captura el archivo seleccionado desde el input tipo `file`.
+   * @param event Evento generado al seleccionar un archivo.
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -44,6 +62,11 @@ export class AppRegisterEpicaComponent {
     }
   }
 
+    /**
+   * Valida que los campos obligatorios del formulario estén completos
+   * y que el archivo de imagen haya sido cargado.
+   * @returns `true` si todos los campos son válidos, de lo contrario `false`.
+   */
   validate(): boolean {
     if (!this.selectedFile) {
       console.error('Debes seleccionar una imagen');
@@ -73,6 +96,9 @@ export class AppRegisterEpicaComponent {
     );
   }
 
+  /** 
+   * Muestra una alerta visual utilizando SweetAlert2.
+   */
   private showAlert(
     icon: any,
     title: string,
@@ -82,6 +108,10 @@ export class AppRegisterEpicaComponent {
     Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
   }
 
+    /**
+   * Envía la información de la épica al backend si la validación es exitosa.
+   * En caso contrario, muestra una alerta de advertencia.
+   */
   onSubmit(): void {
     if (!this.validate()) {     
       this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');

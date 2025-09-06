@@ -7,6 +7,23 @@ import { CommonModule } from '@angular/common';
 import { EffectType } from '../../domain/effect.model';
 import Swal from 'sweetalert2';
 
+/**
+ * AppRegisterHeroeComponent
+ *
+ * Componente Angular encargado de registrar nuevos héroes.
+ * Se encarga de:
+ * - Mostrar un formulario con todos los campos necesarios
+ * - Permitir la carga de una imagen asociada al héroe
+ * - Validar los datos antes de enviarlos al backend
+ * - Crear un héroe a través del `HeroesService`
+ * - Notificar al usuario mediante SweetAlert
+ * - Redirigir al listado de héroes después del registro
+ *
+ * Características:
+ * - Manejo de formularios con `FormsModule`
+ * - Validación detallada de atributos básicos, efectos y acciones especiales
+ * - Uso de enumeraciones (`HeroType`, `EffectType`) para opciones dinámicas
+ */
 
 @Component({
   selector: 'app-app-register-heroe',
@@ -15,6 +32,7 @@ import Swal from 'sweetalert2';
   styleUrl: './app-register-heroe.component.css'
 })
 export class AppRegisterHeroeComponent {
+  // Listado de tipos de héroes disponibles
   heroTypes = Object.values(HeroType);
   heroId: number = 0;
   effectTypes = Object.values(EffectType);
@@ -49,7 +67,10 @@ export class AppRegisterHeroeComponent {
 
   constructor(private heroesService: HeroesService, private router: Router) {}
 
-  // Captura el archivo seleccionado
+  /**
+   * Maneja la selección de un archivo desde un input file.
+   * @param event Evento emitido por el input
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -57,6 +78,10 @@ export class AppRegisterHeroeComponent {
     }
   }
 
+    /**
+   * Valida que los datos del héroe sean correctos antes de enviarlos.
+   * @returns true si los datos son válidos, false en caso contrario
+   */
   validate(): boolean {
 
     if (!this.selectedFile) {
@@ -86,10 +111,18 @@ export class AppRegisterHeroeComponent {
     return true;
   }
 
+  /** 
+   *  Muestra una alerta en pantalla utilizando SweetAlert.
+   */
   private showAlert(icon: any, title: string, text: string, buttonColor: string = '#3085d6') {
     Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
   }
 
+    /**
+   * Envía los datos del héroe al backend para crear un nuevo registro.
+   * Si la validación falla, muestra una alerta.
+   * Si la creación es exitosa, notifica al usuario y redirige al listado de héroes.
+   */
   onSubmit(): void {
     if (!this.validate()) {
       this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');

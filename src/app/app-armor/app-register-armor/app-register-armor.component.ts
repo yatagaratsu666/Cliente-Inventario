@@ -8,6 +8,18 @@ import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/item.model';
 import Swal from 'sweetalert2';
 
+/**
+ * Componente encargado del registro de nuevas armaduras en el sistema.
+ * Permite completar un formulario para crear armaduras, incluyendo
+ * información como tipo, efectos, imagen y tasa de aparición.
+ *
+ * Características principales:
+ * - Soporta carga de imágenes para la armadura.
+ * - Valida los campos obligatorios antes de registrar la armadura.
+ * - Muestra alertas de éxito o error mediante `SweetAlert2`.
+ * - Utiliza `ArmorsService` para enviar los datos al backend.
+ */
+
 @Component({
   selector: 'app-app-register-armor',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -15,6 +27,7 @@ import Swal from 'sweetalert2';
   styleUrl: './app-register-armor.component.css'
 })
 export class AppRegisterArmorComponent {
+  //Tipos de heores, efectos y armaduras disponibles
   effectTypes = Object.values(EffectType);
   heroTypes = Object.values(HeroType);
   armorTypes = Object.values(ArmorType);
@@ -37,6 +50,10 @@ export class AppRegisterArmorComponent {
 
   constructor(private armorService: ArmorsService, private router: Router) {}
 
+    /**
+   * Captura el archivo seleccionado desde un input tipo file.
+   * @param event Evento de selección de archivo.
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -44,6 +61,10 @@ export class AppRegisterArmorComponent {
     }
   }
 
+    /**
+   * Valida que los campos obligatorios estén completos y correctos.
+   * @returns `true` si los datos son válidos, `false` en caso contrario.
+   */
   validate(): boolean {
     if (!this.selectedFile) {
       console.error('Debes seleccionar una imagen');
@@ -63,6 +84,9 @@ export class AppRegisterArmorComponent {
     );
   }
 
+  /**
+   * Muestra una alerta modal con SweetAlert2.
+   */
     private showAlert(
       icon: any,
       title: string,
@@ -72,6 +96,11 @@ export class AppRegisterArmorComponent {
       Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
     }
 
+      /**
+   * Envía el formulario al backend para registrar una nueva armadura.
+   * Si la validación falla, muestra una alerta de advertencia.
+   * Si el registro es exitoso, redirige al panel de control de armaduras.
+   */
   onSubmit(): void {
     if (!this.validate()) {
       this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');

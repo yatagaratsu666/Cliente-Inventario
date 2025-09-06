@@ -7,6 +7,23 @@ import { WeaponsService } from '../../services/weapons.service';
 import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/item.model';
 
+/**
+ * AppModifyWeaponComponent
+ *
+ * Componente Angular para modificar la información de un ítem tipo arma existente.
+ * Se encarga de:
+ * - Cargar los datos de un arma a partir de su ID
+ * - Mostrar un formulario editable con los datos actuales
+ * - Permitir cambiar imagen, nombre, descripción, efectos, héroe compatible, etc.
+ * - Validar los datos antes de enviarlos al backend
+ * - Actualizar el arma usando el `WeaponsService`
+ * - Redirigir al listado de armas al terminar la edición
+ *
+ * Características:
+ * - Uso de `ActivatedRoute` para obtener el ID del arma a editar
+ * - Lógica para leer imagen en Base64 y mostrarla inmediatamente
+ * - Validación simple de campos requeridos
+ */
 @Component({
   selector: 'app-app-modify-weapon',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -35,6 +52,11 @@ export class AppModifyWeaponComponent {
     private weaponService: WeaponsService
   ) {}
 
+  
+  /**
+   * Inicializa el componente cargando el ID del arma desde la ruta
+   * y solicitando los datos correspondientes si el ID es válido.
+   */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.weaponId = id ? +id : 0;
@@ -44,6 +66,10 @@ export class AppModifyWeaponComponent {
     }
   }
 
+    /**
+   * Lee la imagen seleccionada por el usuario y la asigna al objeto arma en Base64.
+   * @param event Evento del input file
+   */
   readImage(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -53,6 +79,10 @@ export class AppModifyWeaponComponent {
     }
   }
 
+    /**
+   * Obtiene los datos de un arma específica desde el backend.
+   * @param id ID del arma a cargar
+   */
   loadWeapon(id: number): void {
     this.weaponService.getWeaponById(id).subscribe({
       next: (data) => {
@@ -65,6 +95,11 @@ export class AppModifyWeaponComponent {
     });
   }
 
+  
+  /**
+   * Valida que los campos requeridos del formulario estén completos y tengan valores válidos.
+   * @returns true si los datos son válidos, false si hay algún error
+   */
   validate(): boolean {
     const { name, description, dropRate, heroType, stock, effects } = this.weapon;
 
@@ -82,6 +117,10 @@ export class AppModifyWeaponComponent {
     );
   }
 
+    /**
+   * Método alternativo para setear la imagen desde un input file (equivalente a readImage).
+   * @param event Evento del input file
+   */
   setImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -91,6 +130,11 @@ export class AppModifyWeaponComponent {
     }
   }
 
+    /**
+   * Envía la actualización del arma al backend.
+   * Si la validación falla, muestra un mensaje de alerta.
+   * Si el proceso es exitoso, redirige al listado de armas.
+   */
   onSubmit(): void {
     if (!this.validate()) {
       alert('Todos los campos son requeridos y los números deben ser válidos.');

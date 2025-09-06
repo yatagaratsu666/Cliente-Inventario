@@ -8,16 +8,14 @@ import { Epic } from '../../domain/epic.model';
 import { EpicsService } from '../../services/epics.service';
 
 /**
- * Componente encargado de la gestión de épicas dentro del sistema.
- * Permite listar, crear, modificar y cambiar el estado de las épicas
- * registradas en el backend.
+ * AppGestionEpicaComponent
  *
- * Características principales:
- * - Obtiene todas las épicas mediante el servicio `EpicsService`.
- * - Permite navegar hacia la creación o modificación de épicas.
- * - Cambia el estado (activo/inactivo) de una épica.
+ * Componente Angular encargado de gestionar la lista de épicas en el sistema.
+ * Permite listar, crear, modificar y cambiar el estado de las épicas registradas
+ * en el backend.
+ *
+ * @property {Epic[]} epic - Lista de épicas obtenidas desde el backend.
  */
-
 @Component({
   selector: 'app-app-gestion-epica',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -25,28 +23,26 @@ import { EpicsService } from '../../services/epics.service';
   styleUrl: './app-gestion-epica.component.css'
 })
 export class AppGestionEpicaComponent {
-  // Lista de épicas traídas desde el backend
   epic: Epic[] = [];
 
   constructor(private router: Router, private epicService: EpicsService) {}
 
-    /**
-   * Llama a la función para cargar las épicas al iniciar el componente.
+  /**
+   * Inicializa el componente y carga las épicas disponibles.
    */
   ngOnInit(): void {
     this.showEpics();
   }
 
-    /**
-   * Navega hacia la vista de creación de épicas.
+  /**
+   * Redirige a la vista de creación de una nueva épica.
    */
   addEpic(): void {
     this.router.navigate(['/epics/create']);
   }
 
-    /**
-   * Obtiene la lista completa de épicas desde el backend
-   * y la asigna a la propiedad `epics`.
+  /**
+   * Obtiene todas las épicas desde el backend y las asigna a la propiedad `epic`.
    */
   showEpics(): void {
     this.epicService.showAllIEpics().subscribe({
@@ -60,16 +56,17 @@ export class AppGestionEpicaComponent {
     });
   }
 
-    /**
+  /**
    * Cambia el estado (activo/inactivo) de una épica específica.
-   * @param id ID de la épica cuyo estado se modificará.
+   *
+   * @param {number} id - ID de la épica cuyo estado se desea modificar.
    */
   changeStatus(id: number): void {
     this.epicService.changeStatus(id).subscribe({
       next: () => {
-        const weapon = this.epic.find((i) => i.id === id);
-        if (weapon) {
-          weapon.status = !weapon.status;
+        const epicItem = this.epic.find((i) => i.id === id);
+        if (epicItem) {
+          epicItem.status = !epicItem.status;
         }
       },
       error: (error) => {
@@ -79,9 +76,10 @@ export class AppGestionEpicaComponent {
     });
   }
 
-    /**
-   * Navega hacia la vista de modificación de una épica.
-   * @param id ID de la épica a modificar.
+  /**
+   * Redirige a la vista de modificación de una épica existente.
+   *
+   * @param {number} id - ID de la épica que se desea modificar.
    */
   modifyEpic(id: number): void {
     this.router.navigate(['/epics/modify', id]);

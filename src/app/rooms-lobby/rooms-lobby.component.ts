@@ -1,32 +1,20 @@
-// room-lobby.component.ts
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BattleService } from '../services/battle.service';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 /**
- * RoomLobbyComponent
- *
  * Componente Angular que gestiona el lobby de una sala de batalla (pre-combate).
- * Su objetivo es manejar la lógica previa a que inicie la batalla, incluyendo:
- * - Obtener el ID de la sala desde la URL.
- * - Consultar y almacenar las estadísticas del héroe del jugador.
- * - Escuchar el evento `battleStarted` para redirigir al componente de batalla cuando sea necesario.
- * - Permitir que el jugador indique que está listo (`onReady`).
- * - Gestionar las suscripciones a eventos para evitar memory leaks (`ngOnDestroy`).
  *
- * Flujo básico:
- * 1. Cuando el componente se inicializa, obtiene `roomId` desde la ruta.
- * 2. Usa `BattleService` para recuperar estadísticas del héroe según el jugador actual.
- * 3. Se suscribe a `battleStarted` para detectar cuando inicia la batalla y redirigir a `/battle/:id`.
- * 4. Ofrece un método `onReady()` para notificar al servidor que el jugador está listo.
- * 5. Limpia todas las suscripciones al destruirse para no dejar listeners colgados.
+ * Funcionalidades principales:
+ * - Obtiene el ID de la sala desde la URL.
+ * - Carga las estadísticas del héroe del jugador.
+ * - Escucha el evento `battleStarted` y redirige al componente de batalla.
+ * - Permite que el jugador indique que está listo (`onReady`).
+ * - Libera suscripciones en `ngOnDestroy` para evitar fugas de memoria.
  */
-
 @Component({
   selector: 'app-room-lobby',
   templateUrl: './rooms-lobby.component.html',
@@ -34,28 +22,48 @@ import { Subscription } from 'rxjs';
   imports: [CommonModule, FormsModule]
 })
 export class RoomLobbyComponent implements OnInit, OnDestroy {
-  // ID de la sala actual extraído de la URL
+  /** ID de la sala actual extraído de la URL */
   roomId!: string;
-  // Lista de jugadores en la sala (puede ser usada para mostrar en el template)
+
+  /** Lista de jugadores en la sala */
   players: any[] = [];
-  // Estadísticas del héroe del jugador actual
+
+  /** Estadísticas del héroe del jugador actual */
   heroStats: any;
-  // ID del jugador actual (obtenido del localStorage)
+
+  /** ID del jugador actual (obtenido del localStorage) */
   id: string = localStorage.getItem('username') || '';
-  // Equipo del jugador (puede ser 'A' o 'B', por defecto 'A')
+
+  /** Equipo del jugador (puede ser 'A' o 'B') */
   team: string = 'A';
-  // Array para almacenar las suscripciones y limpiarlas en ngOnDestroy
+
+  /** Suscripciones a observables para limpiar en ngOnDestroy */
   private subs: Subscription[] = [];
-  constructor(private route: ActivatedRoute, private router: Router, private battleService: BattleService) {}
 
-  ngOnInit() {
-    // Obtiene el ID de la sala desde la ruta
+  /**
+   * Constructor del componente.
+   *
+   * @param route - Servicio para acceder a parámetros de la ruta.
+   * @param router - Servicio de enrutamiento Angular.
+   * @param battleService - Servicio que maneja la lógica de batallas.
+   */
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private battleService: BattleService
+  ) {}
+
+  /**
+   * Hook de inicialización del componente.
+   * - Obtiene `roomId` desde la ruta.
+   * - Recupera las estadísticas del héroe.
+   * - Se suscribe al evento `battleStarted` para redirigir al campo de batalla.
+   */
+  ngOnInit(): void {
     this.roomId = this.route.snapshot.paramMap.get('id') || '';
-    // Carga las estadísticas del héroe del jugador actual
-    this.heroStats = this.battleService.getHeroStatsByPlayerId(this.id)
+    this.heroStats = this.battleService.getHeroStatsByPlayerId(this.id);
 
-    // Se suscribe al evento battleStarted para detectar inicio de la batalla
-    const battleSub = this.battleService.listen<any>("battleStarted").subscribe(event => {
+    const battleSub = this.battleService.listen<any>('battleStarted').subscribe(event => {
       this.battleService.setCurrentBattle(event);
       this.battleService.joinBattle(this.roomId, this.id);
       this.router.navigate([`/battle/${this.roomId}`]);
@@ -64,13 +72,18 @@ export class RoomLobbyComponent implements OnInit, OnDestroy {
     this.subs.push(battleSub);
   }
 
-  
-  // Notifica al servidor que el jugador está listo para iniciar la batalla
-  onReady() {
+  /**
+   * Notifica al servidor que el jugador está listo para iniciar la batalla.
+   */
+  onReady(): void {
     this.battleService.onReady(this.roomId, this.id, this.heroStats, this.team);
   }
-  // Limpia todas las suscripciones para evitar memory leaks
-  ngOnDestroy() {
+
+  /**
+   * Hook de destrucción del componente.
+   * Libera todas las suscripciones a observables para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
   }
 }

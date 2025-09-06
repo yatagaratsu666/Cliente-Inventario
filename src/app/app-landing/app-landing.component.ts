@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
  * - Redirigir al login o al menú según la acción del usuario
  *
  */
-
 @Component({
   selector: 'app-app-landing',
   standalone: true,
@@ -21,18 +20,27 @@ import { Router } from '@angular/router';
   templateUrl: './app-landing.component.html',
   styleUrls: ['./app-landing.component.css']
 })
-
 export class AppLandingComponent {
 
+  /**
+   * Constructor
+   * @param router Servicio de Angular Router para navegación
+   */
   constructor(private router: Router) { }
 
-  // Redirige al usuario al login
-  onLogin() {
+  /**
+   * Redirige al usuario a la pantalla de login
+   * @returns {void}
+   */
+  onLogin(): void {
     this.router.navigate(['/login']);
   }
 
-  // Redirige al usuario al menú principal
-  onPlay() {
+  /**
+   * Redirige al usuario al menú principal de la aplicación
+   * @returns {void}
+   */
+  onPlay(): void {
     this.router.navigate(['/menu']);
   }
 

@@ -6,17 +6,22 @@ import Hero from '../../domain/heroe.model';
 import { HeroesService } from '../../services/heroes.service';
 
 /**
- * Componente encargado de la gestión de héroes dentro del sistema.
- * Permite listar, crear, modificar y cambiar el estado de los héroes
- * registrados en el backend.
+ * AppGestionHeroeComponent
  *
- * Características principales:
- * - Obtiene todos los héroes mediante el servicio `HeroesService`.
- * - Permite navegar hacia la creación o modificación de héroes.
- * - Cambia el estado (activo/inactivo) de un héroe.
+ * Componente Angular encargado de la gestión de héroes en el sistema.
+ * Se encarga de:
+ * - Listar todos los héroes registrados en el backend
+ * - Navegar hacia la creación de nuevos héroes
+ * - Navegar hacia la modificación de héroes existentes
+ * - Cambiar el estado (activo/inactivo) de un héroe
  *
+ * Características:
+ * - Uso de `HeroesService` para la comunicación con el backend
+ * - Manejo de rutas mediante `Router`
+ * - Manejo de formularios y listas dinámicas
+ *
+ * @property {Hero[]} heros Lista de héroes obtenida desde el backend
  */
-
 @Component({
   selector: 'app-app-gestion-heroe',
   imports: [RouterModule, FormsModule, CommonModule],
@@ -24,23 +29,22 @@ import { HeroesService } from '../../services/heroes.service';
   styleUrl: './app-gestion-heroe.component.css'
 })
 export class AppGestionHeroeComponent {
-  // Lista de heroes traidos del backend
   heros: Hero[] = [];
 
   constructor(private router: Router, private heroService: HeroesService) {}
 
-  
   /**
-   * Llama a la función para cargar los héroes al iniciar el componente.
+   * Inicializa el componente y carga la lista de héroes.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.showHeros();
   }
 
-  
   /**
-   * Obtiene la lista completa de héroes desde el backend
-   * y la asigna a la propiedad `heros`.
+   * Obtiene todos los héroes desde el backend
+   * y los asigna a la propiedad `heros`.
+   * @returns {void}
    */
   showHeros(): void {
     this.heroService.showAllIHeros().subscribe({
@@ -48,42 +52,44 @@ export class AppGestionHeroeComponent {
         this.heros = data;
       },
       error: (error) => {
-        console.error('Error al cargar items:', error);
-        alert('No se pudo obtener la lista de items.');
+        console.error('Error al cargar heroes:', error);
+        alert('No se pudo obtener la lista de héroes.');
       },
     });
   }
 
-  
   /**
-   * Navega hacia la vista de creación de héroes.
+   * Redirige al formulario de creación de un nuevo héroe.
+   * @returns {void}
    */
   addHero(): void {
     this.router.navigate(['/heroes/create']);
   }
 
-    /**
+  /**
    * Cambia el estado (activo/inactivo) de un héroe específico.
-   * @param id ID del héroe cuyo estado se modificará.
+   * @param {number} id ID del héroe cuyo estado se modificará
+   * @returns {void}
    */
   changeStatus(id: number): void {
     this.heroService.changeStatus(id).subscribe({
       next: () => {
-        const item = this.heros.find((i) => i.id === id);
-        if (item) {
-          item.status = !item.status;
+        const hero = this.heros.find((i) => i.id === id);
+        if (hero) {
+          hero.status = !hero.status;
         }
       },
       error: (error) => {
-        console.error('Error al cambiar el estado del item:', error);
-        alert('No se pudo cambiar el estado del item.');
+        console.error('Error al cambiar el estado del héroe:', error);
+        alert('No se pudo cambiar el estado del héroe.');
       },
     });
   }
 
-    /**
-   * Navega hacia la vista de modificación de un héroe.
-   * @param id ID del héroe a modificar.
+  /**
+   * Redirige al formulario de modificación de un héroe existente.
+   * @param {number} id ID del héroe a modificar
+   * @returns {void}
    */
   modifyHero(id: number): void {
     this.router.navigate(['/heroes/modify', id]);

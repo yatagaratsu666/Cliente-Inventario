@@ -21,8 +21,9 @@ import { CommonModule } from '@angular/common';
  * - Uso de `Router` para navegación entre vistas
  * - Manejo básico de errores con alertas y console.error
  * - Arquitectura basada en componentes standalone (usa imports propios)
+ *
+ * @property {Weapon[]} weapon Lista de armas cargadas desde el backend
  */
-
 @Component({
   selector: 'app-app-gestion-weapon',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -36,20 +37,24 @@ export class AppGestionWeaponComponent {
 
   /**
    * Inicializa el componente cargando todas las armas disponibles al iniciar la vista.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.showWeapons();
   }
 
-    /**
-   * Navega a la vista para crear una nueva arma
+  /**
+   * Navega a la vista para crear una nueva arma.
+   * @returns {void}
    */
   addWeapon(): void {
     this.router.navigate(['/weapons/create']);
   }
 
-    /**
-   * Obtiene todas las armas desde el backend
+  /**
+   * Obtiene todas las armas desde el backend.
+   * Maneja errores mostrando un mensaje en consola y alerta al usuario.
+   * @returns {void}
    */
   showWeapons(): void {
     this.weaponService.showAllIWeapon().subscribe({
@@ -63,9 +68,10 @@ export class AppGestionWeaponComponent {
     });
   }
 
-    /**
-   * Cambia el estado (activo/inactivo) de un arma según su ID
-   * @param id ID del arma a modificar
+  /**
+   * Cambia el estado (activo/inactivo) de un arma según su ID.
+   * @param {number} id ID del arma a modificar
+   * @returns {void}
    */
   changeStatus(id: number): void {
     this.weaponService.changeStatus(id).subscribe({
@@ -82,9 +88,10 @@ export class AppGestionWeaponComponent {
     });
   }
 
-    /**
-   * Navega a la vista para modificar un arma
-   * @param id ID del arma a modificar
+  /**
+   * Navega a la vista para modificar un arma existente.
+   * @param {number} id ID del arma a modificar
+   * @returns {void}
    */
   modifyWeapon(id: number): void {
     this.router.navigate(['/weapons/modify', id]);

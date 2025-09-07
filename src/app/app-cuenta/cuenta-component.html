@@ -1,0 +1,8 @@
+<div class="mi-cuenta">
+    <button (click)="toggleCuenta()" class="mi-cuenta-button">Mi cuenta</button>
+    <div *ngIf="mostrarCuenta" class="cuenta-contenedor">
+      <p><strong>Jugador:</strong> {{ jugadorNombre }}</p>
+      <p><strong>Tokens:</strong> {{ cantidadTokens }}</p>
+    </div>
+  </div>
+  

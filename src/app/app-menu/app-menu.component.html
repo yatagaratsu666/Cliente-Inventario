@@ -1,11 +1,13 @@
-<header class="header">
+<header class="header"> 
   <nav class="nav">
     <a routerLink="/online">Jugar Online</a>
     <a routerLink="/missions">Misiones</a>
     <a routerLink="/auctions">Subastas</a>
     <a routerLink="/tournament">Torneo</a>
     <a routerLink="/inventory">Mi Inventario</a>
-    <a routerLink="/account">Mi cuenta</a>
+    <div class="mi-cuenta-container">
+      <a routerLink="/account" class="mi-cuenta-link" (click)="toggleCuenta()">Mi cuenta</a>
+    </div>
   </nav>
 </header>
 
@@ -13,9 +15,19 @@
   <div class="left">
     <button (click)="onPlay()" class="play-btn">JUGAR ONLINE</button>
   </div>
+
+  <div *ngIf="mostrarCuenta" class="mi-cuenta-placeholder">
+    <p><strong>MI CUENTA</strong></p>
+    <p><strong>Jugador:</strong> {{ jugadorNombre }}</p>
+    <p><strong>Tokens:</strong> {{ cantidadTokens }}</p>
+  </div>
+
   <div class="right">
     <div class="character-placeholder">
       <span>Imagen del personaje</span>
     </div>
   </div>
 </main>
+
+
+

@@ -1,0 +1,33 @@
+.mi-cuenta {
+    background-color: #0D1B2A; /* Rich Black */
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .mi-cuenta-button {
+    background-color: #56CFE1; /* Sky Blue */
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .mi-cuenta-button:hover {
+    background-color: #0F4C75; /* Indigo Dye */
+  }
+  
+  .cuenta-contenedor {
+    background-color: #1B262C; /* Gunmetal */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .cuenta-contenedor p {
+    margin: 5px 0;
+  }
+  

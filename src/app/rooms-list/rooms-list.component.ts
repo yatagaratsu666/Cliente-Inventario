@@ -4,6 +4,7 @@ import { BattleService } from '../services/battle.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AppChatComponent } from '../app-chat/app-chat.component';
 
 /**
  * Componente Angular que gestiona y visualiza la lista de salas de batalla disponibles.
@@ -21,35 +22,23 @@ import { ReactiveFormsModule } from '@angular/forms';
  */
 @Component({
   selector: 'app-rooms-list',
+  standalone: true, // Componente standalone para poder importar directamente otros standalone (AppChatComponent)
   templateUrl: './rooms-list.component.html',
   styleUrls: ['./rooms-list.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, AppChatComponent] // Se importa el chat global para usarlo en el template
 })
 export class RoomsListComponent implements OnInit {
-  /** Lista de salas obtenidas del servicio */
+  // Lista de salas obtenidas del servicio
   rooms: any[] = [];
-
-  /** ID del jugador actual almacenado en localStorage */
+  // ID del jugador actual 
   playerId: string = localStorage.getItem('username') || '';
-
-  /** Controla la visibilidad del formulario de creación de salas */
+  // Controla la visibilidad del formulario de creación de salas
   showForm = false;
 
   /** Formulario reactivo para crear nuevas salas */
   roomForm!: FormGroup;
 
-  /**
-   * Constructor del componente.
-   *
-   * @param battleService - Servicio para gestionar la lógica de batallas.
-   * @param router - Servicio de enrutamiento Angular.
-   * @param fb - Constructor de formularios reactivos.
-   */
-  constructor(
-    private battleService: BattleService,
-    private router: Router,
-    private fb: FormBuilder
-  ) {}
+  constructor(private battleService: BattleService, private router: Router, private fb: FormBuilder) { }
 
   /**
    * Hook de inicialización del componente.
@@ -86,13 +75,11 @@ export class RoomsListComponent implements OnInit {
   }
 
   /**
-   * Envía el formulario para crear una nueva sala.
-   * - Si la creación es exitosa:
-   *   - Refresca la lista de salas.
-   *   - Reinicia el formulario con valores por defecto.
-   *   - Intenta unir al jugador automáticamente a la sala recién creada.
-   */
-  createRoomSubmit(): void {
+ * Envía el formulario para crear una nueva sala.
+ * Si la creación es exitosa, refresca la lista de salas, reinicia el formulario
+ * y automáticamente intenta unir al jugador a la sala recién creada.
+ */
+  createRoomSubmit() {
     if (this.roomForm.valid) {
       const roomId = this.roomForm.get('id')?.value;
       this.battleService.createRoom(this.roomForm.value).subscribe(() => {
@@ -111,14 +98,11 @@ export class RoomsListComponent implements OnInit {
   }
 
   /**
-   * Intenta unir al jugador a una sala existente.
-   *
-   * @param roomId - ID de la sala a la que se desea unir.
-   *
-   * Si el proceso es exitoso, navega hacia la sala correspondiente.
-   * En caso de error, lo muestra en consola y alerta al usuario.
-   */
-  joinRoom(roomId: string): void {
+  * Intenta unir al jugador a una sala existente, usando sus datos de héroe.
+  * Si el proceso es exitoso, navega a la vista de la sala.
+  * Si falla, muestra un error en consola y alerta al usuario.
+  */
+  joinRoom(roomId: string) {
     const hero = this.battleService.getHeroStatsByPlayerId(this.playerId);
     this.battleService.joinRoom(roomId, this.playerId, hero.hero.level, hero).subscribe({
       next: () => {
@@ -132,22 +116,22 @@ export class RoomsListComponent implements OnInit {
     });
   }
 
-  /**
-   * Devuelve la cantidad máxima de jugadores según el modo seleccionado.
-   *
-   * @param mode - Modo de juego (ej. `"1v1"`, `"2v2"`, `"3v3"`).
-   * @returns Número máximo de jugadores permitido en ese modo.
+    /**
+   * Devuelve la cantidad máxima de jugadores según el modo seleccionado
+   * @param mode Modo de juego (e.g. "1v1", "2v2", "3v3")
+   * @returns Número máximo de jugadores permitido en ese modo
    */
   getMaxPlayers(mode: string): number {
     switch (mode) {
-      case '1v1':
+      case "1v1":
         return 2;
-      case '2v2':
+      case "2v2":
         return 4;
-      case '3v3':
+      case "3v3":
         return 6;
       default:
         return 0;
     }
   }
+
 }

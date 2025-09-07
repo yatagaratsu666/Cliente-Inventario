@@ -1,3 +1,13 @@
+/**
+ * Enumeraciones base del sistema de combate
+ *
+ * Este archivo agrupa los enums esenciales para definir
+ * los tipos, estados y acciones de los héroes dentro del juego.
+ *.
+ * - Cada enum se usa para controlar flujos lógicos y compatibilidad entre héroes, ítems y acciones.
+ *
+ */
+
 export enum HeroType {
     TANK,
     WEAPONS_PAL,

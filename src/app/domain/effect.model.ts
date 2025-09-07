@@ -1,13 +1,24 @@
+/**
+ * Enum que define los tipos de efectos posibles dentro del juego.
+ * Cada tipo representa una acción o modificación que puede aplicarse
+ * a un héroe, arma u otro elemento durante una batalla.
+ */
+
 export enum EffectType {
-  DAMAGE = "DAMAGE",
-  HEAL = "HEAL",
-  BOOST_ATTACK = "BOOST_ATTACK",
-  BOOST_DEFENSE = "BOOST_DEFENSE",
-  REVIVE = "REVIVE",
-  DODGE = "DODGE",
-  DEFENSE = "DEFENSE"
+  DAMAGE = "DAMAGE", // Daño directo al enemigo
+  HEAL = "HEAL", // Curación de puntos de vida
+  BOOST_ATTACK = "BOOST_ATTACK", // Aumento temporal del ataque
+  BOOST_DEFENSE = "BOOST_DEFENSE", // Aumento temporal de la defensa
+  REVIVE = "REVIVE", // Revivir a un héroe caído
+  DODGE = "DODGE", // Esquivar un ataque
+  DEFENSE = "DEFENSE" // Aumento de la defensa
 }
 
+/**
+ * Clase que representa un efecto aplicado dentro del juego.
+ * Los efectos pueden modificar atributos o realizar acciones
+ * durante un número limitado de turnos.
+ */
 export class Effect {
   effectType: EffectType;
   value: number;

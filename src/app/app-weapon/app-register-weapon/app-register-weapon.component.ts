@@ -8,6 +8,28 @@ import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/item.model';
 import Swal from 'sweetalert2';
 
+/**
+ * AppRegisterWeaponComponent
+ *
+ * Componente Angular encargado de registrar nuevos ítems tipo arma.
+ * Se encarga de:
+ * - Mostrar un formulario con todos los campos requeridos
+ * - Permitir la selección de una imagen asociada al arma
+ * - Validar datos antes de enviarlos al backend
+ * - Crear el arma a través del `WeaponsService`
+ * - Notificar al usuario con alertas personalizadas usando SweetAlert
+ * - Redirigir al listado de armas una vez creado el ítem
+ *
+ * Características:
+ * - Uso de `FormsModule` para el manejo del formulario
+ * - Muestra dinámicamente los tipos de efecto y tipos de héroe a elegir
+ * - Valida que todos los campos estén completos y que exista imagen antes de enviar
+ *
+ * @property {EffectType[]} effectTypes Lista de tipos de efectos disponibles
+ * @property {HeroType[]} heroTypes Lista de tipos de héroe disponibles
+ * @property {Weapon} weapon Modelo de arma inicializado con valores por defecto
+ * @property {File | undefined} selectedFile Archivo de imagen seleccionado para el arma
+ */
 @Component({
   selector: 'app-app-register-weapon',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -17,6 +39,7 @@ import Swal from 'sweetalert2';
 export class AppRegisterWeaponComponent {
   effectTypes = Object.values(EffectType);
   heroTypes = Object.values(HeroType);
+
   weapon: Weapon = {
     id: 0,
     image: '',
@@ -35,6 +58,11 @@ export class AppRegisterWeaponComponent {
 
   constructor(private weaponService: WeaponsService, private router: Router) {}
 
+  /**
+   * Maneja el evento de selección de archivo para asociar una imagen al arma.
+   * @param  event Evento emitido por el input file
+   * @returns 
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -42,13 +70,17 @@ export class AppRegisterWeaponComponent {
     }
   }
 
+  /**
+   * Valida que todos los campos obligatorios del formulario estén completos
+   * y que se haya seleccionado una imagen.
+   * @returns {boolean} `true` si los datos son válidos, `false` en caso contrario
+   */
   validate(): boolean {
     if (!this.selectedFile) {
       console.error('Debes seleccionar una imagen');
       return false;
     }
-    const { name, description, dropRate, heroType, stock, effects } =
-      this.weapon;
+    const { name, description, dropRate, heroType, stock, effects } = this.weapon;
 
     return !!(
       name &&
@@ -64,33 +96,45 @@ export class AppRegisterWeaponComponent {
     );
   }
 
+  /**
+   * Muestra una alerta usando SweetAlert con parámetros personalizables.
+   * @param  icon Tipo de icono (success, error, warning, info)
+   * @param  title Título de la alerta
+   * @param  text Mensaje descriptivo
+   * @param {string} [buttonColor="#3085d6"] Color del botón de confirmación
+   * @returns {void}
+   */
   private showAlert(
     icon: any,
     title: string,
     text: string,
     buttonColor: string = '#3085d6'
-  ) {
+  ): void {
     Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
   }
 
+  /**
+   * Envía los datos del formulario al backend para crear el arma.
+   * - Si la validación falla, muestra advertencia.
+   * - Si el proceso es exitoso, notifica al usuario y redirige al listado de armas.
+   * @returns {void}
+   */
   onSubmit(): void {
     if (!this.validate()) {
       this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');
     } else {
       const weaponConId = { ...this.weapon, id: 0 };
 
-      this.weaponService
-        .createWeapon(weaponConId, this.selectedFile)
-        .subscribe({
-          next: () => {
-            this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
-            this.router.navigate(['/weapons/control']);
-          },
-          error: (err) => {
-            this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
-            console.error('Error al crear arma:', err);
-          },
-        });
+      this.weaponService.createWeapon(weaponConId, this.selectedFile).subscribe({
+        next: () => {
+          this.showAlert('success', '¡Éxito!', 'Item creado con éxito');
+          this.router.navigate(['/weapons/control']);
+        },
+        error: (err) => {
+          this.showAlert('error', 'Error', 'Hubo un problema al crear el item', '#d33');
+          console.error('Error al crear arma:', err);
+        },
+      });
     }
   }
 }

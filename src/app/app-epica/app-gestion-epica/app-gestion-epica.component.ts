@@ -7,6 +7,15 @@ import { CommonModule } from '@angular/common';
 import { Epic } from '../../domain/epic.model';
 import { EpicsService } from '../../services/epics.service';
 
+/**
+ * AppGestionEpicaComponent
+ *
+ * Componente Angular encargado de gestionar la lista de épicas en el sistema.
+ * Permite listar, crear, modificar y cambiar el estado de las épicas registradas
+ * en el backend.
+ *
+ * @property {Epic[]} epic - Lista de épicas obtenidas desde el backend.
+ */
 @Component({
   selector: 'app-app-gestion-epica',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -18,14 +27,23 @@ export class AppGestionEpicaComponent {
 
   constructor(private router: Router, private epicService: EpicsService) {}
 
+  /**
+   * Inicializa el componente y carga las épicas disponibles.
+   */
   ngOnInit(): void {
     this.showEpics();
   }
 
+  /**
+   * Redirige a la vista de creación de una nueva épica.
+   */
   addEpic(): void {
     this.router.navigate(['/epics/create']);
   }
 
+  /**
+   * Obtiene todas las épicas desde el backend y las asigna a la propiedad `epic`.
+   */
   showEpics(): void {
     this.epicService.showAllIEpics().subscribe({
       next: (data) => {
@@ -38,12 +56,17 @@ export class AppGestionEpicaComponent {
     });
   }
 
+  /**
+   * Cambia el estado (activo/inactivo) de una épica específica.
+   *
+   * @param {number} id - ID de la épica cuyo estado se desea modificar.
+   */
   changeStatus(id: number): void {
     this.epicService.changeStatus(id).subscribe({
       next: () => {
-        const weapon = this.epic.find((i) => i.id === id);
-        if (weapon) {
-          weapon.status = !weapon.status;
+        const epicItem = this.epic.find((i) => i.id === id);
+        if (epicItem) {
+          epicItem.status = !epicItem.status;
         }
       },
       error: (error) => {
@@ -53,6 +76,11 @@ export class AppGestionEpicaComponent {
     });
   }
 
+  /**
+   * Redirige a la vista de modificación de una épica existente.
+   *
+   * @param {number} id - ID de la épica que se desea modificar.
+   */
   modifyEpic(id: number): void {
     this.router.navigate(['/epics/modify', id]);
   }

@@ -7,6 +7,22 @@ import Hero from '../../domain/heroe.model';
 import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/heroe.model';
 
+/**
+ * AppModifyHeroeComponent
+ *
+ * Componente Angular encargado de la modificación de héroes existentes.
+ * Se encarga de:
+ * - Cargar la información de un héroe por su ID
+ * - Mostrar un formulario editable con todos los campos
+ * - Permitir actualizar la imagen, estadísticas, efectos y acciones especiales
+ * - Validar la información antes de enviarla al backend
+ * - Actualizar el héroe mediante `HeroesService` y redirigir al panel de control
+ *
+ * Características:
+ * - Uso de `ActivatedRoute` para obtener el parámetro ID
+ * - Validación de campos obligatorios y valores mínimos
+ * - Manejo de listas de efectos y acciones especiales
+ */
 @Component({
   selector: 'app-app-modify-heroe',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -15,8 +31,8 @@ import { HeroType } from '../../domain/heroe.model';
 })
 export class AppModifyHeroeComponent {
   heroTypes = Object.values(HeroType);
-  heroId: number = 0;
   effectTypes = Object.values(EffectType);
+  heroId: number = 0;
   hero: Hero = new Hero(
     '', // image
     '', // name
@@ -50,6 +66,10 @@ export class AppModifyHeroeComponent {
     private heroService: HeroesService
   ) {}
 
+  /**
+   * Inicializa el componente obteniendo el ID del héroe desde la ruta
+   * y cargando sus datos si existe.
+   */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.heroId = id ? +id : 0;
@@ -59,6 +79,10 @@ export class AppModifyHeroeComponent {
     }
   }
 
+  /**
+   * Carga los datos de un héroe específico desde el backend.
+   * @param id ID del héroe a cargar
+   */
   loadHero(id: number): void {
     this.heroService.getHeroById(id).subscribe({
       next: (data) => {
@@ -71,6 +95,10 @@ export class AppModifyHeroeComponent {
     });
   }
 
+  /**
+   * Lee y asigna la imagen cargada desde un input file al héroe.
+   * @param event Evento de cambio en el input file
+   */
   readImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -80,10 +108,14 @@ export class AppModifyHeroeComponent {
     }
   }
 
+  /**
+   * Valida que todos los campos del héroe tengan valores correctos.
+   * @returns `true` si todos los campos son válidos, `false` en caso contrario
+   */
   validate(): boolean {
     const { name, description, heroType, level, stock, attack, health, defense, power, specialActions} = this.hero;
 
-    if (!name || !description || !heroType || level < 0 || stock < -1|| attack < 0 || health < 0 || defense < 0 || power < 0) {
+    if (!name || !description || !heroType || level < 0 || stock < -1 || attack < 0 || health < 0 || defense < 0 || power < 0) {
       return false;
     }
 
@@ -104,6 +136,10 @@ export class AppModifyHeroeComponent {
     return true;
   }
 
+  /**
+   * Envía los datos actualizados del héroe al backend.
+   * Muestra alerta si la validación falla.
+   */
   onSubmit(): void {
     if (!this.validate()) {
       alert('Todos los campos son requeridos.');

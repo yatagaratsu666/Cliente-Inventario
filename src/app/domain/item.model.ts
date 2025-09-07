@@ -1,5 +1,23 @@
 import { Effect } from "./effect.model";
 
+/**
+ * Item
+ *
+ * Modelo de datos que representa un item dentro del juego.
+ *
+ * - Se usa para manejar toda la información relacionada con items disponibles.
+ * - Incluye datos básicos (id, nombre, descripción, imagen).
+ * - Asocia el item a un tipo de héroe (HeroType) para controlar compatibilidad.
+ * - Maneja su estado (status) y cantidad disponible (stock).
+ * - Contiene efectos especiales (Effect[]) que modifican estadísticas o añaden habilidades.
+ * - dropRate define la probabilidad de obtener el item como drop en el juego.
+ *
+ * Uso común:
+ * - Cargar el inventario de items desde el backend.
+ * - Asignar items a héroes compatibles.
+ * - Mostrar detalles visuales (imagen, descripción, efectos) en la UI.
+ */
+
 export enum HeroType {
   TANK = 'TANK',
   WEAPONS_PAL = 'WEAPONS_PAL',

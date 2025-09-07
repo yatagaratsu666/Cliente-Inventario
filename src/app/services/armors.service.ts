@@ -10,25 +10,46 @@ import { ApiConfigService } from './api.config.service';
 import { switchMap} from 'rxjs/operators';
 import { Armor } from '../domain/armor.model';
 
+/** 
+ * ArmorsService
+ *
+ * Servicio Angular para manejar todas las operaciones relacionadas con armaduras del juego
+ * a través de peticiones HTTP hacia la API backend.
+ *
+ * Funcionalidades principales:
+ * - Crear armaduras
+ * - Consultar todas las armaduras
+ * - Consultar armadura por ID
+ * - Actualizar armaduras
+ * - Cambiar estado entre activo/inactivo
+ *
+ */
+
 @Injectable({
   // a
   providedIn: 'root'
 })
 // ayuda no hace push
 export class ArmorsService {
+  // URL base de la API para el recurso armors
   private apiUrl: string;
 
   constructor(
     private http: HttpClient,
     private apiConfigService: ApiConfigService
   ) {
+    // Construye la URL base combinando la URL de la API con el endpoint /armors
     this.apiUrl = `${apiConfigService.getApiUrl()}/armors`;
   }
-
+    // Obtiene el token de autenticación almacenado en localStorage
   private getAuthToken(): string {
     return localStorage.getItem('token') || '';
   }
 
+    /* 
+    Crea una nueva armadura
+    si se proporciona un archivo lo convierte a base64 e incluye en la petición
+    */
 createArmor(armor: Armor, file?: File): Observable<Armor> {
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -47,6 +68,7 @@ createArmor(armor: Armor, file?: File): Observable<Armor> {
       })
     );
   } else {
+    // Si no se proporciona una imagen, se asigna un string vacío
     armorConId.image = '';
     return this.http
       .post<Armor>(`${this.apiUrl}/create`, armorConId, { headers })
@@ -54,7 +76,7 @@ createArmor(armor: Armor, file?: File): Observable<Armor> {
   }
 }
 
-// Método auxiliar para convertir File a Base64
+// Convierte un archivo a una cadena Base64
 private convertToBase64(file: File): Observable<string> {
   return new Observable<string>((observer) => {
     const reader = new FileReader();
@@ -66,7 +88,7 @@ private convertToBase64(file: File): Observable<string> {
     reader.readAsDataURL(file);
   });
 }
-
+  // Obtiene el listado de todas las armaduras
   showAllIArmors(): Observable<Armor[]> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -76,7 +98,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Obtiene una armadura por su ID
   getArmorById(id: number): Observable<Armor> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -86,7 +108,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Actualiza una armadura existente
     updateArmor(id: number, armor: Armor): Observable<void> {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -98,7 +120,7 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
-
+  // cambia el estado de una armadura entre activo/inactivo
   changeStatus(id: number): Observable<void> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -108,7 +130,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Manejo de errores de las peticiones HTTP
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError('Something bad happened; please try again later.');

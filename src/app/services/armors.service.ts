@@ -14,6 +14,7 @@ import { Armor } from '../domain/armor.model';
   // a
   providedIn: 'root'
 })
+// ayuda no hace push
 export class ArmorsService {
   private apiUrl: string;
 

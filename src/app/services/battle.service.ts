@@ -1,3 +1,21 @@
+/**
+ * BattleService
+ *
+ * Servicio Angular encargado de gestionar toda la interacción de batallas multijugador.
+ * Combina comunicación HTTP con comunicación en tiempo real
+ * mediante sockets (Socket.IO) para coordinar acciones entre jugadores en vivo.
+ *
+ * Funcionalidades principales:
+ * - Crear, listar, unirse y salir de salas de batalla.
+ * - Conectarse al servidor WebSocket y sincronizar acciones entre jugadores.
+ * - Enviar acciones de combate (ataques básicos, especiales y maestros) al servidor.
+ * - Configurar estadísticas del héroe y reportar estado de "listo".
+ * - Mapear nombres de habilidades a IDs válidos para el servidor.
+ * - Proveer datos de héroes de prueba (mock) para desarrollo.
+ *
+ */
+
+
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -10,10 +28,11 @@ import { HeroType } from '../domain/battle/HeroStats.model';
 import { io, Socket } from 'socket.io-client';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
+// Normaliza claves para mapear nombres de skills a IDs
 function normalizeKey(s: string) {
   return (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 }
-
+// Tipos de acciones que se pueden enviar al servidor
 type ActionType = "BASIC_ATTACK" | "SPECIAL_SKILL" | "MASTER_SKILL";
 
 /** ---------- Habilidades Especiales (Specials) ---------- */
@@ -88,23 +107,29 @@ export class BattleService {
     this.socketUrl = `${apiConfigService.getBattleSocket()}`;
   }
 
+  // Guarda temporalmente la informacion actual de la batalla
 setCurrentBattle(battleData: any) {
   this.currentBattle = battleData;
 }
-
+ // Obtiene la informacion actual de la batalla
 getCurrentBattle() {
   return this.currentBattle;
 }
-
+  //Crea una nueva sala de batalla
   createRoom(roomData: any) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(`${this.apiUrl}`, roomData, { headers });
   }
 
+  // Obtiene la lista de salas de batalla disponibles
   getRooms() {
     return this.http.get<any[]>(`${this.apiUrl}`);
   }
-
+  /*
+    Permite a un jugador unirse a una sala de batalla
+    Si la union es exitosa, establece la conexion del socket
+    Si hay un error (400), lo maneja adecuadamente
+  */
 joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   return this.http.post(`${this.apiUrl}/${roomId}/join`, 
@@ -139,6 +164,7 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
   );
 }
 
+  //Convierte un nombre o ID de una habilidad a un ID valido esperado por el servidor
   toServerSkillId(input: string, type: "SPECIAL" | "MASTER"): string {
     const raw = (input || "").trim();
     if (!raw) return raw;
@@ -154,12 +180,14 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
     }
   }
 
+  // Envía un ataque básico
   sendBasic(targetId: string, roomId: string, sourcePlayerId: string) {
     const action = { type: "BASIC_ATTACK" as ActionType, sourcePlayerId, targetPlayerId: targetId };
     this.socket.emit("submitAction", { roomId, action });
     console.log(`[SEND] BASIC_ATTACK targetId=${targetId}`);
   }
 
+  // Envía una habilidad especial
   sendSpecial(input: string, targetId: string, roomId: string, sourcePlayerId: string) {
     const skillId = this.toServerSkillId(input, "SPECIAL");
     const action = { type: "SPECIAL_SKILL" as ActionType, sourcePlayerId, targetPlayerId: targetId, skillId };
@@ -167,27 +195,30 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
     this.socket.emit("submitAction", { roomId, action });
   }
 
+  // Envía una habilidad maestra
   sendMaster(input: string, targetId: string, roomId: string, sourcePlayerId: string) {
     const skillId = this.toServerSkillId(input, "MASTER");
     const action = { type: "MASTER_SKILL" as ActionType, sourcePlayerId, targetPlayerId: targetId, skillId };
     console.log(`[SEND] MASTER_SKILL skillId=${skillId}`);
     this.socket.emit("submitAction", { roomId, action });
 }
-
+  // Marca a un jugador como "listo" y envía sus estadísticas al servidor
   onReady(roomId: string, playerId: string, stats: any, team: string) {
     this.socket.emit("setHeroStats", { roomId, playerId, stats });
     this.socket.emit("playerReady", { roomId, playerId, team });
   }
 
+  // Permite a un jugador salir de una sala de batalla
   leaveRoom(roomId: string, playerId: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(`${this.apiUrl}/${roomId}/leave`, { playerId }, { headers });
   }
 
+  // Une un jugador a la batalla en progreso (socket)
   joinBattle(roomId: string, playerId: string) {
     this.socket.emit("joinBattle", { roomId, playerId});
   }
-
+  //Listener genérico para eventos del socket
   listen<T>(eventName: string): Observable<T> {
     return new Observable<T>(subscriber => {
       this.socket.on(eventName, (data: T) => {
@@ -195,7 +226,7 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
       });
     });
   }
-
+  //Devuelve la URL de imagen asociada a un jugador
   getImageById(playerId: string){
     if (playerId === "admin") {
       return "https://i.ibb.co/Q3K7wHkK/guerrero-armas.png";
@@ -204,6 +235,8 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
     }
   }
 
+
+   // Devuelve estadísticas de héroe según el jugador.
 
   getHeroStatsByPlayerId(playerId: string) {
     if (playerId === 'admin') {

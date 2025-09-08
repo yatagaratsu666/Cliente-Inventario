@@ -8,6 +8,19 @@ import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/item.model';
 import Swal from 'sweetalert2';
 
+/**
+ * AppRegisterArmorComponent
+ *
+ * Componente Angular encargado de registrar nuevas armaduras.
+ * Permite completar un formulario con todos los datos de la armadura,
+ * incluyendo tipo, efectos, imagen y tasa de aparición.
+ *
+ * @property {Armor[]} armor - Modelo de armadura a crear con valores iniciales.
+ * @property {EffectType[]} effectTypes - Tipos de efectos disponibles.
+ * @property {HeroType[]} heroTypes - Tipos de héroes disponibles.
+ * @property {ArmorType[]} armorTypes - Tipos de armaduras disponibles.
+ * @property {File} [selectedFile] - Archivo de imagen seleccionado por el usuario.
+ */
 @Component({
   selector: 'app-app-register-armor',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -37,6 +50,11 @@ export class AppRegisterArmorComponent {
 
   constructor(private armorService: ArmorsService, private router: Router) {}
 
+  /**
+   * Captura el archivo seleccionado desde un input tipo file.
+   *
+   * @param {Event} event - Evento de selección de archivo.
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -44,6 +62,12 @@ export class AppRegisterArmorComponent {
     }
   }
 
+  /**
+   * Valida que los campos obligatorios del formulario estén completos
+   * y correctos antes de enviarlos al backend.
+   *
+   * @returns {boolean} `true` si todos los campos son válidos, `false` en caso contrario.
+   */
   validate(): boolean {
     if (!this.selectedFile) {
       console.error('Debes seleccionar una imagen');
@@ -63,15 +87,23 @@ export class AppRegisterArmorComponent {
     );
   }
 
-    private showAlert(
-      icon: any,
-      title: string,
-      text: string,
-      buttonColor: string = '#3085d6'
-    ) {
-      Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
-    }
+  /**
+   * Muestra una alerta modal utilizando SweetAlert2.
+   *
+   * @param {any} icon - Tipo de icono (success, error, warning, info).
+   * @param {string} title - Título de la alerta.
+   * @param {string} text - Mensaje descriptivo de la alerta.
+   * @param {string} [buttonColor='#3085d6'] - Color del botón de confirmación.
+   */
+  private showAlert(icon: any, title: string, text: string, buttonColor: string = '#3085d6') {
+    Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
+  }
 
+  /**
+   * Envía los datos del formulario al backend para registrar una nueva armadura.
+   * Si la validación falla, muestra una alerta de advertencia.
+   * Si la creación es exitosa, notifica al usuario y redirige al listado de armaduras.
+   */
   onSubmit(): void {
     if (!this.validate()) {
       this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');

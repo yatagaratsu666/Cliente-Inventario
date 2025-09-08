@@ -1,5 +1,23 @@
 import { Effect } from "./effect.model";
 
+/**
+ * Epic
+ *
+ * Modelo de datos que representa una epica dentro del juego.
+ *
+ * - Se usa para manejar toda la información relacionada con épicas disponibles.
+ * - Incluye datos básicos (id, nombre, descripción, imagen).
+ * - Asocia la épica a un tipo de héroe (HeroType) para controlar compatibilidad.
+ * - Maneja su estado (status) y cantidad disponible (stock).
+ * - Contiene efectos especiales (Effect[]) que modifican estadísticas o añaden habilidades.
+ * - dropRate define la probabilidad de obtener la épica como drop en el juego.
+ *
+ * Uso común:
+ * - Cargar el inventario de épicas desde el backend.
+ * - Asignar épicas a héroes compatibles.
+ * - Mostrar detalles visuales (imagen, descripción, efectos) en la UI.
+ */
+
 export class Epic {
   image: string;
   id: number;

@@ -1,0 +1,37 @@
+<aside class="global-chat">
+
+  <header class="chat-header">
+    <h3>Chat general</h3>
+    <span class="badge">{{ messages.length }} mensajes</span>
+  </header>
+
+  <section class="chat-list" #listRef>
+    <div *ngIf="messages.length === 0" class="empty">
+      Aún no hay mensajes. ¡Saluda al lobby!
+    </div>
+
+    <div *ngFor="let m of messages" class="chat-item" [ngClass]="m.role">
+      <div class="meta" [ngClass]="m.role">
+        <span class="author">{{ m.user }}</span>
+        <span class="time">{{ m.ts | date: 'HH:mm' }}</span>
+      </div>
+      <div class="bubble" [ngClass]="m.role">{{ m.message }}</div>
+    </div>
+  </section>
+
+ 
+  <footer class="chat-input">
+    <textarea
+      [(ngModel)]="chatInput"
+      (keydown)="onKeydown($event)"
+      placeholder="Escribe un mensaje… (Enter para enviar, Shift+Enter para salto)"
+      maxlength="500"
+      rows="2"
+      [disabled]="!canChat"
+    ></textarea>
+
+    <button (click)="send()" [disabled]="!canChat || !chatInput.trim()">
+      Enviar
+    </button>
+  </footer>
+</aside>

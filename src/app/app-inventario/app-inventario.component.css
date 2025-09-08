@@ -1,0 +1,142 @@
+.main {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    height: calc(100vh - 70px); 
+    box-sizing: border-box;
+    background: linear-gradient(160deg, #0d1b2a, #1b2b43);
+  }
+  
+  .izquierda {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .hero-equipado {
+    background-color: #1B262C; 
+    color: #eaf6f6; 
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    min-height: 650px; 
+    width: 280px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative; 
+    margin-left: 45%; 
+    top: 60px; 
+    cursor: pointer;
+  }
+  
+  .hero-equipado h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .equipamientos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: -250px; 
+  }
+  
+  .equipo-item {
+    background-color: #3282B8; 
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #d4f1f4;
+    text-align: center;
+    width: 20%; 
+    margin-left: 85%; 
+    height: 100px; 
+    position: relative;
+    top: -400px;
+    cursor: pointer;
+  }
+  
+  .derecha {
+    width: 30%;  
+    background-color: rgba(86, 207, 225, 0.1);  
+    border-radius: 12px; 
+    padding: 20px;  
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);  
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .items-cuadricula {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px; 
+    justify-items: center;
+  }
+  
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .item button {
+    background-color: #56CFE1;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .item button:hover {
+    background-color: #0F4C75;
+  }
+  
+  .item {
+    width: 200px;
+    height: 130px;  
+    background-color: #1B262C;  
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    margin: 0 auto;  
+    cursor: pointer;
+  }
+  
+  .item p {
+    color: #d4f1f4;
+    font-size: 16px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    background-color: #56CFE1;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .pagination button:hover {
+    background-color: #0F4C75;
+  }
+  

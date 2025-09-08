@@ -37,6 +37,12 @@ export class AppMenuComponent {
     this.router.navigate(['/battles']);
   }
   /**
+   * Navega a la vista del inventario al presionar el botón "Mi Inventario".
+   */
+  onInventory() {
+    this.router.navigate(['/inventory']); // Redirige a la ruta "/inventory"
+  }
+  /**
  * Alterna la visibilidad del contenedor "Mi cuenta".
  */
   toggleCuenta() {

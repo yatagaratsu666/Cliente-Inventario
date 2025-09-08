@@ -16,6 +16,10 @@
     <button (click)="onPlay()" class="play-btn">JUGAR ONLINE</button>
   </div>
 
+  <div class="left">
+    <button (click)="onInventory()" class="play-btn">MI INVENTARIO</button>
+  </div>
+
   <div *ngIf="mostrarCuenta" class="mi-cuenta-placeholder">
     <p><strong>MI CUENTA</strong></p>
     <p><strong>Jugador:</strong> {{ jugadorNombre }}</p>

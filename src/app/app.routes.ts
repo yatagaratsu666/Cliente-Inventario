@@ -27,6 +27,7 @@ import { BattleComponent } from './battle/battle.component';
 import { AppLandingComponent } from './app-landing/app-landing.component';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
+import { AppInventarioComponent } from './app-inventario/app-inventario.component';
 
 /**
  * Definición de rutas principales de la app.
@@ -170,6 +171,12 @@ const routeConfig: Routes = [
     path: 'cuenta',
     component: CuentaComponent,
     canActivate: [AuthGuard]
+  },
+  //ruta para el inventario del jugador
+  {
+    path: 'inventory',
+    component: AppInventarioComponent,
+    canActivate: [AuthGuard]  
   }
 ];
 

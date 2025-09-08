@@ -1,35 +1,92 @@
 header {
-  color: #d4f1f4; /* Azul-verde suave */
-  padding: 15px 20px;
+  height: 80px;
+  padding: 0 20px;                 /* Ajuste: quito padding vertical extra */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-between;  /* Logo a la izquierda, buscador centro, logout a la derecha */
+  align-items: center;             /* Centrado vertical dentro de los 80px */
   box-sizing: border-box;
-  border-bottom: 2px solid #0f4c75; /* Línea sutil para separar */
+  border-bottom: 2px solid #0f4c75;
+  background: linear-gradient(160deg, #0f4c75, #1b262c);
 }
 
+/* Logo */
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #bbe1fa;
+  transition: transform .3s ease;
+}
+
+/* Botón logout */
 button.logout-button {
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: 8px 16px;                /* Ajuste menor para caber mejor en el header */
+  font-size: 14px;
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(to right, #3282b8, #0f4c75); /* Azul elegante */
-  color: #eaf6f6; /* Texto claro */
+  background: linear-gradient(to right, #3282b8, #0f4c75);
+  color: #eaf6f6;
   cursor: pointer;
   transition: background-color .3s, transform .2s, box-shadow .3s;
 }
 
 button.logout-button:hover {
-  background: linear-gradient(to right, #56cfe1, #48bfe3); 
-  color: #1b262c; /* Texto oscuro para contraste */
+  background: linear-gradient(to right, #56cfe1, #48bfe3);
+  color: #1b262c;
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
 }
 
-.logo {
-  font-size: 20px;
+/* Buscador */
+.search-container {
+  position: relative;    /* Necesario para dropdown */
+  display: flex;         /* Para evitar que crezca en bloque raro */
+  flex-direction: column;
+  align-items: center;   /* Centra el input en el eje horizontal */
+}
+
+.search-bar {
+  width: 250px;
+  padding: 8px;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Dropdown de resultados */
+.search-results {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  font-size: 14px;
+  padding: 8px;
+}
+
+.search-results strong {
+  display: block;
   font-weight: bold;
-  color: #bbe1fa; /* Azul clarito para destacar el logo */
-  transition: transform .3s ease;
+  margin-top: 5px;
+}
+
+.search-results ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 4px 0;
+}
+
+.search-results li {
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.search-results li:hover {
+  background: #f0f0f0;
 }

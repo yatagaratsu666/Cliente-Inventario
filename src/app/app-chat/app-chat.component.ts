@@ -42,7 +42,7 @@ interface ChatMessage {
   imports: [CommonModule, FormsModule],
 })
 export class AppChatComponent implements OnInit, OnDestroy {
-  /** URL del backend de sockets (ajústala según tu entorno) */
+  /** URL del backend de sockets*/
   @Input() serverUrl = 'http://localhost:4000';
 
   /**
@@ -100,7 +100,7 @@ export class AppChatComponent implements OnInit, OnDestroy {
       this.myPlayerId = localStorage.getItem('username') || 'Anon';
     }
 
-    // Crear conexión Socket.IO (solo WebSocket; sin long polling)
+    // Crear conexión Socket.IO 
     this.socket = io(this.serverUrl, {
       transports: ['websocket'],
       autoConnect: true,

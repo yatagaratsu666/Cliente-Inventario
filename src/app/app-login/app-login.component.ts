@@ -55,7 +55,7 @@ export class AppLoginComponent {
 
     this.loginService.login(this.username, this.password).subscribe({
       next: () => {
-        this.router.navigate(['/gestion']); // Redirige al panel
+        this.router.navigate(['/menu']); // Redirige al menu principal
       },
       error: (err) => {
         this.errorMessage = err.message;

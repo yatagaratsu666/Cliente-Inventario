@@ -129,6 +129,11 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
+
+  searchHeroes(query: string) {
+  return this.http.get<Hero[]>(`/api/heroes/search?q=${query}`);
+}
+
   // Manejo de errores de las peticiones HTTP
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);

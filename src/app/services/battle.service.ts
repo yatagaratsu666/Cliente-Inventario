@@ -26,7 +26,7 @@ import { ApiConfigService } from './api.config.service';
 import { HeroStats, RandomEffectType } from '../domain/battle/HeroStats.model';
 import { HeroType } from '../domain/battle/HeroStats.model';
 import { io, Socket } from 'socket.io-client';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError, timeout } from 'rxjs';
 
 // Normaliza claves para mapear nombres de skills a IDs
 function normalizeKey(s: string) {
@@ -281,13 +281,13 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
     const HERO_STATS = {
       hero: {
         heroType: "WARRIOR_ARMS",
-        level: 1,
-        power: 5,
-        health: 5,
-        defense: 10,
-        attack: 10,
-        attackBoost: { min: 0, max: 0 },
-        damage: { min: 5, max: 5 },
+        level: 5,
+        power: 48,
+        health: 84,
+        defense: 51,
+        attack: 50,
+        attackBoost: { min: 1, max: 6 },
+        damage: { min: 1, max: 6 },
         specialActions: ALL_SPECIALS.map(s => ({
           name: s.name,
           actionType: "ATTACK",
@@ -297,12 +297,12 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
           effect: [],
         })),
         randomEffects: [
-          { randomEffectType: "DAMAGE",        percentage: 55, valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "CRITIC_DAMAGE", percentage: 10, valueApply: { min: 2, max: 4 } },
-          { randomEffectType: "EVADE",         percentage: 5,  valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "RESIST",        percentage: 10, valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "ESCAPE",        percentage: 0,  valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "NEGATE",        percentage: 20, valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "DAMAGE",        percentage: 60, valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "CRITIC_DAMAGE", percentage: 5, valueApply: { min: 2, max: 8 } },
+          { randomEffectType: "EVADE",         percentage: 3,  valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "RESIST",        percentage: 0, valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "ESCAPE",        percentage: 2,  valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "NEGATE",        percentage: 30, valueApply: { min: 0, max: 0 } },
         ],
       },
       equipped: {
@@ -362,13 +362,13 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
     const HERO_STATS = {
       hero: {
         heroType: "TANK",
-        level: 1,
+        level: 5,
         power: 50,
-        health: 100,
-        defense: 10,
-        attack: 11,
-        attackBoost: { min: 0, max: 0 },
-        damage: { min: 5, max: 5 },
+        health: 84,
+        defense: 51,
+        attack: 50,
+        attackBoost: { min: 1, max: 6 },
+        damage: { min: 1, max: 4 },
         specialActions: ALL_SPECIALS.map(s => ({
           name: s.name,
           actionType: "ATTACK",
@@ -378,12 +378,12 @@ joinRoom(roomId: string, playerId: string, heroLevel: number, stats: any) {
           effect: [],
         })),
         randomEffects: [
-          { randomEffectType: "DAMAGE",        percentage: 55, valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "CRITIC_DAMAGE", percentage: 10, valueApply: { min: 2, max: 4 } },
+          { randomEffectType: "DAMAGE",        percentage: 40, valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "CRITIC_DAMAGE", percentage: 0, valueApply: { min: 2, max: 8 } },
           { randomEffectType: "EVADE",         percentage: 5,  valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "RESIST",        percentage: 10, valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "ESCAPE",        percentage: 0,  valueApply: { min: 0, max: 0 } },
-          { randomEffectType: "NEGATE",        percentage: 20, valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "RESIST",        percentage: 0, valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "ESCAPE",        percentage: 5,  valueApply: { min: 0, max: 0 } },
+          { randomEffectType: "NEGATE",        percentage: 50, valueApply: { min: 0, max: 0 } },
         ],
       },
       equipped: {

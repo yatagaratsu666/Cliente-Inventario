@@ -1,7 +1,7 @@
 <aside class="global-chat">
 
   <header class="chat-header">
-    <h3>Chat general</h3>
+    <h3>{{getChatName()}}</h3>
     <span class="badge">{{ messages.length }} mensajes</span>
   </header>
 
@@ -9,14 +9,15 @@
     <div *ngIf="messages.length === 0" class="empty">
       Aún no hay mensajes. ¡Saluda al lobby!
     </div>
-
-    <div *ngFor="let m of messages" class="chat-item" [ngClass]="m.role">
-      <div class="meta" [ngClass]="m.role">
-        <span class="author">{{ m.user }}</span>
-        <span class="time">{{ m.ts | date: 'HH:mm' }}</span>
-      </div>
-      <div class="bubble" [ngClass]="m.role">{{ m.message }}</div>
-    </div>
+    <ul style="list-style:none; padding: 5px; margin:0;">
+      <li *ngFor="let m of messages" class="chat-item" [ngClass]="m.role">
+        <div class="meta" [ngClass]="m.role">
+          <span class="author">{{ m.user }}</span>
+          <span class="time">{{ m.ts | date: 'HH:mm' }}</span>
+        </div>
+        <div class="bubble" [ngClass]="m.role">{{ m.message }}</div>
+      </li>
+    </ul>
   </section>
 
  

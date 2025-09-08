@@ -3,7 +3,7 @@ export const environment = {
   production: false,
 
   /** URL base de la API utilizada en testeo. */
-  apiUrl: 'http://localhost:1882',
+  apiUrl: 'http://egypt.bucaramanga.upb.edu.co:1882',
 
   /** URL base del servicio de batallas. */
   battleUrl: 'http://localhost:3000',

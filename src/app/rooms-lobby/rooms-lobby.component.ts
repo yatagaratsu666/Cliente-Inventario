@@ -286,10 +286,7 @@ battle: any;
       heroStats: this.heroStats,
       isReady: true
     };
-    
-    // Ejemplo de envío al servidor
-    // this.socketService.emit('player-ready', readyData);
-    console.log('Enviando datos de jugador listo:', readyData);
+    this.battleService.onReady(this.roomId, this.id, this.heroStats, this.team);
   }
 
   // Método para validar si se puede cambiar de equipo

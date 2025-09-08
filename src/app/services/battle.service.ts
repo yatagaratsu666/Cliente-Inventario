@@ -26,7 +26,7 @@ import { ApiConfigService } from './api.config.service';
 import { HeroStats, RandomEffectType } from '../domain/battle/HeroStats.model';
 import { HeroType } from '../domain/battle/HeroStats.model';
 import { io, Socket } from 'socket.io-client';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError, timeout } from 'rxjs';
 
 // Normaliza claves para mapear nombres de skills a IDs
 function normalizeKey(s: string) {

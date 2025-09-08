@@ -8,6 +8,18 @@ import { EffectType } from '../../domain/effect.model';
 import { HeroType } from '../../domain/item.model';
 import Swal from 'sweetalert2';
 
+/**
+ * AppRegisterEpicaComponent
+ *
+ * Componente Angular encargado de registrar nuevas épicas en el sistema.
+ * Permite ingresar los datos de la épica, asociar efectos y guardar la información
+ * en el backend mediante el servicio `EpicsService`.
+ *
+ * @property {EffectType[]} effectTypes - Lista de tipos de efectos disponibles para la épica.
+ * @property {HeroType[]} heroTypes - Lista de tipos de héroes disponibles para la épica.
+ * @property {Epic} epic - Objeto que representa la épica a registrar, inicializado con valores por defecto.
+ * @property {File | undefined} selectedFile - Archivo de imagen seleccionado para la épica.
+ */
 @Component({
   selector: 'app-app-register-epica',
   imports: [FormsModule, CommonModule, RouterModule],
@@ -37,6 +49,10 @@ export class AppRegisterEpicaComponent {
 
   constructor(private epicService: EpicsService, private router: Router) {}
 
+  /**
+   * Maneja la selección de archivo desde un input file.
+   * @param {Event} event - Evento generado al seleccionar un archivo.
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -44,6 +60,10 @@ export class AppRegisterEpicaComponent {
     }
   }
 
+  /**
+   * Valida que los campos del formulario y la imagen sean correctos antes de enviarlos.
+   * @returns {boolean} True si todos los campos son válidos, false en caso contrario.
+   */
   validate(): boolean {
     if (!this.selectedFile) {
       console.error('Debes seleccionar una imagen');
@@ -73,15 +93,22 @@ export class AppRegisterEpicaComponent {
     );
   }
 
-  private showAlert(
-    icon: any,
-    title: string,
-    text: string,
-    buttonColor: string = '#3085d6'
-  ) {
+  /**
+   * Muestra una alerta visual usando SweetAlert2.
+   * @param {any} icon - Tipo de icono (success, error, warning, info).
+   * @param {string} title - Título de la alerta.
+   * @param {string} text - Texto descriptivo de la alerta.
+   * @param {string} [buttonColor='#3085d6'] - Color del botón de confirmación.
+   */
+  private showAlert(icon: any, title: string, text: string, buttonColor: string = '#3085d6') {
     Swal.fire({ icon, title, text, confirmButtonColor: buttonColor });
   }
 
+  /**
+   * Envía la información de la épica al backend para su creación.
+   * Si la validación falla, muestra una alerta de advertencia.
+   * Si la creación es exitosa, muestra una alerta de éxito y redirige al listado.
+   */
   onSubmit(): void {
     if (!this.validate()) {     
       this.showAlert('warning', 'Campos incompletos', 'Todos los campos son obligatorios');

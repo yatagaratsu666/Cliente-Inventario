@@ -1,9 +1,31 @@
 import { Player } from "./Player.model";
+/**
+ * Room
+ *
+ * Modelo que representa una sala (Room) dentro del sistema de batallas del juego.
+ *
+ * - Maneja la configuración de la sala (RoomConfig): modo de juego, nivel de héroes, créditos, IA permitida, dueño, etc.
+ * - Controla el estado actual (fase/phase) de la sala: LOBBY, PREPARING, IN_PROGRESS, FINISHED.
+ * - Administra los jugadores (Player[]) que se conectan a la sala.
+ * - Separa los jugadores en dos equipos (TeamA, TeamB).
+ * - Permite agregar y remover jugadores, asignarlos a equipos, y cambiar el estado de la sala según el progreso.
+ *
+ * Uso común:
+ * - Backend/Frontend para sincronizar el estado de una sala.
+ * - Controlar el flujo de preparación antes de iniciar una partida.
+ * - Validar reglas como el límite de jugadores o el nivel de héroe requerido.
+ */
 
+/** 
+ * Tipos permitidos para el modo de juego de una sala.
+ * Define cuántos jugadores soporta la sala.
+ */
 export type GameMode = "1v1" | "2v2" | "3v3";
 
+ // Fases posibles por las que pasa una sala.
 export type RoomPhase = "LOBBY" | "PREPARING" | "IN_PROGRESS" | "FINISHED";
 
+// Configuración inicial de una sala.
 export interface RoomConfig {
   id: string;
   mode: GameMode;
@@ -12,7 +34,7 @@ export interface RoomConfig {
   heroLevel: number;
   ownerId: string;
 }
-
+// Datos necesarios para crear una sala.
 export interface RoomCreation {
   id: string;
   mode: GameMode;
@@ -21,7 +43,7 @@ export interface RoomCreation {
   heroLevel: number;
   ownerId: string;
 }
-
+// Clase principal que representa una sala de batalla activa.
 export class Room {
   private players: Player[] = [];
   private teamA: Player[] = [];
@@ -36,6 +58,12 @@ export class Room {
     this.config = config;
   }
 
+  /**
+   * Crea una instancia de Room a partir de datos JSON.
+   * Reconstruye jugadores, equipos y fase.
+   * @param data Datos traidos del backend.
+   * @returns Una nueva instancia de Room.
+   */
   static fromJSON(data: any): Room {
     const room = new Room({
       id: data.config.id,
@@ -54,6 +82,7 @@ export class Room {
     return room;
   }
 
+  // Getters y setters para acceder y modificar propiedades privadas.
   get id() {
     return this.config.id;
   }
@@ -106,6 +135,10 @@ export class Room {
       this.phase = phase;
   }
 
+  /**
+   * Intenta agregar un jugador a la sala.
+   * Valida capacidad, duplicados y nivel de héroe requerido.
+   */
   addPlayer(player: Player) {
     if (this.players.length >= this.capacity) {
       throw new Error("Room is full");
@@ -119,12 +152,20 @@ export class Room {
     this.players.push(player);
   }
 
+  /**
+  * Actualiza las estadísticas del héroe de un jugador dentro de la sala.
+  */
   setHeroStats(username: string, stats: NonNullable<Player["heroStats"]>) {
     const player = this.players.find(p => p.username === username);
     if (!player) throw new Error("Player not in room");
     player.heroStats = stats;
   }
 
+  
+   /**
+   * Marca a un jugador como listo y lo asigna a un equipo (A o B).
+   * Si todos los jugadores están listos y la sala está completa, pasa a fase PREPARING.
+   */
   setPlayerReady(username: string, team: "A" | "B") {
       const player = this.players.find(p => p.username === username);
       if (!player) throw new Error("Player not in room");
@@ -151,10 +192,19 @@ export class Room {
       }
   }
 
+  /**
+   * Comprueba que todos los jugadores están listos.
+   * @returns true si todos están listos y la sala está llena.
+   */
   allPlayersReady(): boolean {
       return this.players.length === this.capacity && this.players.every(p => p.ready);
   }
 
+   /**
+   * Remueve un jugador de la sala y de su equipo.
+   * Actualiza la fase si ya no todos están listos o si la sala queda vacía.
+   * @throws Error si el jugador no está en la sala.
+   */
   removePlayer(username: string): void {
     
     const index = this.players.findIndex(p => p.username === username);

@@ -25,108 +25,158 @@ import { RoomsListComponent } from './rooms-list/rooms-list.component';
 import { RoomLobbyComponent } from './rooms-lobby/rooms-lobby.component';
 import { BattleComponent } from './battle/battle.component';
 import { AppLandingComponent } from './app-landing/app-landing.component';
+import { AppMenuComponent } from './app-menu/app-menu.component';
+import { CuentaComponent } from './app-cuenta/cuenta-component';
+import { AppInventarioComponent } from './app-inventario/app-inventario.component';
+
+/**
+ * Definición de rutas principales de la app.
+ * Cada objeto en el arreglo representa una ruta del enrutador de Angular.
+ * - path: la URL que activa la ruta.
+ * - component: el componente que se muestra al navegar a la ruta.
+ * - canActivate: guards que restringen el acceso a la ruta.
+ */
 
 const routeConfig: Routes = [
+  // ruta para Landing page 
   { path: '',  
     component: AppLandingComponent },
+  // ruta para Inicio de sesión
   {
     path: 'login',
     component: AppLoginComponent,
   },
+  // ruta para crear un item
   {
     path: 'items/create',
     component: AppRegisterItemComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para el menu principal
+  {
+    path: 'menu',
+    component: AppMenuComponent,
+    canActivate: [AuthGuard]
+  },
+  // ruta para ver la lista de items
   {
     path: 'items/control',
     component: AppGestionItemComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para modificar un item
   {
     path: 'items/modify/:id',
     component: AppModifyItemComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para crear un heroe
   {
     path: 'heroes/create',
     component: AppRegisterHeroeComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para ver la lista de heroes
   {
     path: 'heroes/control',
     component: AppGestionHeroeComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para modificar un heroe
   {
     path: 'heroes/modify/:id',
     component: AppModifyHeroeComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para crear un arma
   {
     path: 'weapons/create',
     component: AppRegisterWeaponComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para ver la lista de armas
   {
     path: 'weapons/control',
     component: AppGestionWeaponComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para modificar un arma
       {
     path: 'weapons/modify/:id',
     component: AppModifyWeaponComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para crear una armadura
     {
     path: 'armors/create',
     component: AppRegisterArmorComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para ver la lista de armaduras
   {
     path: 'armors/control',
     component: AppGestionArmorComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para modificar una armadura
       {
     path: 'armors/modify/:id',
     component: AppModifyArmorComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para crear una épica
       {
     path: 'epics/create',
     component: AppRegisterEpicaComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para ver la lista de épicas
   {
     path: 'epics/control',
     component: AppGestionEpicaComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para modificar una épica
       {
     path: 'epics/modify/:id',
     component: AppModifyEpicaComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para el menu de gestión general
   {
     path: 'gestion',
     component: AppGestionComponent,
     canActivate: [AuthGuard]
   },
+  // ruta para la lista de salas de batalla
   {
     path: 'battles',
     component: RoomsListComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para la sala de batalla
   {
     path: 'rooms/:id',
     component: RoomLobbyComponent,
     canActivate: [AuthGuard]
   },
+  //ruta para la batalla actual
   {
     path: 'battle/:id',
     component: BattleComponent,
     canActivate: [AuthGuard]
+  },
+  //ruta para la cuenta del jugador
+  {
+    path: 'cuenta',
+    component: CuentaComponent,
+    canActivate: [AuthGuard]
+  },
+  //ruta para el inventario del jugador
+  {
+    path: 'inventory',
+    component: AppInventarioComponent,
+    canActivate: [AuthGuard]  
   }
 ];
 

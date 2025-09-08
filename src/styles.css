@@ -1,21 +1,23 @@
 header {
-  background: linear-gradient(to right, #382627, #382627);
-  color: #d4af37; /* dorado medieval */
+  background: linear-gradient(to right, #0f4c75, #1b262c); /* Azul degradado elegante */
+  color: #56cfe1; /* Azul brillante para el título */
   padding: 40px;
   width: 100%;
   text-align: center;
   margin-top: 0%;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 200px;
+  font-size: 200px; /* gigante pero serio */
   font-weight: bold;
   position: relative;
-  border-bottom: 5px solid #ccc45a; 
+  border-bottom: 5px solid #3282b8; 
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6); /* Profundidad sutil */
 }
 
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: #cac5ab;
+  background: #0d1b2a; 
   font-size: 120%;
   margin-bottom: 20px;
+  color: #d4f1f4; /* Texto base azul verdoso claro */
 }

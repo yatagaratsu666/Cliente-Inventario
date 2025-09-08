@@ -10,23 +10,44 @@ import { ApiConfigService } from './api.config.service';
 import { switchMap} from 'rxjs/operators';
 import Hero from '../domain/heroe.model';
 
+/** 
+ * HeroesService
+ *
+ * Servicio Angular para manejar todas las operaciones relacionadas con los héroes del juego
+ * a través de peticiones HTTP hacia la API backend.
+ *
+ * Funcionalidades principales:
+ * - Crear héroes
+ * - Consultar todos los héroes
+ * - Consultar héroe por ID
+ * - Actualizar héroes
+ * - Cambiar estado entre activo/inactivo
+ *
+ */
+
 @Injectable({
   providedIn: 'root'
 })
 export class HeroesService {
+  // URL base de la API para el recurso heroes
   private apiUrl: string;
 
   constructor(
     private http: HttpClient,
     private apiConfigService: ApiConfigService
   ) {
+    // Construye la URL base combinando la URL de la API con el endpoint /heroes
     this.apiUrl = `${apiConfigService.getApiUrl()}/heroes`;
   }
-
+    // Obtiene el token de autenticación almacenado en localStorage
   private getAuthToken(): string {
     return localStorage.getItem('token') || '';
   }
 
+    /* 
+    Crea un nuevo héroe
+    si se proporciona un archivo lo convierte a base64 e incluye en la petición
+    */
 createHero(hero: Hero, file?: File): Observable<Hero> {
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -53,7 +74,7 @@ createHero(hero: Hero, file?: File): Observable<Hero> {
   }
 }
 
-// Método auxiliar para convertir File a Base64
+// convierte un archivo a una cadena Base64
 private convertToBase64(file: File): Observable<string> {
   return new Observable<string>((observer) => {
     const reader = new FileReader();
@@ -65,7 +86,7 @@ private convertToBase64(file: File): Observable<string> {
     reader.readAsDataURL(file);
   });
 }
-
+  // Obtiene el listado de todos los héroes
   showAllIHeros(): Observable<Hero[]> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -76,6 +97,7 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
+  // Obtiene un héroe por su ID
   getHeroById(id: number): Observable<Hero> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -85,7 +107,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Actualiza un héroe existente
     updateHero(id: number, hero: Hero): Observable<void> {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -97,7 +119,7 @@ private convertToBase64(file: File): Observable<string> {
       );
   }
 
-
+  // cambia el estado de un héroe entre activo/inactivo
   changeStatus(id: number): Observable<void> {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.getAuthToken()}`
@@ -107,7 +129,7 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
-
+  // Manejo de errores de las peticiones HTTP
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError('Something bad happened; please try again later.');

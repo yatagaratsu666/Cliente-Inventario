@@ -1,10 +1,11 @@
 header {
-  color: #d8d2d2;
+  color: #d4f1f4; /* Azul-verde suave */
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  border-bottom: 2px solid #0f4c75; /* Línea sutil para separar */
 }
 
 button.logout-button {
@@ -13,18 +14,22 @@ button.logout-button {
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  background: #cdb88c; /* pergamino */
-  color: #2f1f0f; /* marrón hierro */
+  background: linear-gradient(to right, #3282b8, #0f4c75); /* Azul elegante */
+  color: #eaf6f6; /* Texto claro */
   cursor: pointer;
-  transition: background-color .3s, transform .2s;
+  transition: background-color .3s, transform .2s, box-shadow .3s;
 }
 
 button.logout-button:hover {
-  background: #bda76d; /* pergamino más oscuro */
-  color: #4b2e05; /* marrón madera */
+  background: linear-gradient(to right, #56cfe1, #48bfe3); 
+  color: #1b262c; /* Texto oscuro para contraste */
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
 }
 
 .logo {
   font-size: 20px;
   font-weight: bold;
+  color: #bbe1fa; /* Azul clarito para destacar el logo */
+  transition: transform .3s ease;
 }

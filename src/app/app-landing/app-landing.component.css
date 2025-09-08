@@ -4,12 +4,16 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #F5E6C4;
+  background: linear-gradient(160deg, #0f4c75, #1b262c); /* Azul profundo degradado */
   padding: 2px;
 }
 
 .logo {
-    margin-top: 2px;
+  margin-top: 2px;
+  color: #bbe1fa; /* Azul clarito para resaltar */
+  font-size: 24px;
+  font-weight: bold;
+  transition: transform .3s ease;
 }
 
 .button-group {
@@ -22,8 +26,8 @@
 }
 
 .button-group .play {
-  background-color: #ac3bb4; 
-  color: #fac342; 
+  background: linear-gradient(to right, #3282b8, #0f4c75); /* Azul serio */
+  color: #eaf6f6; 
   font-size: 18px;
   font-weight: bold;
   padding: 14px 18px;
@@ -31,12 +35,12 @@
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .button-group .login {
-  background-color: #fac342; 
-  color: #ac3bb4; 
+  background: linear-gradient(to right, #1f7a7a, #145252); /* Verde-azulado */
+  color: #eaf6f6; 
   font-size: 18px;
   font-weight: bold;
   padding: 14px 18px;
@@ -44,9 +48,12 @@
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .button-group button:hover {
-  background-color: #c79b9b; 
+  background: linear-gradient(to right, #56cfe1, #48bfe3); /* Azul vivo elegante */
+  color: #1b262c; /* Contraste serio */
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
 }

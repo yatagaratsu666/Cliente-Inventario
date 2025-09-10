@@ -1,14 +1,17 @@
-<header class="header">
+<header>
   <div class="logo">Nexus Battles IV</div>
 
-  <div class="search-container">
-    <input
-      type="text"
-      class="search-bar"
-      placeholder="Buscar..."
-      [(ngModel)]="searchQuery"
-      (input)="onSearchChange()"
-    />
+  <div class="nav-container">
+    <nav class="nav-links">
+      <a (click)="onPlay()">Jugar Online</a>
+      <a (click)="onMission()">Misiones</a>
+      <a (click)="onAuction()">Subastas</a>
+      <a (click)="onTournament()">Torneo</a>
+      <a (click)="onInventory()">Mi Inventario</a>
+      <a (click)="onAccount()">Mi Cuenta</a>
+    </nav>
+    <input type="text" class="search-bar" placeholder="Buscar..." [(ngModel)]="searchQuery"
+      (input)="onSearchChange()" />
 
     <!-- Dropdown de resultados -->
     <div class="search-results" *ngIf="searchQuery">
@@ -49,11 +52,9 @@
     </div>
   </div>
 
-  <button
-    class="logout-button"
-    *ngIf="loginService?.isLoggedIn()"
-    (click)="logout()"
-  >
+
+
+  <button class="logout-button" *ngIf="loginService?.isLoggedIn()" (click)="logout()">
     Cerrar sesión
   </button>
 </header>

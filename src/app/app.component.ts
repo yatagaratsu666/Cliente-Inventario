@@ -27,6 +27,10 @@ export class AppComponent {
   title = 'frontend-inv';
   searchQuery: string = '';
 
+  mostrarCuenta = false;
+  jugadorNombre = 'Jugador1';
+  cantidadTokens = 150;
+
   // datos filtrados (lo que se muestra)
   items: Item[] = [];
   heroes: Hero[] = [];
@@ -50,7 +54,7 @@ export class AppComponent {
     private armorService: ArmorsService,
     private epicsService: EpicsService,
     private weaponService: WeaponsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Traer todos los datos una sola vez
@@ -98,6 +102,39 @@ export class AppComponent {
   logout(): void {
     this.loginService.logout();
     this.router.navigate(['/login']);
+  }
+
+    /**
+   * Navega a la vista de batallas al presionar el botón "Play".
+   */
+  onPlay() {
+    this.router.navigate(['/battles']);
+  }
+  /**
+   * Navega a la vista del inventario al presionar el botón "Mi Inventario".
+   */
+  onInventory() {
+    this.router.navigate(['/inventory']); 
+  }
+
+  onAuction(){
+    this.router.navigate(['/']);
+  }
+
+  onTournament(){
+    this.router.navigate(['/']);
+  }
+
+  onMission(){
+    this.router.navigate(['/']);
+  }
+
+  onAccount(){
+    this.router.navigate(['/cuenta']);
+  }
+
+  toggleCuenta() {
+    this.mostrarCuenta = !this.mostrarCuenta;
   }
 
   onSearchChange(): void {

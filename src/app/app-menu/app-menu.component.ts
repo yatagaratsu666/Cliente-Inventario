@@ -31,18 +31,6 @@ export class AppMenuComponent {
   constructor(private router: Router) { }
   
   /**
-   * Navega a la vista de batallas al presionar el botón "Play".
-   */
-  onPlay() {
-    this.router.navigate(['/battles']);
-  }
-  /**
-   * Navega a la vista del inventario al presionar el botón "Mi Inventario".
-   */
-  onInventory() {
-    this.router.navigate(['/inventory']); // Redirige a la ruta "/inventory"
-  }
-  /**
  * Alterna la visibilidad del contenedor "Mi cuenta".
  */
   toggleCuenta() {

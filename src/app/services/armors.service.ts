@@ -130,6 +130,11 @@ private convertToBase64(file: File): Observable<string> {
         catchError(this.handleError)
       );
   }
+
+  searchArmors(query: string) {
+  return this.http.get<Armor[]>(`/api/armors/search?q=${query}`);
+}
+
   // Manejo de errores de las peticiones HTTP
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);

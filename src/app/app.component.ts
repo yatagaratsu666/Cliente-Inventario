@@ -4,40 +4,170 @@ import { CommonModule } from '@angular/common';
 import { LoginService } from './services/login.service';
 import { Router } from '@angular/router';
 import { ChatService } from './services/chat.service';
-
-/**
- * Componente raíz de la aplicación.
- *
- * - Muestra el layout base (definido en app.component.html).
- * - Gestiona funciones globales como cerrar sesión.
- * - Se encarga de inyectar servicios que pueden necesitarse a nivel global.
- */
+import { FormsModule } from '@angular/forms';
+import { Item } from './domain/item.model';
+import Hero from './domain/heroe.model';
+import { Armor } from './domain/armor.model';
+import { Epic } from './domain/epic.model';
+import { Weapon } from './domain/weapon.model';
+import { ItemsService } from './services/items.service';
+import { HeroesService } from './services/heroes.service';
+import { ArmorsService } from './services/armors.service';
+import { EpicsService } from './services/epics.service';
+import { WeaponsService } from './services/weapons.service';
 
 @Component({
-  selector: 'app-root',     // Nombre del componente raíz
-  imports: [RouterModule, CommonModule], // Módulos necesarios para routing y utilidades comunes
-  templateUrl: './app.component.html',  //template HTML del componente
-  styleUrl: './app.component.css' //estilos CSS del componente
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterModule, CommonModule, FormsModule],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'frontend-inv';
+  searchQuery: string = '';
 
-    /**
-   * Constructor del componente.
-   * Inyecta servicios globales:
-   * - LoginService: manejo de autenticación / sesión.
-   * - Router: para navegación programática entre rutas.
-   * - ChatService: servicio de chat en tiempo real.
-   */
+  mostrarCuenta = false;
+  jugadorNombre = 'Jugador1';
+  cantidadTokens = 150;
 
-  constructor(public loginService: LoginService, private router: Router, private chatService: ChatService) {}
+  // datos filtrados (lo que se muestra)
+  items: Item[] = [];
+  heroes: Hero[] = [];
+  armors: Armor[] = [];
+  epics: Epic[] = [];
+  weapons: Weapon[] = [];
 
-    /**
-   * Cierra sesión del usuario y redirige al login.
-   */
+  // copia completa (para filtrar en memoria)
+  allItems: Item[] = [];
+  allHeroes: Hero[] = [];
+  allArmors: Armor[] = [];
+  allEpics: Epic[] = [];
+  allWeapons: Weapon[] = [];
+
+  constructor(
+    public loginService: LoginService,
+    private router: Router,
+    private chatService: ChatService,
+    private itemService: ItemsService,
+    private heroService: HeroesService,
+    private armorService: ArmorsService,
+    private epicsService: EpicsService,
+    private weaponService: WeaponsService
+  ) { }
+
+  ngOnInit() {
+    // Traer todos los datos una sola vez
+    this.itemService.showAllItems().subscribe({
+      next: (data) => {
+        this.allItems = data;
+        this.items = data;
+      },
+      error: (err) => console.error('Error cargando items:', err)
+    });
+
+    this.heroService.showAllIHeros().subscribe({
+      next: (data) => {
+        this.allHeroes = data;
+        this.heroes = data;
+      },
+      error: (err) => console.error('Error cargando heroes:', err)
+    });
+
+    this.armorService.showAllIArmors().subscribe({
+      next: (data: Armor[]) => {
+        this.allArmors = data;
+        this.armors = data;
+      },
+      error: (err: any) => console.error('Error cargando armaduras:', err)
+    });
+
+    this.epicsService.showAllIEpics().subscribe({
+      next: (data: Epic[]) => {
+        this.allEpics = data;
+        this.epics = data;
+      },
+      error: (err: any) => console.error('Error cargando épicos:', err)
+    });
+
+    this.weaponService.showAllIWeapon().subscribe({
+      next: (data: Weapon[]) => {
+        this.allWeapons = data;
+        this.weapons = data;
+      },
+      error: (err: any) => console.error('Error cargando armas:', err)
+    });
+  }
 
   logout(): void {
     this.loginService.logout();
     this.router.navigate(['/login']);
+  }
+
+    /**
+   * Navega a la vista de batallas al presionar el botón "Play".
+   */
+  onPlay() {
+    this.router.navigate(['/battles']);
+  }
+  /**
+   * Navega a la vista del inventario al presionar el botón "Mi Inventario".
+   */
+  onInventory() {
+    this.router.navigate(['/inventory']); 
+  }
+
+  onAuction(){
+    this.router.navigate(['/']);
+  }
+
+  onTournament(){
+    this.router.navigate(['/']);
+  }
+
+  onMission(){
+    this.router.navigate(['/']);
+  }
+
+  onAccount(){
+    this.router.navigate(['/cuenta']);
+  }
+
+  toggleCuenta() {
+    this.mostrarCuenta = !this.mostrarCuenta;
+  }
+
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      // restaurar todo si no hay texto
+      this.items = this.allItems;
+      this.heroes = this.allHeroes;
+      this.armors = this.allArmors;
+      this.epics = this.allEpics;
+      this.weapons = this.allWeapons;
+      return;
+    }
+
+    this.items = this.allItems.filter(i =>
+      i.name?.toLowerCase().includes(query)
+    );
+
+    this.heroes = this.allHeroes.filter(h =>
+      h.name?.toLowerCase().includes(query)
+    );
+
+    this.armors = this.allArmors.filter(a =>
+      a.name?.toLowerCase().includes(query)
+    );
+
+    this.epics = this.allEpics.filter(e =>
+      e.name?.toLowerCase().includes(query)
+    );
+
+    this.weapons = this.allWeapons.filter(w =>
+      w.name?.toLowerCase().includes(query)
+    );
   }
 }

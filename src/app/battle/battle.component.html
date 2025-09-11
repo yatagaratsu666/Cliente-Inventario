@@ -1,104 +1,211 @@
-<div class="battle-container">
-  <!-- Cola de turnos -->
-  <div class="turn-queue">
-    <h3>Turnos</h3>
-    <div *ngFor="let player of turnQueue">
-      <span class="activePlayer" [class.active]="player === currentTurn">{{ player }}</span>
+<div class="battle-arena">
+  <!-- Área superior -->
+  <div class="top-section">
+    <!-- Temporizadores centrados -->
+    <div class="timers-section">
+      <div class="timer turn-timer">
+        <div class="timer-label">Turno</div>
+        <div class="timer-value">{{ turnTimer }}</div>
+      </div>
+      <div class="timer battle-timer">
+        <div class="timer-label">Batalla</div>
+        <div class="timer-value">{{ battleTimer }}</div>
+      </div>
+    </div>
+
+    <!-- Cola de turnos (superior derecha) -->
+    <div class="turn-queue">
+      <h4>Cola de Turnos</h4>
+      <div class="turn-list">
+        <div 
+          *ngFor="let player of turnQueue; let i = index" 
+          class="turn-player"
+          [class.current-turn]="player === currentTurn"
+          [class.my-turn]="player === myPlayerId && player === currentTurn">
+          <span class="turn-position">{{ i + 1 }}</span>
+          <span class="turn-name">{{ player }}</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Equipos -->
-  <div class="teams">
-    <!-- Equipo A -->
-    <div class="team">
-      <h2>Equipo A</h2>
-      <div *ngFor="let p of teamA" class="player">
-        <p>{{ p.username }}</p>
-        <img [src]="getImageById(p.username)" alt="Imagen del jugador" />
+  <!-- Área central - Equipos -->
+  <div class="battlefield">
+    <!-- Equipo A (izquierda) -->
+    <div class="team team-a">
+      <div class="team-label">EQUIPO A</div>
+      <div class="players-formation">
+        <div 
+          *ngFor="let player of teamA; let i = index" 
+          class="battle-player"
+          [class.player-center]="i === 1 && teamA.length === 3"
+          [class.selected-target]="selectedTarget === player.username"
+          [class.enemy-target]="isEnemyPlayer(player.username)"
+          (click)="selectTarget(player.username)">
+          
+          <!-- Avatar del jugador -->
+          <div class="player-avatar">
+            <img [src]="getImageById(player.username)" [alt]="player.username">
+            <div class="power-indicator">{{ player.heroStats.hero.power }}</div>
+          </div>
 
-        <div class="health-bar" [style.backgroundColor]="getHealthColor(p.heroStats.hero.health, p.username)">
-          Vida: {{ p.heroStats.hero.health }}
-        </div>
+          <!-- Barra de vida -->
+          <div class="health-container">
+            <div 
+              class="health-bar" 
+              [style.width.%]="getHealthPercentage(player)"
+              [style.background-color]="getHealthColor(player.heroStats.hero.health, player.username)">
+            </div>
+            <div class="health-text">{{ player.heroStats.hero.health }}</div>
+          </div>
 
-        <div class="player-stats">
-          Poder: {{ p.heroStats.hero.power }}<br>
-          Ataque: {{ p.heroStats.hero.attack }} + {{ p.heroStats.hero.attackBoost.min }}d{{
-          p.heroStats.hero.attackBoost.max }}<br>
-          Defensa: {{ p.heroStats.hero.defense }}<br>
-          Daño: {{ p.heroStats.hero.damage.min }}d{{ p.heroStats.hero.damage.max }}
-        </div>
-
-        <!-- Acciones si es mi turno -->
-        <div *ngIf="isMyTurn() && p.username === myPlayerId" class="actions-panel">
-          <h4>Acciones</h4>
-          <label for="skill">Habilidad:</label>
-          <select class="skill-selector" (change)="onSkillSelected($event)" [(ngModel)]="selectedSkill"
-            [compareWith]="compareSkills">
-            <option *ngFor="let skill of getMySkills()" [ngValue]="skill">
-              {{ skill.name }}
-            </option>
-          </select>
-
-          <label for="target">Objetivo:</label>
-          <select id="target" [(ngModel)]="selectedTarget">
-            <option *ngFor="let enemy of getEnemyTeam()" [value]="enemy.username">
-              {{ enemy.username }} ({{ enemy.heroStats.hero.health }} HP)
-            </option>
-          </select>
-
-          <button (click)="performAction()">Atacar</button>
+          <!-- Nombre del usuario -->
+          <div class="player-name">{{ player.username }}</div>
         </div>
       </div>
     </div>
 
-    <!-- Equipo B -->
-    <div class="team">
-      <h2>Equipo B</h2>
-      <div *ngFor="let p of teamB" class="player">
-        <p>{{ p.username }}</p>
-        <img [src]="getImageById(p.username)" alt="Imagen del jugador" class="imagen-B" />
-
-        <div class="health-bar" [style.backgroundColor]="getHealthColor(p.heroStats.hero.health, p.username)">
-          Vida: {{ p.heroStats.hero.health }}
-        </div>
-
-        <div class="player-stats">
-          Poder: {{ p.heroStats.hero.power }}<br>
-          Ataque: {{ p.heroStats.hero.attack }} + {{ p.heroStats.hero.attackBoost.min }}d{{
-          p.heroStats.hero.attackBoost.max }}<br>
-          Defensa: {{ p.heroStats.hero.defense }}<br>
-          Daño: {{ p.heroStats.hero.damage.min }}d{{ p.heroStats.hero.damage.max }}
-        </div>
-
-        <!-- Acciones si es mi turno -->
-        <div class="actions-panel-container" *ngIf="isMyTurn() && p.username === myPlayerId">
-          <h4>Acciones</h4>
-          <div class="actions-panel">
-            <label for="skill">Habilidad:</label>
-            <select (change)="onSkillSelected($event)" [(ngModel)]="selectedSkill" [compareWith]="compareSkills">
-              <option *ngFor="let skill of getMySkills()" [ngValue]="skill">
-                {{ skill.name }}
-              </option>
-            </select>
-
-            <label for="target">Objetivo:</label>
-            <select id="target" [(ngModel)]="selectedTarget">
-              <option *ngFor="let enemy of getEnemyTeam()" [value]="enemy.username">
-                {{ enemy.username }} ({{ enemy.heroStats.hero.health }} HP)
-              </option>
-            </select>
-
-            <button (click)="performAction()">Atacar</button>
+    <!-- Equipo B (derecha) -->
+    <div class="team team-b">
+      <div class="team-label">EQUIPO B</div>
+      <div class="players-formation">
+        <div 
+          *ngFor="let player of teamB; let i = index" 
+          class="battle-player"
+          [class.player-center]="i === 1 && teamB.length === 3"
+          [class.selected-target]="selectedTarget === player.username"
+          [class.enemy-target]="isEnemyPlayer(player.username)"
+          (click)="selectTarget(player.username)">
+          
+          <!-- Avatar del jugador -->
+          <div class="player-avatar">
+            <img [src]="getImageById(player.username)" [alt]="player.username" class="flipped">
+            <div class="power-indicator">{{ player.heroStats.hero.power }}</div>
           </div>
+
+          <!-- Barra de vida -->
+          <div class="health-container">
+            <div 
+              class="health-bar" 
+              [style.width.%]="getHealthPercentage(player)"
+              [style.background-color]="getHealthColor(player.heroStats.hero.health, player.username)">
+            </div>
+            <div class="health-text">{{ player.heroStats.hero.health }}</div>
+          </div>
+
+          <!-- Nombre del usuario -->
+          <div class="player-name">{{ player.username }}</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Área inferior -->
+  <div class="bottom-section">
+    <!-- Logs de batalla (inferior izquierda) -->
+    <div class="battle-logs">
+      <div class="logs-header">
+        <h4>Registro de Batalla</h4>
+      </div>
+      <div class="logs-container">
+        <div 
+          *ngFor="let log of battleLogs; trackBy: trackLogById" 
+          class="log-entry"
+          [class.damage-log]="log.type === 'damage'"
+          [class.heal-log]="log.type === 'heal'"
+          [class.system-log]="log.type === 'system'">
+          <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+          <span class="log-message">{{ log.message }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de acción (inferior centro) -->
+    <div class="action-buttons" *ngIf="isMyTurn()">
+      <button 
+        class="action-btn basic-attack"
+        [disabled]="!selectedTarget"
+        (click)="performAction(
+          {
+            name: 'Ataque Básico',
+            type: 'BASIC_ATTACK'
+          }
+        )">
+        <div class="btn-icon">⚔️</div>
+        <div class="btn-label">Ataque Básico</div>
+      </button>
+
+      <button 
+        *ngFor="let skill of getMySpecialSkills(); let i = index"
+        class="action-btn special-skill"
+        [disabled]="!selectedTarget || !canUseSkill(skill)"
+        (click)="performAction(
+          {
+            name: skill.name,
+            type: 'SPECIAL_SKILL',
+          }
+        )">
+        <div class="btn-icon">{{ getSkillIcon(skill) }}</div>
+        <div class="btn-label">{{ skill.name }}</div>
+        <div class="btn-cooldown" *ngIf="skill.cooldown > 0">{{ skill.cooldown }}</div>
+      </button>
+
+      <button 
+        *ngIf="getMyMasterSkills().length > 0"
+        class="action-btn epic-skill"
+        [disabled]="!selectedTarget || !canUseEpicSkill()"
+        (click)="performAction(
+          {
+            name: getEpicSkillName(),
+            type: 'MASTER_SKILL',
+          }
+        )">
+        <div class="btn-icon">✨</div>
+        <div class="btn-label">{{ getEpicSkillName() }}</div>
+        <div class="btn-cooldown" *ngIf="getEpicSkillCooldown() > 0">{{ getEpicSkillCooldown() }}</div>
+      </button>
+    </div>
+
+    <!-- Indicador de turno cuando no es mi turno -->
+    <div class="waiting-turn" *ngIf="!isMyTurn()">
+      <div class="waiting-message">
+        <div class="waiting-icon">⏳</div>
+        <div class="waiting-text">Esperando turno de {{ getCurrentPlayerName() }}...</div>
+      </div>
+    </div>
+
+    <!-- Chat de batalla (inferior derecha) -->
+    <div class="battle-chat">
+    <app-chat
+      [serverUrl]="'http://localhost:4000'"
+      [myPlayerId]="myPlayerId"
+      [canChat]="true"
+      [channel]=  `battle-${roomId}`
+      >
+    </app-chat>
     </div>
   </div>
 
   <!-- Overlay de resultado -->
-  <div *ngIf="showResult" class="overlay">
-    <h1 [ngClass]="{ 'victory': isWinner, 'defeat': !isWinner }">
-      {{ isWinner ? '¡VICTORIA!' : 'DERROTA' }}
-    </h1>
+  <div *ngIf="showResult" class="result-overlay">
+    <div class="result-content">
+      <h1 [class.victory]="isWinner" [class.defeat]="!isWinner">
+        {{ isWinner ? '¡VICTORIA!' : 'DERROTA' }}
+      </h1>
+      <div class="result-details">
+        <p *ngIf="isWinner">¡Has derrotado al equipo enemigo!</p>
+        <p *ngIf="!isWinner">El equipo enemigo ha sido victorioso.</p>
+      </div>
+      <button class="return-btn" (click)="returnToLobby()">Regresar al Lobby</button>
+    </div>
+  </div>
+
+  <!-- Indicador de objetivo seleccionado -->
+  <div class="target-indicator" *ngIf="selectedTarget && isMyTurn()">
+    <div class="target-info">
+      <span class="target-label">Objetivo:</span>
+      <span class="target-name">{{ selectedTarget }}</span>
+      <button class="clear-target" (click)="clearTarget()">✕</button>
+    </div>
   </div>
 </div>

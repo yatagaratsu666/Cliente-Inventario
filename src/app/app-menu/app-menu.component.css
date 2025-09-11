@@ -9,6 +9,7 @@
   padding: 15px 30px;
   border-bottom: 2px solid #56cfe1; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  position: relative; 
 }
 
 .nav {
@@ -29,6 +30,22 @@
   text-shadow: 0 0 8px rgba(86, 207, 225, 0.8);
 }
 
+.mi-cuenta-container {
+  position: absolute;
+  right: 100px; 
+}
+
+.mi-cuenta-link {
+  text-decoration: none;
+  color: #eaf6f6;  
+  font-weight: bold;
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.mi-cuenta-link:hover {
+  color: #56cfe1;
+  text-shadow: 0 0 8px rgba(86, 207, 225, 0.8); 
+}
 
 .main {
   display: flex;
@@ -73,6 +90,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.mi-cuenta-placeholder {
+  position: absolute;
+  right: 30px; 
+  top: 150px;
+  width: 150px; 
+  height: 150px; 
+  height: auto;
+  border: 2px solid #56cfe1; 
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #d4f1f4;
+  background: rgba(86, 207, 225, 0.05); 
+  border-radius: 12px; 
+  box-shadow: inset 0 0 10px rgba(72, 191, 227, 0.2); 
+  padding: 10px;
+}
+
+.mi-cuenta-placeholder p {
+  margin: 5px 0; 
 }
 
 .character-placeholder {

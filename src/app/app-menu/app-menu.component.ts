@@ -24,12 +24,16 @@ import { Router } from '@angular/router';
 })
 export class AppMenuComponent {
 
-  constructor(private router: Router) { }
+  mostrarCuenta = false;
+  jugadorNombre = 'Jugador1';
+  cantidadTokens = 150;
 
+  constructor(private router: Router) { }
+  
   /**
-   * Navega a la vista de batallas al presionar el botón "Play".
-   */
-  onPlay() {
-    this.router.navigate(['/battles']);
+ * Alterna la visibilidad del contenedor "Mi cuenta".
+ */
+  toggleCuenta() {
+    this.mostrarCuenta = !this.mostrarCuenta;
   }
 }

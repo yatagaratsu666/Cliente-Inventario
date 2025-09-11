@@ -1,28 +1,165 @@
 <!-- room-lobby.component.html -->
-<h2>Sala {{ roomId }}</h2>
-
-<ul>
-    <div>
-      <strong>{{ heroStats.name }}</strong> 
+<div class="lobby-container">
+  <!-- Panel izquierdo - Equipamiento del jugador -->
+  <div class="left-panel">
+    <div class="room-title">
+      <h2>Sala {{ roomId }}</h2>
     </div>
-    <div>
-      <span>Clase: {{ heroStats.hero.heroType }}</span> 
-      <span>Nivel: {{ heroStats.hero.level }}</span> 
-      <span>Poder: {{ heroStats.hero.power }}</span> 
-      <span>Vida: {{ heroStats.hero.health }}</span> 
-      <span>Defensa: {{ heroStats.hero.defense }}</span> 
-      <span>Ataque: {{ heroStats.hero.attack }}</span>
-    </div>
-    <div>
-      <span>Boost: {{ heroStats.hero.attackBoost.min }} - {{ heroStats.hero.attackBoost.max }}</span> 
-      <span>Daño: {{ heroStats.hero.damage.min }} - {{ heroStats.hero.damage.max }}</span>
-    </div>
-    <label>Equipo:</label>
-    <select [(ngModel)]="team">
-      <option value="A">A</option>
-      <option value="B">B</option>
-    </select>
-</ul>
 
+    <!-- Información del héroe -->
+    <div class="hero-info">
+      <div class="hero-name">
+        <strong>{{ heroStats.name }}</strong>
+      </div>
+      <div class="hero-stats">
+        <span>{{ heroStats.hero.heroType }}</span>
+        <span>Nivel: {{ heroStats.hero.level }}</span>
+        <span>Poder: {{ heroStats.hero.power }}</span>
+      </div>
+      <div class="hero-stats">
+        <span>Vida: {{ heroStats.hero.health }}</span>
+        <span>Defensa: {{ heroStats.hero.defense }}</span>
+        <span>Ataque: {{ heroStats.hero.attack }}</span>
+      </div>
+      <div class="hero-stats">
+        <span>Boost: {{ heroStats.hero.attackBoost.min }}-{{ heroStats.hero.attackBoost.max }}</span>
+        <span>Daño: {{ heroStats.hero.damage.min }}-{{ heroStats.hero.damage.max }}</span>
+      </div>
+    </div>
 
-<button (click)="onReady()">Listo</button>
+    <!-- Panel de equipamiento -->
+    <div class="equipment-panel">
+      <!-- Fila superior: Casco -->
+      <div class="equipment-row top-row">
+        <div class="equipment-slot helmet" (click)="openEquipmentModal('helmet')">
+          <img *ngIf="equippedItems.helmet" [src]="equippedItems.helmet.image" [alt]="equippedItems.helmet.name">
+          <span *ngIf="!equippedItems.helmet" class="slot-label">Casco</span>
+        </div>
+      </div>
+
+      <!-- Fila media: Armas y armadura central -->
+      <div class="equipment-row middle-row">
+        <div class="left-weapon">
+          <div class="equipment-slot weapon-left" (click)="openEquipmentModal('weapon1')">
+            <img *ngIf="equippedItems.weapon1" [src]="equippedItems.weapon1.image" [alt]="equippedItems.weapon1.name">
+            <span *ngIf="!equippedItems.weapon1" class="slot-label">Arma 1</span>
+          </div>
+          <div class="equipment-slot bracer-left" (click)="openEquipmentModal('bracerLeft')">
+            <img *ngIf="equippedItems.bracerLeft" [src]="equippedItems.bracerLeft.image" [alt]="equippedItems.bracerLeft.name">
+            <span *ngIf="!equippedItems.bracerLeft" class="slot-label">Brazal</span>
+          </div>
+        </div>
+
+        <div class="center-armor">
+          <div class="equipment-slot chest" (click)="openEquipmentModal('chest')">
+            <img *ngIf="equippedItems.chest" [src]="equippedItems.chest.image" [alt]="equippedItems.chest.name">
+            <span *ngIf="!equippedItems.chest" class="slot-label">Pecho</span>
+          </div>
+        </div>
+
+        <div class="right-weapon">
+          <div class="equipment-slot weapon-right" (click)="openEquipmentModal('weapon2')">
+            <img *ngIf="equippedItems.weapon2" [src]="equippedItems.weapon2.image" [alt]="equippedItems.weapon2.name">
+            <span *ngIf="!equippedItems.weapon2" class="slot-label">Arma 2</span>
+          </div>
+          <div class="equipment-slot bracer-right" (click)="openEquipmentModal('bracerRight')">
+            <img *ngIf="equippedItems.bracerRight" [src]="equippedItems.bracerRight.image" [alt]="equippedItems.bracerRight.name">
+            <span *ngIf="!equippedItems.bracerRight" class="slot-label">Brazal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila inferior: Guantes y pantalones -->
+      <div class="equipment-row bottom-row">
+        <div class="equipment-slot gloves" (click)="openEquipmentModal('gloves')">
+          <img *ngIf="equippedItems.gloves" [src]="equippedItems.gloves.image" [alt]="equippedItems.gloves.name">
+          <span *ngIf="!equippedItems.gloves" class="slot-label">Guantes</span>
+        </div>
+        <div class="equipment-slot pants" (click)="openEquipmentModal('pants')">
+          <img *ngIf="equippedItems.pants" [src]="equippedItems.pants.image" [alt]="equippedItems.pants.name">
+          <span *ngIf="!equippedItems.pants" class="slot-label">Pantalón</span>
+        </div>
+      </div>
+
+      <!-- Fila final: Zapatos -->
+      <div class="equipment-row shoes-row">
+        <div class="equipment-slot shoes" (click)="openEquipmentModal('shoes')">
+          <img *ngIf="equippedItems.shoes" [src]="equippedItems.shoes.image" [alt]="equippedItems.shoes.name">
+          <span *ngIf="!equippedItems.shoes" class="slot-label">Zapatos</span>
+        </div>
+      </div>
+
+      <!-- Items y habilidad épica -->
+      <div class="equipment-row extras-row">
+        <div class="equipment-slot item1" (click)="openEquipmentModal('item1')">
+          <img *ngIf="equippedItems.item1" [src]="equippedItems.item1.image" [alt]="equippedItems.item1.name">
+          <span *ngIf="!equippedItems.item1" class="slot-label">Item 1</span>
+        </div>
+        <div class="equipment-slot epic-skill" (click)="openEquipmentModal('epicSkill')">
+          <img *ngIf="equippedItems.epicSkill" [src]="equippedItems.epicSkill.image" [alt]="equippedItems.epicSkill.name">
+          <span *ngIf="!equippedItems.epicSkill" class="slot-label">Épica</span>
+        </div>
+        <div class="equipment-slot item2" (click)="openEquipmentModal('item2')">
+          <img *ngIf="equippedItems.item2" [src]="equippedItems.item2.image" [alt]="equippedItems.item2.name">
+          <span *ngIf="!equippedItems.item2" class="slot-label">Item 2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles inferiores -->
+    <div class="bottom-controls">
+      <div class="team-selection">
+        <label>Equipo:</label>
+        <select [(ngModel)]="team" [disabled]="isReady">
+          <option value="A">Equipo A</option>
+          <option value="B">Equipo B</option>
+        </select>
+      </div>
+      <button (click)="onReady()" [disabled]="isReady" [class.ready]="isReady">
+        {{ isReady ? 'LISTO ✓' : 'LISTO' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel derecho - Chat -->
+  <div class="right-panel">
+    <app-chat
+      [serverUrl]="'http://localhost:4000'"
+      [myPlayerId]="id"
+      [canChat]="true"
+      [channel]=  `battle-${roomId}`
+      >
+    </app-chat>
+  </div>
+</div>
+
+<!-- Modal de equipamiento -->
+<div class="modal-overlay" *ngIf="showEquipmentModal" (click)="closeEquipmentModal()">
+  <div class="modal-content equipment-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Seleccionar {{ getSlotName(selectedSlot) }}</h3>
+      <button class="close-btn" (click)="closeEquipmentModal()">✕</button>
+    </div>
+    
+    <div class="equipment-grid">
+      <div 
+        *ngFor="let item of getAvailableItems(selectedSlot)" 
+        class="equipment-item"
+        [class.equipped]="isEquipped(item)"
+        (click)="equipItem(item)">
+        <img [src]="item.image" [alt]="item.name">
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-stats" *ngIf="item.stats">{{ item.stats }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="unequipSlot()" class="unequip-btn" *ngIf="equippedItems[selectedSlot]">
+        Desequipar
+      </button>
+      <button (click)="closeEquipmentModal()" class="cancel-btn">Cerrar</button>
+    </div>
+  </div>
+</div>

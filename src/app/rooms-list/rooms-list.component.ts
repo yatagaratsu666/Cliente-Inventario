@@ -33,7 +33,7 @@ export class RoomsListComponent implements OnInit {
   // ID del jugador actual 
   playerId: string = localStorage.getItem('username') || '';
   // Controla la visibilidad del formulario de creación de salas
-  showForm = false;
+  showModal = false;
 
   /** Formulario reactivo para crear nuevas salas */
   roomForm!: FormGroup;
@@ -68,10 +68,18 @@ export class RoomsListComponent implements OnInit {
   }
 
   /**
-   * Alterna la visibilidad del formulario de creación de salas.
+   * Activa el modal para crear una nueva sala.
    */
-  toggleForm(): void {
-    this.showForm = !this.showForm;
+  openModal(): void {
+    this.showModal = true;
+  }
+
+  /**
+   * Cierra el modal de creación de sala.
+   */
+  closeModal(): void {
+    this.showModal = false;
+    this.roomForm.reset();
   }
 
   /**
@@ -84,7 +92,7 @@ export class RoomsListComponent implements OnInit {
       const roomId = this.roomForm.get('id')?.value;
       this.battleService.createRoom(this.roomForm.value).subscribe(() => {
         this.loadRooms();
-        this.showForm = false;
+        this.showModal = false;
         this.roomForm.reset({
           mode: '1v1',
           allowAI: false,
@@ -133,5 +141,7 @@ export class RoomsListComponent implements OnInit {
         return 0;
     }
   }
+
+
 
 }

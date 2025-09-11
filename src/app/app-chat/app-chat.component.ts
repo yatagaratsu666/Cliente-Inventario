@@ -42,8 +42,12 @@ interface ChatMessage {
   imports: [CommonModule, FormsModule],
 })
 export class AppChatComponent implements OnInit, OnDestroy {
-  /** URL del backend de sockets (ajústala según tu entorno) */
+  /** URL del backend de sockets*/
   @Input() serverUrl = 'http://localhost:4000';
+
+  /** Canal de comunicación de los sockets */
+  @Input() channel: 'global' | `battle-${string}` = 'global';
+
 
   /**
    * Usuario actual. Si no se provee desde fuera, se intenta leer
@@ -80,14 +84,31 @@ export class AppChatComponent implements OnInit, OnDestroy {
   private handlers = {
     connect: () => this.onConnect(),
     disconnect: (_reason: string) => this.onDisconnect(),
-    global: (payload: { user: string; message: string }) =>
+
+    // manejador genérico para cualquier canal
+    message: (payload: { user: string; message: string }) => {
+      if (payload.user === this.myPlayerId) return;
       this.push({
         user: payload.user,
         message: payload.message,
         ts: Date.now(),
         role: payload.user === this.myPlayerId ? 'me' : 'other',
-      }),
+      });
+    },
+
+    system: (msg: string) => {
+      this.push({
+        user: 'system',
+        message: msg,
+        ts: Date.now(),
+        role: 'system',
+      });
+    }
   };
+
+  getChatName(): string {
+    return this.channel === 'global' ? 'Chat Global' : 'Chat de Batalla ' + this.channel.replace('battle-', '');
+  }
 
   /**
    * Ciclo de vida: OnInit
@@ -100,17 +121,32 @@ export class AppChatComponent implements OnInit, OnDestroy {
       this.myPlayerId = localStorage.getItem('username') || 'Anon';
     }
 
-    // Crear conexión Socket.IO (solo WebSocket; sin long polling)
+
     this.socket = io(this.serverUrl, {
       transports: ['websocket'],
       autoConnect: true,
     });
 
-    // Suscripción a eventos del socket
     this.socket.on('connect', this.handlers.connect);
     this.socket.on('disconnect', this.handlers.disconnect);
-    this.socket.on('chat:global', this.handlers.global);
+
+    // suscribir dinámicamente al canal
+    const eventName = this.channel === 'global' ? 'chat:global' : 'chat:battle';
+    this.socket.on(eventName, this.handlers.message);
+
+    // sistema (solo útil en batallas)
+    this.socket.on('system', this.handlers.system);
+
+    // si es batalla, avisamos al backend
+    if (this.channel.startsWith('battle-')) {
+      const battleId = this.channel.replace('battle-', '');
+      this.socket.emit('join:battle', {
+        playerId: this.myPlayerId,
+        battleId,
+      });
+    }
   }
+
 
   /**
    * Ciclo de vida: OnDestroy
@@ -121,7 +157,6 @@ export class AppChatComponent implements OnInit, OnDestroy {
     if (!this.socket) return;
     this.socket.off('connect', this.handlers.connect);
     this.socket.off('disconnect', this.handlers.disconnect);
-    this.socket.off('chat:global', this.handlers.global);
     this.socket.disconnect();
   }
 
@@ -168,13 +203,20 @@ export class AppChatComponent implements OnInit, OnDestroy {
     const text = (this.chatInput || '').trim();
     if (!text || !this.canChat || !this.socket?.connected) return;
 
-    // Emitir a global con la forma que espera tu backend
-    this.socket.emit('chat:global', {
-      playerId: this.myPlayerId,
-      msg: text,
-    });
+    if (this.channel === 'global') {
+      this.socket.emit('chat:global', {
+        playerId: this.myPlayerId,
+        msg: text,
+      });
+    } else {
+      const battleId = this.channel.replace('battle-', '');
+      this.socket.emit('chat:battle', {
+        battleId,
+        playerId: this.myPlayerId,
+        message: text,
+      });
+    }
 
-    // Eco local (permite ver el mensaje de inmediato)
     this.push({
       user: this.myPlayerId,
       message: text,
@@ -182,9 +224,9 @@ export class AppChatComponent implements OnInit, OnDestroy {
       role: 'me',
     });
 
-    // Limpiar el textarea
     this.chatInput = '';
   }
+
 
   // ──────────────────────────────
   //  Utilidades internas

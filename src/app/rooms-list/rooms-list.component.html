@@ -1,52 +1,85 @@
-<h2>Salas disponibles</h2>
+<div class="room-container">
+  <!-- Panel izquierdo -->
+  <div class="left-panel">
+    <!-- Lista de salas (80% altura) -->
+    <div class="rooms-section">
+      <h2>Salas disponibles</h2>
+      <ul class="rooms-list">
+        <li *ngFor="let room of rooms" class="room-item">
+          <span class="room-info">
+            ID: {{ room.config.id }} |
+            Jugadores: {{ room.players.length }}/{{ getMaxPlayers(room.config.mode) }} |
+            Nivel requerido: {{ room.config.heroLevel }}
+          </span>
+          <button (click)="joinRoom(room.config.id)" class="join-btn">Unirse</button>
+        </li>
+      </ul>
+    </div>
 
-<button (click)="toggleForm()">➕ Crear sala</button>
+    <!-- Botones de control (20% altura) -->
+    <div class="control-buttons">
+      <button (click)="loadRooms()" class="refresh-btn">🔄 Actualizar</button>
+      <button (click)="openModal()" class="create-btn">➕ Crear sala</button>
+    </div>
+  </div>
 
-<div *ngIf="showForm">
-  <form [formGroup]="roomForm" (ngSubmit)="createRoomSubmit()">
-    <label>ID:</label>
-    <input type="text" formControlName="id">
-
-    <label>Modo:</label>
-    <select formControlName="mode">
-      <option value="1v1">1v1</option>
-      <option value="2v2">2v2</option>
-      <option value="3v3">3v3</option>
-    </select>
-
-    <label class="check-wrap">
-      <input type="checkbox"
-      formControlName="allowAI"
+  <!-- Panel derecho - Chat -->
+  <div class="right-panel">
+    <app-chat
+      [serverUrl]="'http://localhost:4000'"
+      [myPlayerId]="playerId"
+      [canChat]="true"
+      [channel]="'global'"
       >
-      <span class="check-custom"></span>
-      Permitir IA:
-    </label>
-
-    <label>Créditos:</label>
-    <input type="number" formControlName="credits">
-
-    <label>Nivel requerido:</label>
-    <input type="number" formControlName="heroLevel">
-
-    <button type="submit">Crear</button>
-  </form>
+    </app-chat>
+  </div>
 </div>
 
+<!-- Modal para crear sala -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Crear Nueva Sala</h3>
+      <button class="close-btn" (click)="closeModal()">✕</button>
+    </div>
+    
+    <form [formGroup]="roomForm" (ngSubmit)="createRoomSubmit()" class="modal-form">
+      <div class="form-group">
+        <label>Nombre de la sala:</label>
+        <input type="text" formControlName="id" placeholder="Ingrese nombre de la sala">
+      </div>
 
-<ul>
-  <button (click)="loadRooms()">Actualizar</button>
-  <li *ngFor="let room of rooms">
-    <span>
-      ID: {{ room.config.id }} |
-      Jugadores: {{ room.players.length }}/{{ getMaxPlayers(room.config.mode) }} |
-      Nivel requerido: {{ room.config.heroLevel }}
-    </span>
-    <button (click)="joinRoom(room.config.id)">Unirse</button>
-  </li>
-</ul>
+      <div class="form-group">
+        <label>Modo de juego:</label>
+        <select formControlName="mode">
+          <option value="1v1">1 vs 1</option>
+          <option value="2v2">2 vs 2</option>
+          <option value="3v3">3 vs 3</option>
+        </select>
+      </div>
 
-<app-chat
-  [serverUrl]="'http://localhost:4000'"
-  [myPlayerId]="playerId"
-  [canChat]="true">
-</app-chat>
+      <div class="form-group checkbox-group">
+        <label class="check-wrap">
+          <input type="checkbox" formControlName="allowAI">
+          <span class="check-custom"></span>
+          Permitir IA
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>Créditos:</label>
+        <input type="number" formControlName="credits" min="0" placeholder="0">
+      </div>
+
+      <div class="form-group">
+        <label>Nivel requerido:</label>
+        <input type="number" formControlName="heroLevel" min="1" placeholder="1">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" (click)="closeModal()" class="cancel-btn">Cancelar</button>
+        <button type="submit" class="submit-btn">Crear Sala</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,11 +1,62 @@
 <header>
   <div class="logo">Nexus Battles IV</div>
 
-  <button class="logout-button" *ngIf="loginService.isLoggedIn()" (click)="logout()">
+  <div class="nav-container">
+    <nav class="nav-links">
+      <a (click)="onPlay()">Jugar Online</a>
+      <a (click)="onMission()">Misiones</a>
+      <a (click)="onAuction()">Subastas</a>
+      <a (click)="onTournament()">Torneo</a>
+      <a (click)="onInventory()">Mi Inventario</a>
+      <a (click)="onAccount()">Mi Cuenta</a>
+    </nav>
+    <input type="text" class="search-bar" placeholder="Buscar..." [(ngModel)]="searchQuery"
+      (input)="onSearchChange()" />
+
+    <!-- Dropdown de resultados -->
+    <div class="search-results" *ngIf="searchQuery">
+      <div *ngIf="items.length">
+        <strong>Items</strong>
+        <ul>
+          <li *ngFor="let item of items">{{ item.name }}</li>
+        </ul>
+      </div>
+
+      <div *ngIf="heroes.length">
+        <strong>Heroes</strong>
+        <ul>
+          <li *ngFor="let hero of heroes">{{ hero.name }}</li>
+        </ul>
+      </div>
+
+      <div *ngIf="armors.length">
+        <strong>Armaduras</strong>
+        <ul>
+          <li *ngFor="let armor of armors">{{ armor.name }}</li>
+        </ul>
+      </div>
+
+      <div *ngIf="epics.length">
+        <strong>Épicos</strong>
+        <ul>
+          <li *ngFor="let epic of epics">{{ epic.name }}</li>
+        </ul>
+      </div>
+
+      <div *ngIf="weapons.length">
+        <strong>Armas</strong>
+        <ul>
+          <li *ngFor="let weapon of weapons">{{ weapon.name }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+  <button class="logout-button" *ngIf="loginService?.isLoggedIn()" (click)="logout()">
     Cerrar sesión
   </button>
 </header>
 
 <router-outlet></router-outlet>
-
-

@@ -3,12 +3,14 @@ export const environment = {
   production: false,
 
   /** URL base de la API utilizada en testeo. */
-  apiUrl: 'http://egypt.bucaramanga.upb.edu.co:1882',
+  apiUrl: 'http://localhost:1882',
 
   /** URL base del servicio de batallas. */
   battleUrl: 'http://localhost:3000',
 
   battleSocket: 'http://localhost:3000',
+
+  inventarySocket: 'http://localhost:1882',
 
   chatUrlSocket: 'http://speedorz.bucaramanga.upb.edu.co:4000'
 };

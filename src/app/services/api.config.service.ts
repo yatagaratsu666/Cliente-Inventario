@@ -21,11 +21,11 @@ import { environment } from '../environment/environment';
 })
 export class ApiConfigService {
 
-  // URLs de configuración obtenidas del entorno
   private readonly apiUrl: string = environment.apiUrl;
   private readonly battleUrl: string = environment.battleUrl;
   private readonly battleSocket: string = environment.battleSocket;
   private readonly chatUrl: string = environment.chatUrlSocket;
+  private readonly inventarySocket: string = environment.inventarySocket
 
   getApiUrl(): string {
     return this.apiUrl;
@@ -41,6 +41,10 @@ export class ApiConfigService {
 
   getChatUrl(): string {
     return this.chatUrl;
+  }
+
+  getInventarySocket(): string {
+    return this.inventarySocket;
   }
 }
 

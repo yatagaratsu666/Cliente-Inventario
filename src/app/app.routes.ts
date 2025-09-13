@@ -175,8 +175,7 @@ const routeConfig: Routes = [
   //ruta para el inventario del jugador
   {
     path: 'inventory',
-    component: AppInventarioComponent,
-    canActivate: [AuthGuard]  
+    component: AppInventarioComponent
   }
 ];
 

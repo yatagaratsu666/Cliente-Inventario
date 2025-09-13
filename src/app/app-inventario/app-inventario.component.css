@@ -1,142 +1,127 @@
-.main {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    height: calc(100vh - 70px); 
-    box-sizing: border-box;
-    background: linear-gradient(160deg, #0d1b2a, #1b2b43);
-  }
-  
-  .izquierda {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .hero-equipado {
-    background-color: #1B262C; 
-    color: #eaf6f6; 
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-    min-height: 650px; 
-    width: 280px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative; 
-    margin-left: 45%; 
-    top: 60px; 
-    cursor: pointer;
-  }
-  
-  .hero-equipado h3 {
-    font-size: 24px;
-    margin-bottom: 15px;
-  }
-  
-  .equipamientos {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: -250px; 
-  }
-  
-  .equipo-item {
-    background-color: #3282B8; 
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    color: #d4f1f4;
-    text-align: center;
-    width: 20%; 
-    margin-left: 85%; 
-    height: 100px; 
-    position: relative;
-    top: -400px;
-    cursor: pointer;
-  }
-  
-  .derecha {
-    width: 30%;  
-    background-color: rgba(86, 207, 225, 0.1);  
-    border-radius: 12px; 
-    padding: 20px;  
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);  
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .items-cuadricula {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 15px; 
-    justify-items: center;
-  }
-  
-  .item-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .item button {
-    background-color: #56CFE1;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background-color 0.3s ease-in-out;
-  }
+/* Contenedor principal de la página */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #1c1c2b, #0e0e17);
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #f1f1f1;
+}
 
-  .item button:hover {
-    background-color: #0F4C75;
-  }
-  
-  .item {
-    width: 200px;
-    height: 130px;  
-    background-color: #1B262C;  
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    text-align: center;
-    margin: 0 auto;  
-    cursor: pointer;
-  }
-  
-  .item p {
-    color: #d4f1f4;
-    font-size: 16px;
-  }
+/* Panel del inventario */
+.inventario {
+  width: 85%;
+  max-width: 950px;
+  padding: 25px;
+  background-color: #2a2a3d;
+  border-radius: 15px;
+  border: 3px solid #444;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
 
-  .pagination {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .pagination button {
-    background-color: #56CFE1;
-    color: white;
-    border: none;
-    padding: 5px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-  }
-  
-  .pagination button:hover {
-    background-color: #0F4C75;
-  }
-  
+/* Título principal */
+.inventario h2 {
+  margin-bottom: 25px;
+  color: #ffd700;
+  text-shadow: 2px 2px 5px #000;
+  font-size: 1.8rem;
+}
+
+/* Secciones (armas, armaduras, items, épicas) */
+.inventario section {
+  margin-bottom: 25px;
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid #555;
+  background-color: #1e1e2f;
+  transition: transform 0.2s;
+}
+
+.inventario section:hover {
+  transform: scale(1.01);
+}
+
+/* Subtítulos */
+.inventario h3,
+.inventario h4 {
+  margin-bottom: 12px;
+  color: #00c3ff;
+  text-shadow: 1px 1px 3px #000;
+  font-size: 1.2rem;
+}
+
+/* Listas de objetos en rejilla */
+ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+/* Cada ítem */
+li {
+  background-color: #2f2f45;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #666;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.25s ease-in-out;
+}
+
+li:hover {
+  transform: scale(1.07);
+  border-color: #00c3ff;
+  box-shadow: 0 0 12px rgba(0, 195, 255, 0.6);
+}
+
+/* Botones */
+button {
+  margin-top: 10px;
+  padding: 7px 14px;
+  background: linear-gradient(135deg, #0077ff, #005ecb);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #005ecb, #003e99);
+  transform: scale(1.05);
+}
+
+/* Mensaje de estado */
+.mensaje {
+  font-size: 1rem;
+  margin: 15px 0 25px;
+  color: #76ff76;
+  font-weight: bold;
+}
+
+/* Paginación */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.paginacion button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+.paginacion span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+}

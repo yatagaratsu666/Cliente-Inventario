@@ -1,68 +1,123 @@
-<main class="main">
-    <div class="izquierda">
-      <div class="hero-equipado">
-        <h3>Héroe Equipado</h3>
-        <p><strong>Héroe: Mago de fuego</strong></p>
-      </div>
-      <div class="equipamientos">
-        <div class="equipo-item">
-          <p><strong>Arma equipada:</strong> Espada de dos manos</p>
-        </div>
-        <div class="equipo-item">
-          <p><strong>Armadura equipada:</strong> Defensa del enfurecido</p>
-        </div>
-        <div class="equipo-item">
-          <p><strong>Item equipado:</strong> Pociones de vida</p>
-        </div>
-        <div class="equipo-item">
-          <p><strong>Épica equipada:</strong> Escudo del dragón</p>
-        </div>
-      </div>
-    </div>
-  
-    <div class="derecha">
-      <div class="items-container">
-        <div class="items-cuadricula">
-          <div class="item">
-            <p>Ítem 1</p>
-          </div>
-          <div class="item">
-            <p>Ítem 2</p>
-          </div>
-          <div class="item">
-            <p>Ítem 3</p>
-          </div>
-          <div class="item">
-            <p>Ítem 4</p>
-          </div>
-          <div class="item">
-            <p>Ítem 5</p>
-          </div>
-          <div class="item">
-            <p>Ítem 6</p>
-          </div>
-          <div class="item">
-            <p>Ítem 7</p>
-          </div>
-          <div class="item">
-            <p>Ítem 8</p>
-          </div>
-        </div>
-  
-        <div class="pagination">
-            <button (click)="previousPage()">&lt; Anterior</button>
-            <span>Página {{ currentPage }}</span>
-            <button (click)="nextPage()">Siguiente &gt;</button>
-          </div>
-      </div>
-    </div>
-  </main>
-  
+<!-- Armas -->
+<section>
+  <h3>Armas disponibles</h3>
+  <ul>
+    <li *ngFor="let arma of armasDisponiblesPaginados">
+      {{ arma.name }}
+      <button (click)="equipWeapon(arma.name)">Equipar</button>
+    </li>
+  </ul>
 
-  
-  
-  
-  
-  
-  
-  
+  <!-- Paginación -->
+  <div class="pagination">
+    <button (click)="cambiarPagina('armas', -1)">Anterior</button>
+    <span>Página {{ paginaArmas }}</span>
+    <button (click)="cambiarPagina('armas', 1)">Siguiente</button>
+  </div>
+
+  <h4>Armas equipadas</h4>
+  <ul>
+    <li *ngFor="let arma of user.equipados?.weapons">{{ arma.name }}
+      <button (click)="unequipWeapon(arma.name)">Desquipar</button>
+    </li>
+  </ul>
+</section>
+
+<!-- Armaduras -->
+<section>
+  <h3>Armaduras disponibles</h3>
+  <ul>
+    <li *ngFor="let armadura of armadurasDisponiblesPaginados">
+      {{ armadura.name }}
+      <button (click)="equipArmor(armadura.name)">Equipar</button>
+    </li>
+  </ul>
+
+  <!-- Paginación -->
+  <div class="pagination">
+    <button (click)="cambiarPagina('armaduras', -1)">Anterior</button>
+    <span>Página {{ paginaArmaduras }}</span>
+    <button (click)="cambiarPagina('armaduras', 1)">Siguiente</button>
+  </div>
+
+  <h4>Armaduras equipadas</h4>
+  <ul>
+    <li *ngFor="let armadura of user.equipados?.armors">{{ armadura.name }}
+      <button (click)="unequipArmor(armadura.name)">Desquipar</button>
+    </li>
+  </ul>
+</section>
+
+<!-- Items -->
+<section>
+  <h3>Items disponibles</h3>
+  <ul>
+    <li *ngFor="let item of itemsDisponiblesPaginados">
+      {{ item.name }}
+      <button (click)="equipItem(item.name)">Equipar</button>
+    </li>
+  </ul>
+
+  <!-- Paginación -->
+  <div class="pagination">
+    <button (click)="cambiarPagina('items', -1)">Anterior</button>
+    <span>Página {{ paginaItems }}</span>
+    <button (click)="cambiarPagina('items', 1)">Siguiente</button>
+  </div>
+
+  <h4>Items equipados</h4>
+  <ul>
+    <li *ngFor="let item of user.equipados?.items">{{ item.name }}
+      <button (click)="unequipItem(item.name)">Desquipar</button>
+    </li>
+  </ul>
+</section>
+
+<!-- Épicas -->
+<section>
+  <h3>Épicas disponibles</h3>
+  <ul>
+    <li *ngFor="let epica of epicasDisponiblesPaginados">
+      {{ epica.name }}
+      <button (click)="equipEpic(epica.name)">Equipar</button>
+    </li>
+  </ul>
+
+  <!-- Paginación -->
+  <div class="pagination">
+    <button (click)="cambiarPagina('epicas', -1)">Anterior</button>
+    <span>Página {{ paginaEpicas }}</span>
+    <button (click)="cambiarPagina('epicas', 1)">Siguiente</button>
+  </div>
+
+  <h4>Épicas equipadas</h4>
+  <ul>
+    <li *ngFor="let epica of user.equipados?.epicAbility">{{ epica.name }}
+      <button (click)="unequipEpic(epica.name)">Desquipar</button>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h3>Heroes disponibles</h3>
+  <ul>
+    <li *ngFor="let heroe of heroesDisponiblesPaginados">
+      {{ heroe.name }}
+      <button (click)="equipHero(heroe.name)">Equipar</button>
+    </li>
+  </ul>
+
+  <!-- Paginación -->
+  <div class="pagination">
+    <button (click)="cambiarPagina('heroe', -1)">Anterior</button>
+    <span>Página {{ paginaEpicas }}</span>
+    <button (click)="cambiarPagina('heroe', 1)">Siguiente</button>
+  </div>
+
+  <h4>Heroe equipado</h4>
+  <ul>
+    <li *ngFor="let heroe of user.equipados?.hero">{{ heroe.name }}
+      <button (click)="unequipHero(heroe.name)">Desquipar</button>
+    </li>
+  </ul>
+</section>

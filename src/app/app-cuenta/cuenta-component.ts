@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 /**
@@ -17,7 +18,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta-component.html',
-  styleUrls: ['./cuenta-component.css']
+  styleUrls: ['./cuenta-component.css'],
+  imports: [CommonModule]
 })
 export class CuentaComponent {
   mostrarCuenta = false;

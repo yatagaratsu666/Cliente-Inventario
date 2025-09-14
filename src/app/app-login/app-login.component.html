@@ -12,6 +12,10 @@
       <input type="password" id="password" [(ngModel)]="password" name="password" required />
     </div>
 
+    <div>
+      <label for="id">ID:</label>
+      <input type="number" id="id" [(ngModel)]="id" name="id" required />
+    </div>
     <div *ngIf="errorMessage" class="error">
       {{ errorMessage }}
     </div>

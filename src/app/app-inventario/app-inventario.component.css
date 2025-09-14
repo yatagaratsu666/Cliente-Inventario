@@ -1,127 +1,104 @@
-/* Contenedor principal de la página */
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: radial-gradient(circle at center, #1c1c2b, #0e0e17);
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #f1f1f1;
+/* Contenedor general */
+.equip-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 25px;
+  border-radius: 14px;
+  background: #1b262c; /* Azul-gris serio */
+  border: 2px solid #0f4c75;
+  margin-bottom: 40px;
 }
 
-/* Panel del inventario */
-.inventario {
-  width: 85%;
-  max-width: 950px;
-  padding: 25px;
-  background-color: #2a2a3d;
-  border-radius: 15px;
-  border: 3px solid #444;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+/* Títulos */
+.equip-section h3 {
   text-align: center;
-}
-
-/* Título principal */
-.inventario h2 {
+  font-size: 30px;
+  font-weight: bold;
   margin-bottom: 25px;
-  color: #ffd700;
-  text-shadow: 2px 2px 5px #000;
-  font-size: 1.8rem;
+  color: #bbe1fa; /* Azul claro elegante */
 }
 
-/* Secciones (armas, armaduras, items, épicas) */
-.inventario section {
-  margin-bottom: 25px;
-  padding: 15px;
-  border-radius: 12px;
-  border: 2px solid #555;
-  background-color: #1e1e2f;
-  transition: transform 0.2s;
+.equip-section h4 {
+  font-size: 22px;
+  margin-top: 35px;
+  margin-bottom: 15px;
+  color: #56cfe1; /* Azul brillante para resaltar */
 }
 
-.inventario section:hover {
-  transform: scale(1.01);
-}
-
-/* Subtítulos */
-.inventario h3,
-.inventario h4 {
-  margin-bottom: 12px;
-  color: #00c3ff;
-  text-shadow: 1px 1px 3px #000;
-  font-size: 1.2rem;
-}
-
-/* Listas de objetos en rejilla */
-ul {
+/* Listas */
+.equip-section ul {
   list-style: none;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 14px;
+  margin: 0;
 }
 
-/* Cada ítem */
-li {
-  background-color: #2f2f45;
-  padding: 12px;
+.equip-section li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f4c75; /* Azul serio */
+  color: #d4f1f4;
+  padding: 12px 20px;
+  margin-bottom: 12px;
   border-radius: 10px;
-  border: 1px solid #666;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.25s ease-in-out;
+  transition: transform 0.2s, background 0.3s;
 }
 
-li:hover {
-  transform: scale(1.07);
-  border-color: #00c3ff;
-  box-shadow: 0 0 12px rgba(0, 195, 255, 0.6);
+.equip-section li:hover {
+  background: #145252; /* Verde-azulado serio en hover */
+  transform: scale(1.02);
 }
 
-/* Botones */
-button {
-  margin-top: 10px;
-  padding: 7px 14px;
-  background: linear-gradient(135deg, #0077ff, #005ecb);
+/* Botones generales */
+.equip-section button {
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
+  background: linear-gradient(to right, #3282b8, #0f4c75);
+  color: #ffffff;
   cursor: pointer;
-  color: #fff;
-  font-weight: bold;
-  transition: 0.3s ease;
+  transition: background-color .3s, transform .2s;
 }
 
-button:hover {
-  background: linear-gradient(135deg, #005ecb, #003e99);
-  transform: scale(1.05);
+.equip-section button:hover {
+  background: linear-gradient(to right, #56cfe1, #48bfe3);
+  color: #1b262c;
 }
 
-/* Mensaje de estado */
-.mensaje {
-  font-size: 1rem;
-  margin: 15px 0 25px;
-  color: #76ff76;
-  font-weight: bold;
+.equip-section button:active {
+  transform: scale(0.95);
 }
 
 /* Paginación */
-.paginacion {
+.pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   margin-top: 20px;
+  margin-bottom: 25px;
 }
 
-.paginacion button {
-  padding: 6px 12px;
-  font-size: 0.9rem;
-}
-
-.paginacion span {
-  font-size: 1rem;
+.pagination button {
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: bold;
-  color: #fff;
+  background: linear-gradient(to right, #1f7a7a, #145252);
+  border: 1px solid #0d2b2b;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.pagination button:hover {
+  background: linear-gradient(to right, #2b9c9c, #1f7a7a);
+}
+
+.pagination span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #d4f1f4;
 }

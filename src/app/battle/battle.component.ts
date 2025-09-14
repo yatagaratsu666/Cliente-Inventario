@@ -106,6 +106,7 @@ export class BattleComponent implements OnInit, OnDestroy {
     this.initializeTimers();
     this.setupBattleListeners();
     this.addSystemLog('La batalla ha comenzado');
+    
   }
 
   /**
@@ -582,10 +583,8 @@ getMySkills(): any[] {
    * Obtiene la imagen de un jugador.
    */
 getImageById(playerId: string): void {
-  this.battleService.getImageById(playerId).subscribe((data: string) => {
-    // El backend ya manda "data:image/jpeg;base64,..."
-    this.imageBase64 = data;
-  });
+  //this.battleService.getImageById(playerId)
+
 }
 
 

@@ -7,7 +7,6 @@ export enum Roles {
 }
 
 export default class User {
-  id: string;
   nombreUsuario: string;
   rol: Roles;
   creditos: number;
@@ -22,7 +21,6 @@ export default class User {
     inventario: Inventario = new Inventario(),
     equipados: Equipamiento = new Equipamiento()
   ) {
-    this.id = id;
     this.nombreUsuario = nombreUsuario;
     this.rol = rol;
     this.creditos= creditos;

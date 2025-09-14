@@ -73,8 +73,9 @@ ngOnInit(): void {
   const heroSub = this.battleService.getHeroStatsByPlayerId(this.id).subscribe(hero => {
     this.heroStats = hero;
     console.log("Nivel del héroe:", this.heroStats?.hero?.level);
-    console.log("Tipo de héroe:", this.heroStats?.heroType);
-    console.log("maximo damage:" )
+    console.log("Tipo de héroe:", this.heroStats?.hero.heroType);
+    console.log("maximo damage:", this.heroStats?.hero.damage.min)
+    console.log("maximo damage:", this.heroStats?.hero.damage.max)
   });
 
   this.subs.push(heroSub);

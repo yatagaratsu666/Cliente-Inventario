@@ -18,9 +18,9 @@ import { Observable, of, throwError } from 'rxjs';
 export class LoginService {
   private readonly USERNAME = 'admin'; 
   private readonly PASSWORD = '1234'; 
-  private readonly USERNAME2 = 'u005';
+  private readonly USERNAME2 = 'hatsune';
   private readonly PASSWORD2 = '5678';
-  private readonly USERNAME3 = 'u002';
+  private readonly USERNAME3 = 'mikunano';
   private readonly PASSWORD3 = '5678';
 
   constructor() {}

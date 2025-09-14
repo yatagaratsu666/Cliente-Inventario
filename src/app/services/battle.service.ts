@@ -177,74 +177,71 @@ export class BattleService {
     });
   }
 
-getHeroStatsByPlayerId(playerId: string): Observable<any> {
-  return new Observable((observer) => {
-    this.usuarioService.getUsuarioById(playerId).subscribe({
-      next: (user: User) => {
-        if (!user || !user.equipados || !user.equipados.hero) {
-          observer.error('El usuario no tiene héroe equipado');
-          return;
-        }
+  getHeroStatsByPlayerId(playerId: string): Observable<any> {
+    return new Observable((observer) => {
+      this.usuarioService.getUsuarioById(playerId).subscribe({
+        next: (user: User) => {
+          if (!user || !user.equipados || !user.equipados.hero) {
+            observer.error('El usuario no tiene héroe equipado');
+            return;
+          }
 
-        const hero = user.equipados.hero[0];
+          const hero = user.equipados.hero[0];
 
-        const heroStats = {
-          hero: {
-            name: hero.name,
-            heroType: hero.heroType,
-            level: hero.level,
-            power: hero.power,
-            health: hero.health,
-            defense: hero.defense,
-            attack: hero.attack,
-            attackBoost: hero.attackBoost,
-            attackBoostMax: hero.attackBoost?.max ?? 0,
-            attackBoostMin: hero.attackBoost?.min ?? 0,
-            damageMax: hero.damage?.max ?? 0,
-            damageMin: hero.damage?.min ?? 0,
-            specialActions: hero.specialActions || [],
-            effects: hero.effects || [],
-            randomEffects: hero.randomEffects || [],
-          },
-          equipados: {
-            items: (user.equipados.items || []).map((item) => ({
-              name: item.name,
-              image: item.image,
-              heroType: item.heroType,
-              effects: item.effects,
-              dropRate: item.dropRate,
-            })),
-            armors: (user.equipados.armors || []).map((armor) => ({
-              name: armor.name,
-              image: armor.image,
-              heroType: armor.heroType,
-              effects: armor.effects,
-              dropRate: armor.dropRate,
-            })),
-            weapons: (user.equipados.weapons || []).map((weapon) => ({
-              name: weapon.name,
-              image: weapon.image,
-              heroType: weapon.heroType,
-              effects: weapon.effects,
-              dropRate: weapon.dropRate,
-            })),
-            epicAbilities: (user.equipados.epicAbility || []).map((epic) => ({
-              name: epic.name,
-              image: epic.image,
-              compatibleHeroType: epic.heroType,
-              effects: epic.effects,
-              cooldown: epic.cooldown,
-              isAvailable: epic.isAvailable,
-              masterChance: epic.masterChance,
-            })),
-          },
-        };
+          const heroStats = {
+            hero: {
+              name: hero.name,
+              heroType: hero.heroType,
+              level: hero.level,
+              power: hero.power,
+              health: hero.health,
+              defense: hero.defense,
+              attack: hero.attack,
+              attackBoost: hero.attackBoost,
+              damage: hero.damage,
+              specialActions: hero.specialActions,
+              effects: hero.effects || [],
+              randomEffects: hero.randomEffects || [],
+            },
+            equipped: {
+              items: (user.equipados.items || []).map((item) => ({
+                name: item.name,
+                image: item.image,
+                heroType: item.heroType,
+                effects: item.effects,
+                dropRate: item.dropRate,
+              })),
+              armors: (user.equipados.armors || []).map((armor) => ({
+                name: armor.name,
+                image: armor.image,
+                heroType: armor.heroType,
+                effects: armor.effects,
+                dropRate: armor.dropRate,
+              })),
+              weapons: (user.equipados.weapons || []).map((weapon) => ({
+                name: weapon.name,
+                image: weapon.image,
+                heroType: weapon.heroType,
+                effects: weapon.effects,
+                dropRate: weapon.dropRate,
+              })),
+              epicAbilities: (user.equipados.epicAbility || []).map((epic) => ({
+                name: epic.name,
+                image: epic.image,
+                compatibleHeroType: epic.heroType,
+                effects: epic.effects,
+                cooldown: epic.cooldown,
+                isAvailable: epic.isAvailable,
+                masterChance: epic.masterChance,
+              })),
+            },
+          };
 
-        observer.next(heroStats);
-        observer.complete();
-      },
-      error: (err) => observer.error(err),
+          observer.next(heroStats);
+          observer.complete();
+        },
+        error: (err) => observer.error(err),
+      });
     });
-  });
-}
+  }
 }

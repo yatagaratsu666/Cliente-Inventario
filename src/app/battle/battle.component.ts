@@ -5,8 +5,6 @@ import { BattleService } from '../services/battle.service';
 import { FormsModule } from '@angular/forms';
 import { AppChatComponent } from "../app-chat/app-chat.component";
 import { Observable } from 'rxjs';
-import { HeroStats } from '../domain/battle/HeroStats.model';
-
 /**
  * Componente Angular encargado de manejar la lógica de las batallas en curso.
  * 
@@ -91,6 +89,8 @@ export class BattleComponent implements OnInit, OnDestroy {
 
   /** Habilidades con estado de cooldown */
   mySkillsWithCooldown: any[] = [];
+
+  imageBase64: string | null = null;
 
   /**
    * Constructor del componente.
@@ -311,7 +311,7 @@ getMySkills(): any[] {
     ...s
   }));
 
-  const masters = (me.heroStats.equipados?.epicAbilites || []).map((m: any) => ({
+  const masters = (me.heroStats.equipped?.epicAbilities || []).map((m: any) => ({
     name: m.name,
     type: 'MASTER_SKILL',
     ...m
@@ -511,6 +511,8 @@ getMySkills(): any[] {
     if (actionResult.value) {
       message += ` causando ${actionResult.value} de daño`;
     }
+
+    console.log(actionResult.value)
     
     this.battleLogs.push({
       id: actionResult.timestamp,
@@ -579,8 +581,11 @@ getMySkills(): any[] {
   /**
    * Obtiene la imagen de un jugador.
    */
-getImageById(playerId: string): Observable<string> {
-  return this.battleService.getImageById(playerId);
+getImageById(playerId: string): void {
+  this.battleService.getImageById(playerId).subscribe((data: string) => {
+    // El backend ya manda "data:image/jpeg;base64,..."
+    this.imageBase64 = data;
+  });
 }
 
 

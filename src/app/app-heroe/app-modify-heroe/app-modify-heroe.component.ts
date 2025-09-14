@@ -53,7 +53,8 @@ export class AppModifyHeroeComponent {
         actionType: 'default', 
         powerCost: 0, 
         cooldown: 0, 
-        isAvailable: true 
+        isAvailable: true,
+        effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }]
       }
     ],
     0,

@@ -50,6 +50,7 @@ export default class Hero {
     powerCost: number;
     cooldown: number;
     isAvailable: boolean;
+    effects: Effect[];
   }[];
   effects: Effect[];
   randomEffects: {
@@ -78,6 +79,7 @@ export default class Hero {
       powerCost: number;
       cooldown: number;
       isAvailable: boolean;
+      effects: Effect[];
     }[] = [],
     id: number = 0,
     effects: Effect[] = [],

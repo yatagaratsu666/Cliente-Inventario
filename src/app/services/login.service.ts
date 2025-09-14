@@ -18,8 +18,10 @@ import { Observable, of, throwError } from 'rxjs';
 export class LoginService {
   private readonly USERNAME = 'admin'; 
   private readonly PASSWORD = '1234'; 
-  private readonly USERNAME2 = 'user2';
+  private readonly USERNAME2 = 'u005';
   private readonly PASSWORD2 = '5678';
+  private readonly USERNAME3 = 'u002';
+  private readonly PASSWORD3 = '5678';
 
   constructor() {}
 
@@ -41,6 +43,10 @@ export class LoginService {
       localStorage.setItem('username', username);
       return of(true);
     } else if (username === this.USERNAME2 && password === this.PASSWORD2) {
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', username);
+      return of(true);
+    }  else if (username === this.USERNAME3 && password === this.PASSWORD3) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
       return of(true);

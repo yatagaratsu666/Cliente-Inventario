@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { BattleService } from '../services/battle.service';
 import { FormsModule } from '@angular/forms';
 import { AppChatComponent } from "../app-chat/app-chat.component";
+import { Observable } from 'rxjs';
+import { HeroStats } from '../domain/battle/HeroStats.model';
 
 /**
  * Componente Angular encargado de manejar la lógica de las batallas en curso.
@@ -297,24 +299,27 @@ export class BattleComponent implements OnInit, OnDestroy {
   /**
    * Obtiene las habilidades del jugador actual.
    */
-  getMySkills(): any[] {
-    const me = [...this.teamA, ...this.teamB].find(p => p.username === this.myPlayerId);
-    if (!me) return [];
+getMySkills(): any[] {
+  const me = [...this.teamA, ...this.teamB].find(p => p.username === this.myPlayerId);
+  if (!me) return [];
 
-    const basic = [{ name: 'Basic Attack', type: 'BASIC_ATTACK' }];
-    const specials = me.heroStats.hero.specialActions.map((s: any) => ({
-      name: s.name,
-      type: 'SPECIAL_SKILL',
-      ...s
-    }));
-    const masters = me.heroStats.equipped.epicAbilites.map((m: any) => ({
-      name: m.name,
-      type: 'MASTER_SKILL',
-      ...m
-    }));
+  const basic = [{ name: 'Basic Attack', type: 'BASIC_ATTACK' }];
 
-    return [...basic, ...specials, ...masters];
-  }
+  const specials = (me.heroStats.hero?.specialActions || []).map((s: any) => ({
+    name: s.name,
+    type: 'SPECIAL_SKILL',
+    ...s
+  }));
+
+  const masters = (me.heroStats.equipados?.epicAbilites || []).map((m: any) => ({
+    name: m.name,
+    type: 'MASTER_SKILL',
+    ...m
+  }));
+
+  return [...basic, ...specials, ...masters];
+}
+
 
   /**
    * Obtiene las habilidades especiales con cooldown.
@@ -574,9 +579,10 @@ export class BattleComponent implements OnInit, OnDestroy {
   /**
    * Obtiene la imagen de un jugador.
    */
-  getImageById(playerId: string): string {
-    return this.battleService.getImageById(playerId);
-  }
+getImageById(playerId: string): Observable<string> {
+  return this.battleService.getImageById(playerId);
+}
+
 
   /**
    * Verifica si es el turno del jugador actual.

@@ -8,11 +8,11 @@ export const environment = {
   apiUrl:  'http://localhost:1882',
 
   /** URL base del servicio de batallas. */
-  battleUrl: 'http://speedorz.bucaramanga.upb.edu.co:3000',
+  battleUrl: 'http://localhost:3000',
 
-  battleSocket: 'http://speedorz.bucaramanga.upb.edu.co:3000',
+  battleSocket: 'http://localhost:3000',
 
   inventarySocket: 'http://localhost:1882',
 
-  chatUrlSocket: 'http://speedorz.bucaramanga.upb.edu.co:4000'
+  chatUrlSocket: 'http://localhost:4000'
 };

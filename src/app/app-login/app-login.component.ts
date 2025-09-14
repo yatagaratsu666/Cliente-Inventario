@@ -55,7 +55,7 @@ export class AppLoginComponent {
 
     this.loginService.login(this.username, this.password).subscribe({
       next: () => {
-        this.router.navigate(['/menu']); // Redirige al menu principal
+        this.router.navigate(['/menu']);
       },
       error: (err) => {
         this.errorMessage = err.message;

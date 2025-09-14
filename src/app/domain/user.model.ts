@@ -10,7 +10,7 @@ export default class User {
   id: string;
   nombreUsuario: string;
   rol: Roles;
-  contraseña: string;
+  creditos: number;
   inventario: Inventario;
   equipados: Equipamiento;
 
@@ -18,14 +18,14 @@ export default class User {
     id: string = '',
     nombreUsuario: string = '',
     rol: Roles = Roles.JUGADOR,
-    contraseña: string = '',
+    creditos: number = 0,
     inventario: Inventario = new Inventario(),
     equipados: Equipamiento = new Equipamiento()
   ) {
     this.id = id;
     this.nombreUsuario = nombreUsuario;
     this.rol = rol;
-    this.contraseña = contraseña;
+    this.creditos= creditos;
     this.inventario = inventario;
     this.equipados = equipados;
   }

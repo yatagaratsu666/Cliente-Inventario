@@ -1,3 +1,14 @@
+<div class="auction-page">
+  <!-- 🔹 Barra superior con acciones -->
+  <div class="toolbar">
+  <button (click)="goToComprar()">🛒 Comprar</button>
+  <button (click)="goToVender()">📦 Vender</button>
+  <button (click)="goToRecoger()">🎁 Recoger</button>
+  <button (click)="goToMisPujas()">💰 Mis pujas</button>
+  <div class="toolbar">
+</div>
+
+</div>
 <form (ngSubmit)="submit()" class="border p-4 rounded mb-4">
   <div *ngIf="loading">Cargando items...</div>
 

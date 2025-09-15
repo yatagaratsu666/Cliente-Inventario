@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { AuctionDTO } from '../../domain/auction.model';
 import { AuctionService } from '../../services/auction.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -8,7 +9,7 @@ import { environment } from '../../environment/environment';
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './transaction-history.component.html'
 })
 export class TransactionHistoryComponent implements OnInit {
@@ -19,7 +20,11 @@ export class TransactionHistoryComponent implements OnInit {
   private token?: string;
   private userId?: string;
 
-  constructor(private auctionService: AuctionService, private http: HttpClient) {}
+  constructor(
+    private auctionService: AuctionService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.token = localStorage.getItem('token') || undefined;
@@ -34,40 +39,30 @@ export class TransactionHistoryComponent implements OnInit {
   }
 
   async fetchHistory() {
-  try {
-    const [purchasedRes, soldRes] = await Promise.all([
-      this.auctionService.getPurchasedAuctions(this.userId!, this.token),
-      this.auctionService.getSoldAuctions(this.userId!, this.token)
-    ]);
+    try {
+      const [purchasedRes, soldRes] = await Promise.all([
+        this.auctionService.getPurchasedAuctions(this.userId!, this.token),
+        this.auctionService.getSoldAuctions(this.userId!, this.token)
+      ]);
 
-    // Normalizar a array si viene con .data o directo
-    this.purchased = Array.isArray(purchasedRes)
-      ? purchasedRes
-      : (purchasedRes as any).data ?? [];
+      this.purchased = Array.isArray(purchasedRes) ? purchasedRes : (purchasedRes as any).data ?? [];
+      this.sold = Array.isArray(soldRes) ? soldRes : (soldRes as any).data ?? [];
 
-    this.sold = Array.isArray(soldRes)
-      ? soldRes
-      : (soldRes as any).data ?? [];
+      const ids = Array.from(new Set([
+        ...this.purchased.map(a => a.item?.userId).filter(Boolean) as string[],
+        ...this.sold.map(a => a.highestBidderId).filter(Boolean) as string[]
+      ]));
 
-    // IDs únicos para precargar usernames
-    const ids = Array.from(new Set([
-      ...this.purchased.map(a => a.item?.userId).filter(Boolean) as string[],
-      ...this.sold.map(a => a.highestBidderId).filter(Boolean) as string[]
-    ]));
+      await Promise.all(ids.map(async id => {
+        if (!this.usernames[id]) {
+          this.usernames[id] = await this.fetchUsername(id);
+        }
+      }));
 
-    await Promise.all(ids.map(async id => {
-      if (!this.usernames[id]) {
-        this.usernames[id] = await this.fetchUsername(id);
-      }
-    }));
-
-  } catch (err) {
-    console.error('[TransactionHistory] Error fetching history', err);
+    } catch (err) {
+      console.error('[TransactionHistory] Error fetching history', err);
+    }
   }
-}
-
-
-
 
   private async fetchUsername(id: string): Promise<string> {
     try {
@@ -89,4 +84,10 @@ export class TransactionHistoryComponent implements OnInit {
   getBuyerName(a: AuctionDTO) {
     return a.highestBidderId ? this.usernames[a.highestBidderId] || '...' : 'N/A';
   }
+
+  // 🔹 Métodos de navegación
+  goToComprar() { this.router.navigate(['/auctions']); }
+  goToVender() { this.router.navigate(['/auctions/vender']); }
+  goToRecoger() { this.router.navigate(['/auctions/recoger']); }
+  goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
 }

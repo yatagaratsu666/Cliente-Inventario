@@ -188,7 +188,7 @@ const routeConfig: Routes = [
   { path: 'auctions/mis-pujas', component: AuctionListComponent, canActivate: [AuthGuard], data: { onlyMyBids: true } },
   { path: 'auctions/:id', component: AuctionDetailsComponent, canActivate: [AuthGuard] },
   { path: 'auctions', component: AuctionListComponent, canActivate: [AuthGuard] },
-  }
+  
 ];
 
 export default routeConfig;

@@ -182,14 +182,12 @@ const routeConfig: Routes = [
     component: AppInventarioComponent
   },
   // Subastas más específicas
-{ path: 'auctions/vender', component: CreateAuctionFormComponent, canActivate: [AuthGuard] },
-{ path: 'auctions/recoger', component: TransactionHistoryComponent, canActivate: [AuthGuard] },
-{ path: 'auctions/mis-pujas', component: AuctionListComponent, canActivate: [AuthGuard] },
-
-// Subastas generales
-{ path: 'auctions/:id', component: AuctionDetailsComponent, canActivate: [AuthGuard] },
-{ path: 'auctions', component: AuctionListComponent, canActivate: [AuthGuard] },
-
+  { path: 'auctions/vender', component: CreateAuctionFormComponent, canActivate: [AuthGuard] },
+  { path: 'auctions/recoger', component: TransactionHistoryComponent, canActivate: [AuthGuard] },
+  { path: 'auctions/mis-pujas', component: AuctionListComponent, canActivate: [AuthGuard], data: { onlyMyBids: true } },
+  // Subastas generales
+  { path: 'auctions/:id', component: AuctionDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'auctions', component: AuctionListComponent, canActivate: [AuthGuard] },
 ];
 
 export default routeConfig;

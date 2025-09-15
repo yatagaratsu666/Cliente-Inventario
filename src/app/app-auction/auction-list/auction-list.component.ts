@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // 🔹 import Router
+import { Router, ActivatedRoute } from '@angular/router'; // 🔹 import ActivatedRoute
 
 import { AuctionCardComponent } from '../auction-card/auction-card.component';
 import { AuctionDetailsComponent } from '../auction-details/auction-details.component';
@@ -23,6 +23,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   filter: string = '';
   selected?: AuctionDTO;
   token?: string;
+  userId?: string;
 
   // 🔹 filtros
   selectedType: string = '';
@@ -32,13 +33,23 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   // 🔹 lista de tipos únicos
   uniqueTypes: string[] = [];
 
+  // 🔹 flag para ver solo mis pujas
+  onlyMyBids: boolean = false;
+
   constructor(
     private auctionService: AuctionService,
     private socketService: SocketService,
-    private router: Router // 🔹 inyectamos Router
+    private router: Router,
+    private route: ActivatedRoute // 🔹 para leer data de la ruta
   ) {}
 
   async ngOnInit() {
+    this.token = localStorage.getItem('token') || undefined;
+    this.userId = localStorage.getItem('userId') || undefined;
+
+    // 🔹 leer flag de la ruta
+    this.onlyMyBids = this.route.snapshot.data['onlyMyBids'] ?? false;
+
     await this.loadAuctions();
 
     const socket = this.socketService.connect(this.token);
@@ -61,7 +72,16 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   async loadAuctions() {
     try {
-      const data = await this.auctionService.listAuctions(this.token);
+      let data: AuctionDTO[];
+
+      if (this.onlyMyBids && this.userId) {
+        // 🔹 solo subastas activas donde he pujado
+        const all = await this.auctionService.listAuctions(this.token);
+        data = all.filter(a => a.highestBidderId === this.userId && !a.isClosed);
+      } else {
+        data = await this.auctionService.listAuctions(this.token);
+      }
+
       this.auctions = data;
       console.log("📦 Auctions recibidas:", this.auctions);
 

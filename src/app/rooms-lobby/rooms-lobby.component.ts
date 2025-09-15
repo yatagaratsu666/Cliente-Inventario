@@ -46,7 +46,7 @@ export class RoomLobbyComponent implements OnInit, OnDestroy {
 
   /** Suscripciones a observables para limpiar en ngOnDestroy */
   private subs: Subscription[] = [];
-battle: any;
+  battle: any;
 
   /**
    * Constructor del componente.
@@ -67,18 +67,28 @@ battle: any;
    * - Recupera las estadísticas del héroe.
    * - Se suscribe al evento `battleStarted` para redirigir al campo de batalla.
    */
-  ngOnInit(): void {
-    this.roomId = this.route.snapshot.paramMap.get('id') || '';
-    this.heroStats = this.battleService.getHeroStatsByPlayerId(this.id);
+ngOnInit(): void {
+  this.roomId = this.route.snapshot.paramMap.get('id') || '';
 
-    const battleSub = this.battleService.listen<any>('battleStarted').subscribe(event => {
-      this.battleService.setCurrentBattle(event);
-      this.battleService.joinBattle(this.roomId, this.id);
-      this.router.navigate([`/battle/${this.roomId}`]);
-    });
+  const heroSub = this.battleService.getHeroStatsByPlayerId(this.id).subscribe(hero => {
+    this.heroStats = hero;
+    console.log("Nivel del héroe:", this.heroStats?.hero?.level);
+    console.log("Tipo de héroe:", this.heroStats?.hero.heroType);
+    console.log("maximo damage:", this.heroStats?.hero.damage.min)
+    console.log("maximo damage:", this.heroStats?.hero.damage.max)
+  });
 
-    this.subs.push(battleSub);
-  }
+  this.subs.push(heroSub);
+
+  const battleSub = this.battleService.listen<any>('battleStarted').subscribe(event => {
+    this.battleService.setCurrentBattle(event);
+    this.battleService.joinBattle(this.roomId, this.id);
+    this.router.navigate([`/battle/${this.roomId}`]);
+  });
+
+  this.subs.push(battleSub);
+}
+
 
   /**
    * Notifica al servidor que el jugador está listo para iniciar la batalla.
@@ -234,60 +244,76 @@ battle: any;
   }
 
   // Actualizar estadísticas del héroe basado en equipamiento
-  updateHeroStats() {
-    // Aquí implementarías la lógica para recalcular las estadísticas
-    // del héroe basado en los items equipados
-    
-    // Ejemplo básico:
-    let bonusAttack = 0;
-    let bonusDefense = 0;
-    let bonusHealth = 0;
+updateHeroStats() {
+  if (!this.heroStats?.hero) return;
 
-    Object.values(this.equippedItems).forEach((item: any) => {
-      if (item && item.stats) {
-        // Parsear stats básicos (esto es un ejemplo simple)
-        if (item.stats.includes('ATK')) {
-          const match = item.stats.match(/\+(\d+) ATK/);
-          if (match) bonusAttack += parseInt(match[1]);
-        }
-        if (item.stats.includes('DEF')) {
-          const match = item.stats.match(/\+(\d+) DEF/);
-          if (match) bonusDefense += parseInt(match[1]);
-        }
-        if (item.stats.includes('HP')) {
-          const match = item.stats.match(/\+(\d+) HP/);
-          if (match) bonusHealth += parseInt(match[1]);
-        }
-      }
-    });
+  // Valores base
+  const baseAttack = this.heroStats.hero.attack;
+  const baseDefense = this.heroStats.hero.defense;
+  const baseHealth = this.heroStats.hero.health;
 
-    // Actualizar stats del héroe (ejemplo)
-    // this.heroStats.hero.attack = this.baseAttack + bonusAttack;
-    // this.heroStats.hero.defense = this.baseDefense + bonusDefense;
-    // this.heroStats.hero.health = this.baseHealth + bonusHealth;
-  }
+  let bonusAttack = 0;
+  let bonusDefense = 0;
+  let bonusHealth = 0;
 
-  // Método para marcar como listo
-  onReady() {
-    if (this.isReady) return;
-    
-    this.isReady = true;
-    
-    // Aquí enviarías la información al servidor
-    this.sendReadyStatus();
-  }
+  // Recorrer items equipados y sumar bonuses
+  Object.values(this.equippedItems).forEach((item: any) => {
+    if (!item || !item.stats) return;
 
-  // Enviar estado de listo al servidor
-  sendReadyStatus() {
-    const readyData = {
-      playerId: this.id,
-      team: this.team,
-      equippedItems: this.equippedItems,
-      heroStats: this.heroStats,
-      isReady: true
-    };
-    this.battleService.onReady(this.roomId, this.id, this.heroStats, this.team);
-  }
+    if (item.stats.includes('ATK')) {
+      const match = item.stats.match(/\+(\d+) ATK/);
+      if (match) bonusAttack += parseInt(match[1]);
+    }
+    if (item.stats.includes('DEF')) {
+      const match = item.stats.match(/\+(\d+) DEF/);
+      if (match) bonusDefense += parseInt(match[1]);
+    }
+    if (item.stats.includes('HP')) {
+      const match = item.stats.match(/\+(\d+) HP/);
+      if (match) bonusHealth += parseInt(match[1]);
+    }
+  });
+
+  // Actualizar heroStats con los bonuses
+  this.heroStats.hero.attack = baseAttack + bonusAttack;
+  this.heroStats.hero.defense = baseDefense + bonusDefense;
+  this.heroStats.hero.health = baseHealth + bonusHealth;
+
+  console.log('Hero stats actualizados:', this.heroStats.hero);
+}
+
+
+onReady() {
+  if (this.isReady) return;
+
+  // Actualizar stats antes de enviar
+  this.updateHeroStats();
+
+  this.isReady = true;
+
+  // Enviar stats completos al servidor
+  this.sendReadyStatus();
+}
+
+sendReadyStatus() {
+  const readyData = {
+    playerId: this.id,
+    team: this.team,
+    equippedItems: this.getEquippedItemsData(),
+    heroStats: this.heroStats, // <- stats ya actualizados
+    isReady: true
+  };
+
+  this.battleService.onReady(
+    this.roomId,
+    this.id,
+    this.heroStats,
+    this.team
+  );
+
+  console.log('Jugador listo con stats:', readyData);
+}
+
 
   // Método para validar si se puede cambiar de equipo
   canChangeTeam(): boolean {

@@ -34,7 +34,6 @@ export class AppLoginComponent {
 
   username: string = '';
   password: string = '';
-  id: number = 0;
   errorMessage: string = '';
 
   constructor(private loginService: LoginService, private router: Router) {}
@@ -54,7 +53,7 @@ export class AppLoginComponent {
       return;
     }
 
-    this.loginService.login(this.id, this.username, this.password).subscribe({
+    this.loginService.login(this.username, this.password).subscribe({
       next: () => {
         this.router.navigate(['/menu']); // Redirige al menu principal
       },

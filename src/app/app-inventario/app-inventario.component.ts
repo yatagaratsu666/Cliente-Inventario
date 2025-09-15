@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AppInventarioComponent {
   user: User = new User();
-  userId = 'u005'
+  userId: string = localStorage.getItem('username') || '';
   message = '';
 
   constructor(private userService: UsuarioService, private router: Router) {}

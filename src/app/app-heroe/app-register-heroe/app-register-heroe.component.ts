@@ -62,11 +62,13 @@ export class AppRegisterHeroeComponent {
         actionType: 'default', 
         powerCost: 0, 
         cooldown: 0, 
-        isAvailable: true 
+        isAvailable: true,
+        effects: [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
       }
     ],
     0, // id
-    [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }]
+    [{ effectType: EffectType.BOOST_DEFENSE, value: 0, durationTurns: 0 }],
+    [{randomEffectType: "DAMAGE", percentage: 55, valueApply: { min: 0, max: 0 }}]
   );
 
   /** Archivo de imagen seleccionado por el usuario */

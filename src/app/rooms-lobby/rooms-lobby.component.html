@@ -1,6 +1,4 @@
-<!-- room-lobby.component.html -->
 <div class="lobby-container">
-  <!-- Panel izquierdo - Equipamiento del jugador -->
   <div class="left-panel">
     <div class="room-title">
       <h2>Sala {{ roomId }}</h2>
@@ -9,7 +7,7 @@
     <!-- Información del héroe -->
     <div class="hero-info">
       <div class="hero-name">
-        <strong>{{ heroStats.name }}</strong>
+        <strong>{{ heroStats.hero.name }}</strong>
       </div>
       <div class="hero-stats">
         <span>{{ heroStats.hero.heroType }}</span>
@@ -22,8 +20,8 @@
         <span>Ataque: {{ heroStats.hero.attack }}</span>
       </div>
       <div class="hero-stats">
-        <span>Boost: {{ heroStats.hero.attackBoost.min }}-{{ heroStats.hero.attackBoost.max }}</span>
-        <span>Daño: {{ heroStats.hero.damage.min }}-{{ heroStats.hero.damage.max }}</span>
+        <span>Boost: {{ heroStats.hero.attackBoostMax }}-{{ heroStats.hero.attackBoostMin }}</span>
+        <span>Daño: {{ heroStats.hero.damageMax }}-{{ heroStats.hero.damageMin }}</span>
       </div>
     </div>
 

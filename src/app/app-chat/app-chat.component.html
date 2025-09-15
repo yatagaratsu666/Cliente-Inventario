@@ -1,6 +1,6 @@
 <aside class="global-chat">
 
-  <header class="chat-header">
+  <header class="chat-header" *ngIf="channel === 'global'">
     <h3>{{getChatName()}}</h3>
     <span class="badge">{{ messages.length }} mensajes</span>
   </header>

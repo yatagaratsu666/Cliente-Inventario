@@ -58,6 +58,7 @@ export class AppLoginComponent {
         this.router.navigate(['/menu']); // Redirige al menu principal
       },
       error: (err) => {
+        console.error('Error during login:', err);
         this.errorMessage = err.message;
       }
     });

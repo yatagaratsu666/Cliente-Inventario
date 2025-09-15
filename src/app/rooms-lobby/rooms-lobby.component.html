@@ -5,7 +5,7 @@
     </div>
 
     <!-- Información del héroe -->
-    <div class="hero-info">
+    <div class="hero-info" *ngIf="heroStats && heroStats.hero">
       <div class="hero-name">
         <strong>{{ heroStats.hero.name }}</strong>
       </div>
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Panel de equipamiento -->
-    <div class="equipment-panel">
+    <div class="equipment-panel" *ngIf="equippedItems">
       <!-- Fila superior: Casco -->
       <div class="equipment-row top-row">
         <div class="equipment-slot helmet" (click)="openEquipmentModal('helmet')">
@@ -126,7 +126,7 @@
       [myPlayerId]="id"
       [canChat]="true"
       [channel]=  `battle-${roomId}`
-      >
+    >
     </app-chat>
   </div>
 </div>
@@ -138,17 +138,18 @@
       <h3>Seleccionar {{ getSlotName(selectedSlot) }}</h3>
       <button class="close-btn" (click)="closeEquipmentModal()">✕</button>
     </div>
-    
+
     <div class="equipment-grid">
       <div 
         *ngFor="let item of getAvailableItems(selectedSlot)" 
         class="equipment-item"
-        [class.equipped]="isEquipped(item)"
         (click)="equipItem(item)">
         <img [src]="item.image" [alt]="item.name">
         <div class="item-info">
           <span class="item-name">{{ item.name }}</span>
-          <span class="item-stats" *ngIf="item.stats">{{ item.stats }}</span>
+          <span class="item-stats" *ngIf="item.effects?.length">
+            {{ getFormattedEffects(item) }}
+          </span>
         </div>
       </div>
     </div>

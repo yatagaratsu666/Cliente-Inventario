@@ -215,6 +215,7 @@ export class BattleService {
                 name: armor.name,
                 image: armor.image,
                 heroType: armor.heroType,
+                armorType: armor.armorType,
                 effects: armor.effects,
                 dropRate: armor.dropRate,
               })),
@@ -236,7 +237,6 @@ export class BattleService {
               })),
             },
           };
-
           observer.next(heroStats);
           observer.complete();
         },

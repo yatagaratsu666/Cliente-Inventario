@@ -3,6 +3,7 @@ import { LoginService } from '../services/login.service';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import User from '../domain/user.model';
 
 /**
  * AppLoginComponent
@@ -55,7 +56,7 @@ export class AppLoginComponent {
 
     this.loginService.login(this.username, this.password).subscribe({
       next: () => {
-        this.router.navigate(['/menu']); // Redirige al menu principal
+        this.router.navigate(['/battles']); // Aqui va el if :3
       },
       error: (err) => {
         this.errorMessage = err.message;

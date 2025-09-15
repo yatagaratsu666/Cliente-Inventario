@@ -18,7 +18,7 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
   @Input() auction!: AuctionDTO | null;
   @Input() token: string = '';
   @Output() onClose = new EventEmitter<void>();
-
+  @Output() onBought = new EventEmitter<AuctionDTO>();
   freshAuction!: AuctionDTO | null;
   editingBid?: number;
 
@@ -107,13 +107,16 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
   async buyNow() {
   if (!this.freshAuction) return;
   try {
-    await this.auctionService.buyNow(this.freshAuction.id, this.token || undefined);
-    const updated = await this.auctionService.getAuction(this.freshAuction.id, this.token);
-    if (updated) this.freshAuction = updated;
+    const updated = await this.auctionService.buyNow(this.freshAuction.id, this.token || undefined);
+    if (updated) {
+      this.freshAuction = updated;
+      this.onBought.emit(updated); // 🔹 avisamos al padre
+    }
   } catch (err) {
     console.error('Error buying now:', err);
   }
 }
+
 
 
   getRemaining(endIso?: string) {

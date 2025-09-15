@@ -51,16 +51,28 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     this.subs.push(
   this.auctionSocket.onAuctionUpdated().subscribe(updated => {
-    this.auctions = this.auctionSocket.mergeAuctionLocal(this.auctions, updated);
+    this.auctions = this.auctions.map(a => 
+      a.id === updated.id 
+        ? { ...a, ...updated }  // 🔹 merge parcial para mantener pujas activas
+        : a
+    );
     this.refreshTypes();
     this.applyFilter();
   })
 );
 
-this.subs.push(
-  this.auctionSocket.onNewAuction().subscribe(created => {
-    this.auctions.push(created);
-    this.refreshTypes();
+    this.subs.push(
+      this.auctionSocket.onNewAuction().subscribe(created => {
+        this.auctions.push(created);
+        this.refreshTypes();
+        this.applyFilter();
+      })
+    );
+
+    this.subs.push(
+  this.auctionSocket.onAuctionClosed().subscribe(closed => {
+    this.auctions = this.auctions.filter(a => a.id !== closed.id);
+    if (this.selected?.id === closed.id) this.closeDetails();
     this.applyFilter();
   })
 );
@@ -114,6 +126,16 @@ this.subs.push(
 
   openDetails(a: AuctionDTO) { this.selected = a; }
   closeDetails() { this.selected = undefined; }
+
+  // 🔹 Evento que recibe cuando se compra una subasta
+  handleBought(updated: AuctionDTO) {
+  // 🔹 eliminamos la subasta comprada inmediatamente
+  this.auctions = this.auctions.filter(a => a.id !== updated.id);
+  this.applyFilter();
+  if (this.selected?.id === updated.id) this.closeDetails();
+}
+
+
   goToComprar() { this.router.navigate(['/auctions']); }
   goToVender() { this.router.navigate(['/auctions/vender']); }
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }

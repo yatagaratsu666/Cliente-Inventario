@@ -9,10 +9,8 @@ import User from '../domain/user.model';
 })
 export class UsuarioService {
   private apiUrl = 'http://localhost:1882/usuarios';
-  private socket: Socket;
 
   constructor(private http: HttpClient) {
-    this.socket = io(this.apiUrl.replace('/usuarios', ''));
   }
 
   getUsuarioById(nombreUsuario: string): Observable<User> {
@@ -57,9 +55,5 @@ export class UsuarioService {
 
   unequipHero(nombreUsuario: string, name: string): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/unequipHero`, { heroName: name });
-  }
-
-  onEquipUpdate(callback: (user: User) => void) {
-    this.socket.on('equipUpdated', callback);
   }
 }

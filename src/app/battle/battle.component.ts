@@ -90,7 +90,6 @@ export class BattleComponent implements OnInit, OnDestroy {
   /** Habilidades con estado de cooldown */
   mySkillsWithCooldown: any[] = [];
 
-  imageBase64: string | null = null;
 
   /**
    * Constructor del componente.
@@ -106,7 +105,7 @@ export class BattleComponent implements OnInit, OnDestroy {
     this.initializeTimers();
     this.setupBattleListeners();
     this.addSystemLog('La batalla ha comenzado');
-    
+    this.getImageById(this.myPlayerId)
   }
 
   /**
@@ -582,9 +581,8 @@ getMySkills(): any[] {
   /**
    * Obtiene la imagen de un jugador.
    */
-getImageById(playerId: string): void {
-  //this.battleService.getImageById(playerId)
-
+getImageById(playerId: string): Observable<string> {
+  return this.battleService.getImageById(playerId)
 }
 
 

@@ -44,6 +44,12 @@ paginaItems = 1;
 paginaEpicas = 1;
 paginaHeroes = 1;
 
+selectedCategory: string = 'armas';
+
+setCategory(cat: string) {
+  this.selectedCategory = cat;
+}
+
 get armasDisponiblesPaginados() {
   const start = (this.paginaArmas - 1) * this.itemsPorPagina;
   return this.user.inventario.weapons.slice(start, start + this.itemsPorPagina);

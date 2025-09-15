@@ -1,15 +1,23 @@
 <div class="history">
+  <p>DEBUG: {{ purchased.length }} compradas, {{ sold.length }} vendidas</p>
+
   <h3>Compradas</h3>
   <ul>
     <li *ngFor="let a of purchased">
-      {{ a.item?.name || a.title }} - {{ a.currentPrice }} - {{ a.endsAt | date:'short' }}
+      {{ a.item?.name || a.title }} -
+      {{ a.highestBid?.amount || a.buyNowPrice || 0 }} -
+      Vendedor: {{ getSellerName(a) }}
     </li>
   </ul>
 
   <h3>Vendidas</h3>
   <ul>
     <li *ngFor="let a of sold">
-      {{ a.item?.name || a.title }} - {{ a.currentPrice }} - {{ a.endsAt | date:'short' }}
+      {{ a.item?.name || a.title }} -
+      {{ a.highestBid?.amount || a.buyNowPrice || 0 }} -
+      Comprador: {{ getBuyerName(a) }}
     </li>
   </ul>
+
+  <p *ngIf="purchased.length === 0 && sold.length === 0">No hay transacciones para mostrar.</p>
 </div>

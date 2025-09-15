@@ -73,22 +73,23 @@ export class AuctionService {
   }
 
   getPurchasedAuctions(userId: string, token?: string) {
-    return lastValueFrom(
-      this.http.get<AuctionDTO[]>(
-        `${this.base}/auctions/purchased?userId=${userId}`,
-        this.authHeaders(token)
-      )
-    );
-  }
+  return lastValueFrom(
+    this.http.get<AuctionDTO[]>(
+      `${this.base}/auctions/history/purchased/${userId}`,
+      this.authHeaders(token)
+    )
+  );
+}
 
-  getSoldAuctions(userId: string, token?: string) {
-    return lastValueFrom(
-      this.http.get<AuctionDTO[]>(
-        `${this.base}/auctions/sold?userId=${userId}`,
-        this.authHeaders(token)
-      )
-    );
-  }
+getSoldAuctions(userId: string, token?: string) {
+  return lastValueFrom(
+    this.http.get<AuctionDTO[]>(
+      `${this.base}/auctions/history/sold/${userId}`,
+      this.authHeaders(token)
+    )
+  );
+}
+
   getUserItems(userId: string, token?: string) {
   return lastValueFrom(
     this.http.get<{ data: { id: string; name: string }[] }>(

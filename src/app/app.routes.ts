@@ -28,6 +28,10 @@ import { AppLandingComponent } from './app-landing/app-landing.component';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
 import { AppInventarioComponent } from './app-inventario/app-inventario.component';
+import { AuctionListComponent } from './app-auction/auction-list/auction-list.component';
+import { AuctionDetailsComponent } from './app-auction/auction-details/auction-details.component';
+import { TransactionHistoryComponent } from './app-auction/transaction-history/transaction-history.component';
+import { CreateAuctionFormComponent } from './app-auction/create-auction-form/create-auction-form.component';
 
 /**
  * Definición de rutas principales de la app.
@@ -177,7 +181,29 @@ const routeConfig: Routes = [
     path: 'inventory',
     component: AppInventarioComponent,
     canActivate: [AuthGuard]
-  }
+  },
+  // Subastas más específicas
+  { path: 'auctions/vender', 
+    component: CreateAuctionFormComponent, 
+    canActivate: [AuthGuard] },
+
+  { path: 'auctions/recoger', 
+    component: TransactionHistoryComponent, 
+    canActivate: [AuthGuard] },
+
+  { path: 'auctions/mis-pujas', 
+    component: AuctionListComponent, 
+    canActivate: [AuthGuard], 
+    data: { onlyMyBids: true } },
+
+  { path: 'auctions/:id', 
+    component: AuctionDetailsComponent, 
+    canActivate: [AuthGuard] },
+    
+  { path: 'auctions', 
+    component: AuctionListComponent, 
+    canActivate: [AuthGuard] },
+
 ];
 
 export default routeConfig;

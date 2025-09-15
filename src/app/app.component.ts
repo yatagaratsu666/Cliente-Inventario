@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginService } from './services/login.service';
 import { Router } from '@angular/router';
@@ -45,16 +45,24 @@ export class AppComponent {
   allEpics: Epic[] = [];
   allWeapons: Weapon[] = [];
 
+  isBattleRoute = false;
+
   constructor(
     public loginService: LoginService,
-    private router: Router,
+    public router: Router,
     private chatService: ChatService,
     private itemService: ItemsService,
     private heroService: HeroesService,
     private armorService: ArmorsService,
     private epicsService: EpicsService,
-    private weaponService: WeaponsService
-  ) { }
+    private weaponService: WeaponsService,
+  ) { 
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isBattleRoute = event.urlAfterRedirects.startsWith('battle');
+      }
+    });
+  }
 
   ngOnInit() {
     // Traer todos los datos una sola vez
@@ -118,7 +126,7 @@ export class AppComponent {
   }
 
   onAuction(){
-    this.router.navigate(['/']);
+    this.router.navigate(['/auctions']);
   }
 
   onTournament(){
@@ -170,4 +178,19 @@ export class AppComponent {
       w.name?.toLowerCase().includes(query)
     );
   }
+  goToComprar() {
+  this.router.navigate(['/auctions']);
+}
+
+goToVender() {
+  this.router.navigate(['/auctions/vender']);
+}
+
+goToRecoger() {
+  this.router.navigate(['/auctions/recoger']);
+}
+
+goToMisPujas() {
+  this.router.navigate(['/auctions/mis-pujas']);
+}
 }

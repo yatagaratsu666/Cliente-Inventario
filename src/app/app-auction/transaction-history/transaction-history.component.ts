@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuctionDTO } from '../../domain/auction.model';
 import { AuctionService } from '../../services/auction.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environment/environment';
+import { AuctionSocketService } from '../../services/auctionSocket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-transaction-history',
@@ -12,18 +14,20 @@ import { environment } from '../../environment/environment';
   imports: [CommonModule, RouterModule],
   templateUrl: './transaction-history.component.html'
 })
-export class TransactionHistoryComponent implements OnInit {
+export class TransactionHistoryComponent implements OnInit, OnDestroy {
   purchased: AuctionDTO[] = [];
   sold: AuctionDTO[] = [];
   usernames: Record<string, string> = {};
 
   private token?: string;
   private userId?: string;
+  private subs: Subscription[] = [];
 
   constructor(
     private auctionService: AuctionService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private auctionSocket: AuctionSocketService
   ) {}
 
   ngOnInit() {
@@ -36,6 +40,22 @@ export class TransactionHistoryComponent implements OnInit {
     }
 
     this.fetchHistory();
+
+    // 🔹 Conectar sockets
+    this.auctionSocket.connect(this.token);
+
+    // 🔹 Escuchar transacciones nuevas
+    this.subs.push(
+      this.auctionSocket.onTransactionCreated().subscribe(tx => {
+        // Recargar historial cada vez que hay transacción nueva
+        this.fetchHistory();
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
+    this.auctionSocket.disconnect();
   }
 
   async fetchHistory() {

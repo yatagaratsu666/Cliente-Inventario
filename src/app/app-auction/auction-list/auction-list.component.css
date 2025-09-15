@@ -1,2 +1,96 @@
-.auction-page .toolbar { display:flex; gap:8px; margin-bottom:12px; align-items:center;}
-.list { display:flex; flex-direction:column; gap:10px; }
+/* 🔹 Página principal */
+.auction-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0d1b2a, #1b2b43);
+  color: #eaf6f6;
+  padding: 30px;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+/* 🔹 Barra de acciones */
+.auction-page .toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.auction-page .toolbar button {
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: transparent;
+  color: #56cfe1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auction-page .toolbar button:hover {
+  background: linear-gradient(to right, #1f7a7a, #145252);
+  color: #eaf6f6;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
+}
+
+/* 🔹 Filtros */
+.filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.filters input,
+.filters select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: rgba(86, 207, 225, 0.05);
+  color: #eaf6f6;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #48bfe3;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.5);
+}
+
+/* 🔹 Listado */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 🔹 Placeholder para tarjetas */
+app-auction-card {
+  display: block;
+  border: 2px solid #56cfe1;
+  border-radius: 10px;
+  padding: 15px;
+  background: #1b262c;
+  color: #d4f1f4;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+app-auction-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 12px rgba(86, 207, 225, 0.3);
+}
+
+/* 🔹 Detalle de subasta */
+app-auction-details {
+  display: block;
+  margin-top: 20px;
+  border: 2px solid #56cfe1;
+  border-radius: 12px;
+  background: #1b262c;
+  padding: 20px;
+  box-shadow: 0 0 14px rgba(86, 207, 225, 0.2);
+}

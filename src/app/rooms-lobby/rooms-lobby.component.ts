@@ -146,7 +146,7 @@ ngOnInit(): void {
       { id: 2, name: 'Pantalones de Malla', image: 'assets/items/pants2.png', stats: '+18 DEF' },
     ],
     shoes: [
-      { id: 1, name: 'Botas de Cuero', image: 'assets/items/shoes1.png', stats: '+7 DEF' },
+      { id: 1, name: 'Pie de atleta', image: 'assets/items/shoes1.png', stats: '+7 DEF' },
       { id: 2, name: 'Botas de Guerra', image: 'assets/items/shoes2.png', stats: '+12 DEF' },
     ],
     weapon1: [

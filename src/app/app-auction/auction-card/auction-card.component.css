@@ -1,0 +1,3 @@
+.card { display:flex; gap:12px; padding:8px; border-radius:8px; border:1px solid #ddd; align-items:center;}
+.card img { width:64px; height:64px; object-fit:cover; border-radius:6px;}
+.info h3 { margin:0; font-size:1rem; }

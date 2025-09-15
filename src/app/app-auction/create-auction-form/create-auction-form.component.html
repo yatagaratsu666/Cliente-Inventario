@@ -1,0 +1,17 @@
+<div class="form">
+  <label>Item
+    <select [(ngModel)]="form.itemId">
+      <option value="">-- seleccionar --</option>
+      <option *ngFor="let it of availableItems" [value]="it.id">{{ it.name }}</option>
+    </select>
+  </label>
+
+  <label>Título <input [(ngModel)]="form.title" /></label>
+  <label>Descripción <textarea [(ngModel)]="form.description"></textarea></label>
+  <label>Precio inicial <input type="number" [(ngModel)]="form.startingPrice" /></label>
+  <label>Compra ya <input type="number" [(ngModel)]="form.buyNowPrice" /></label>
+  <label>Duración (h) <input type="number" [(ngModel)]="form.durationHours" /></label>
+
+  <button (click)="submit()">Crear Subasta</button>
+</div>
+

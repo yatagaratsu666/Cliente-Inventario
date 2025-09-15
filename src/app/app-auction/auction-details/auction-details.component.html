@@ -1,0 +1,24 @@
+<div class="details" *ngIf="freshAuction">
+  <button (click)="close()">Cerrar</button>
+  <h2>{{ freshAuction.title || freshAuction.item?.name }}</h2>
+  <p>{{ freshAuction.description }}</p>
+
+  <p>Precio actual: {{ freshAuction.currentPrice }}</p>
+  <p *ngIf="freshAuction.highestBid">Mejor puja: {{ freshAuction.highestBid.amount }} por {{ freshAuction.highestBid.userId }}</p>
+  <p>Creada: {{ freshAuction.createdAt | date:'short' }}</p>
+  <p>Finaliza: {{ freshAuction.endsAt | date:'short' }} ({{ getRemaining(freshAuction.endsAt) }})</p>
+
+  <div class="actions">
+    <input type="number" [(ngModel)]="editingBid" placeholder="Monto" />
+    <button (click)="placeBid()">Pujar</button>
+    <button *ngIf="freshAuction.buyNowPrice" (click)="buyNow()">Comprar ahora {{ freshAuction.buyNowPrice }}</button>
+  </div>
+
+  <div *ngIf="freshAuction.bids?.length">
+    <h4>Pujas</h4>
+    <ul>
+      <li *ngFor="let b of freshAuction.bids">{{ b.userId }} - {{ b.amount }} ({{ b.createdAt | date:'short' }})</li>
+    </ul>
+  </div>
+</div>
+

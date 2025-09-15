@@ -28,6 +28,8 @@ import { AppLandingComponent } from './app-landing/app-landing.component';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
 import { AppInventarioComponent } from './app-inventario/app-inventario.component';
+import { AuctionListComponent } from './app-auction/auction-list/auction-list.component';
+import { AuctionDetailsComponent } from './app-auction/auction-details/auction-details.component';
 
 /**
  * Definición de rutas principales de la app.
@@ -176,7 +178,9 @@ const routeConfig: Routes = [
   {
     path: 'inventory',
     component: AppInventarioComponent
-  }
+  },
+  { path: 'auctions', component: AuctionListComponent, canActivate: [AuthGuard] },
+  { path: 'auctions/:id', component: AuctionDetailsComponent, canActivate: [AuthGuard] }
 ];
 
 export default routeConfig;

@@ -1,0 +1,21 @@
+<div class="auction-page">
+  <div class="toolbar">
+    <input placeholder="Buscar..." [(ngModel)]="filter" />
+    <button (click)="loadAuctions()">Refresh</button>
+  </div>
+
+  <div class="list">
+    <app-auction-card
+      *ngFor="let a of filtered"
+      [auction]="a"
+      (click)="openDetails(a)"
+    ></app-auction-card>
+  </div>
+
+  <app-auction-details
+    *ngIf="selected"
+    [auction]="selected"
+    [token]="token || ''"
+    (onClose)="closeDetails()"
+  ></app-auction-details>
+</div>

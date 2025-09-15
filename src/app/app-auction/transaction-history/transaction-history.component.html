@@ -1,0 +1,15 @@
+<div class="history">
+  <h3>Compradas</h3>
+  <ul>
+    <li *ngFor="let a of purchased">
+      {{ a.item?.name || a.title }} - {{ a.currentPrice }} - {{ a.endsAt | date:'short' }}
+    </li>
+  </ul>
+
+  <h3>Vendidas</h3>
+  <ul>
+    <li *ngFor="let a of sold">
+      {{ a.item?.name || a.title }} - {{ a.currentPrice }} - {{ a.endsAt | date:'short' }}
+    </li>
+  </ul>
+</div>

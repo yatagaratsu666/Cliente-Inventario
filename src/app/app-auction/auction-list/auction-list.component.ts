@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router'; // 🔹 import ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { AuctionCardComponent } from '../auction-card/auction-card.component';
 import { AuctionDetailsComponent } from '../auction-details/auction-details.component';
-
 import { AuctionDTO } from '../../domain/auction.model';
 import { AuctionService } from '../../services/auction.service';
-import { SocketService } from '../../services/socket.service';
+import { AuctionSocketService } from '../../services/auctionSocket.service';
 
 @Component({
   selector: 'app-auction-list',
@@ -25,133 +25,119 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   token?: string;
   userId?: string;
 
-  // 🔹 filtros
   selectedType: string = '';
   selectedDuration: string = '';
   maxPrice?: number;
-
-  // 🔹 lista de tipos únicos
   uniqueTypes: string[] = [];
-
-  // 🔹 flag para ver solo mis pujas
   onlyMyBids: boolean = false;
+
+  private subs: Subscription[] = [];
 
   constructor(
     private auctionService: AuctionService,
-    private socketService: SocketService,
+    private auctionSocket: AuctionSocketService,
     private router: Router,
-    private route: ActivatedRoute // 🔹 para leer data de la ruta
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
     this.token = localStorage.getItem('token') || undefined;
     this.userId = localStorage.getItem('userId') || undefined;
-
-    // 🔹 leer flag de la ruta
     this.onlyMyBids = this.route.snapshot.data['onlyMyBids'] ?? false;
 
     await this.loadAuctions();
 
-    const socket = this.socketService.connect(this.token);
-    socket.on('auction-updated', (updated: AuctionDTO) => {
-      this.auctions = this.auctions.map(a => a.id === updated.id ? updated : a);
-      this.refreshTypes();
-      this.applyFilter();
-    });
+    this.auctionSocket.connect(this.token);
 
-    socket.on('auction-created', (created: AuctionDTO) => {
-      this.auctions.push(created);
-      this.refreshTypes();
-      this.applyFilter();
-    });
+    this.subs.push(
+  this.auctionSocket.onAuctionUpdated().subscribe(updated => {
+    this.auctions = this.auctions.map(a => 
+      a.id === updated.id 
+        ? { ...a, ...updated }  // 🔹 merge parcial para mantener pujas activas
+        : a
+    );
+    this.refreshTypes();
+    this.applyFilter();
+  })
+);
+
+    this.subs.push(
+      this.auctionSocket.onNewAuction().subscribe(created => {
+        this.auctions.push(created);
+        this.refreshTypes();
+        this.applyFilter();
+      })
+    );
+
+    this.subs.push(
+  this.auctionSocket.onAuctionClosed().subscribe(closed => {
+    this.auctions = this.auctions.filter(a => a.id !== closed.id);
+    if (this.selected?.id === closed.id) this.closeDetails();
+    this.applyFilter();
+  })
+);
+
   }
 
   ngOnDestroy() {
-    this.socketService.disconnect();
+    this.auctionSocket.disconnect();
+    this.subs.forEach(s => s.unsubscribe());
   }
 
-  async loadAuctions() {
+  private async loadAuctions() {
     try {
-      let data: AuctionDTO[];
-
-      if (this.onlyMyBids && this.userId) {
-        // 🔹 solo subastas activas donde he pujado
-        const all = await this.auctionService.listAuctions(this.token);
-        data = all.filter(a => a.highestBidderId === this.userId && !a.isClosed);
-      } else {
-        data = await this.auctionService.listAuctions(this.token);
-      }
-
-      this.auctions = data;
-      console.log("📦 Auctions recibidas:", this.auctions);
-
-      // actualizar tipos únicos
+      const all = await this.auctionService.listAuctions(this.token);
+      this.auctions = this.onlyMyBids && this.userId
+        ? all.filter(a => a.highestBidderId === this.userId && !a.isClosed)
+        : all;
       this.refreshTypes();
-
       this.applyFilter();
     } catch (err) {
       console.error('Error cargando subastas:', err);
     }
   }
 
-  // 🔹 recalcular tipos únicos
   private refreshTypes() {
-    const types = this.auctions
-      .map(a => a.item?.type)
-      .filter((t): t is string => !!t);
-
-    this.uniqueTypes = Array.from(new Set(types));
+    this.uniqueTypes = Array.from(new Set(
+      this.auctions.map(a => a.item?.type).filter((t): t is string => !!t)
+    ));
   }
 
   applyFilter() {
     const q = this.filter.trim().toLowerCase();
-
     this.filtered = this.auctions.filter(a => {
       if (q && q.length >= 4) {
         const matchTitle = a.title?.toLowerCase().includes(q);
         const matchDesc = a.description?.toLowerCase().includes(q);
         if (!matchTitle && !matchDesc) return false;
       }
-
       if (this.selectedType && a.item?.type !== this.selectedType) return false;
-
       if (this.selectedDuration) {
         const created = new Date(a.createdAt).getTime();
         const ends = new Date(a.endsAt).getTime();
         const durationHours = (ends - created) / (1000 * 60 * 60);
-
         if (this.selectedDuration === '24' && durationHours > 24) return false;
         if (this.selectedDuration === '48' && durationHours > 48) return false;
       }
-
       if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
-
       return true;
     });
   }
 
-  openDetails(a: AuctionDTO) {
-    this.selected = a;
-  }
+  openDetails(a: AuctionDTO) { this.selected = a; }
+  closeDetails() { this.selected = undefined; }
 
-  closeDetails() {
-    this.selected = undefined;
-  }
+  // 🔹 Evento que recibe cuando se compra una subasta
+  handleBought(updated: AuctionDTO) {
+  // 🔹 eliminamos la subasta comprada inmediatamente
+  this.auctions = this.auctions.filter(a => a.id !== updated.id);
+  this.applyFilter();
+  if (this.selected?.id === updated.id) this.closeDetails();
+}
 
-  // 🔹 Métodos para navegar desde los botones
-  goToComprar() {
-    this.router.navigate(['/auctions']);
-  }
 
-  goToVender() {
-    this.router.navigate(['/auctions/vender']);
-  }
-
-  goToRecoger() {
-    this.router.navigate(['/auctions/recoger']);
-  }
-
-  goToMisPujas() {
-    this.router.navigate(['/auctions/mis-pujas']);
-  }
+  goToComprar() { this.router.navigate(['/auctions']); }
+  goToVender() { this.router.navigate(['/auctions/vender']); }
+  goToRecoger() { this.router.navigate(['/auctions/recoger']); }
+  goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
 }

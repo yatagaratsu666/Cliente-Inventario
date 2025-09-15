@@ -1,28 +1,41 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuctionService } from '../../services/auction.service';
-import { SocketService } from '../../services/socket.service';
-import { AuctionDTO } from '../../domain/auction.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router'; // 🔹 import Router
+
 import { AuctionCardComponent } from '../auction-card/auction-card.component';
 import { AuctionDetailsComponent } from '../auction-details/auction-details.component';
-import { FormsModule } from '@angular/forms';
+
+import { AuctionDTO } from '../../domain/auction.model';
+import { AuctionService } from '../../services/auction.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-auction-list',
   standalone: true,
   templateUrl: './auction-list.component.html',
   styleUrls: ['./auction-list.component.css'],
-  imports: [FormsModule, AuctionCardComponent, AuctionDetailsComponent]
+  imports: [CommonModule, FormsModule, AuctionCardComponent, AuctionDetailsComponent]
 })
 export class AuctionListComponent implements OnInit, OnDestroy {
   auctions: AuctionDTO[] = [];
   filtered: AuctionDTO[] = [];
-  filter = '';
-  selected: AuctionDTO | null = null;
+  filter: string = '';
+  selected?: AuctionDTO;
   token?: string;
+
+  // 🔹 filtros
+  selectedType: string = '';
+  selectedDuration: string = '';
+  maxPrice?: number;
+
+  // 🔹 lista de tipos únicos
+  uniqueTypes: string[] = [];
 
   constructor(
     private auctionService: AuctionService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private router: Router // 🔹 inyectamos Router
   ) {}
 
   async ngOnInit() {
@@ -30,14 +43,14 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     const socket = this.socketService.connect(this.token);
     socket.on('auction-updated', (updated: AuctionDTO) => {
-      this.auctions = this.auctions.map(a =>
-        a.id === updated.id ? updated : a
-      );
+      this.auctions = this.auctions.map(a => a.id === updated.id ? updated : a);
+      this.refreshTypes();
       this.applyFilter();
     });
 
     socket.on('auction-created', (created: AuctionDTO) => {
       this.auctions.push(created);
+      this.refreshTypes();
       this.applyFilter();
     });
   }
@@ -50,20 +63,51 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     try {
       const data = await this.auctionService.listAuctions(this.token);
       this.auctions = data;
+      console.log("📦 Auctions recibidas:", this.auctions);
+
+      // actualizar tipos únicos
+      this.refreshTypes();
+
       this.applyFilter();
     } catch (err) {
       console.error('Error cargando subastas:', err);
     }
   }
 
+  // 🔹 recalcular tipos únicos
+  private refreshTypes() {
+    const types = this.auctions
+      .map(a => a.item?.type)
+      .filter((t): t is string => !!t);
+
+    this.uniqueTypes = Array.from(new Set(types));
+  }
+
   applyFilter() {
     const q = this.filter.trim().toLowerCase();
-    this.filtered = !q
-      ? this.auctions
-      : this.auctions.filter(a =>
-          a.title?.toLowerCase().includes(q) ||
-          a.description?.toLowerCase().includes(q)
-        );
+
+    this.filtered = this.auctions.filter(a => {
+      if (q && q.length >= 4) {
+        const matchTitle = a.title?.toLowerCase().includes(q);
+        const matchDesc = a.description?.toLowerCase().includes(q);
+        if (!matchTitle && !matchDesc) return false;
+      }
+
+      if (this.selectedType && a.item?.type !== this.selectedType) return false;
+
+      if (this.selectedDuration) {
+        const created = new Date(a.createdAt).getTime();
+        const ends = new Date(a.endsAt).getTime();
+        const durationHours = (ends - created) / (1000 * 60 * 60);
+
+        if (this.selectedDuration === '24' && durationHours > 24) return false;
+        if (this.selectedDuration === '48' && durationHours > 48) return false;
+      }
+
+      if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
+
+      return true;
+    });
   }
 
   openDetails(a: AuctionDTO) {
@@ -71,7 +115,23 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   closeDetails() {
-    this.selected = null;
+    this.selected = undefined;
+  }
+
+  // 🔹 Métodos para navegar desde los botones
+  goToComprar() {
+    this.router.navigate(['/auctions']);
+  }
+
+  goToVender() {
+    this.router.navigate(['/auctions/vender']);
+  }
+
+  goToRecoger() {
+    this.router.navigate(['/auctions/recoger']);
+  }
+
+  goToMisPujas() {
+    this.router.navigate(['/auctions/mis-pujas']);
   }
 }
-

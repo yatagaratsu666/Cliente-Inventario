@@ -7,12 +7,14 @@ export interface Bid {
 
 export interface ItemRef {
   id: string;
-  name?: string;
-  imagen?: string;
   userId?: string;
+  name?: string;
+  isAvailable?: boolean;
   type?: string;
   description?: string;
+  imagen?: string;
 }
+
 
 export interface AuctionDTO {
   id: string;

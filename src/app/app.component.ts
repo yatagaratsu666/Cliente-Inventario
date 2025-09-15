@@ -118,7 +118,7 @@ export class AppComponent {
   }
 
   onAuction(){
-    this.router.navigate(['/']);
+    this.router.navigate(['/auctions']);
   }
 
   onTournament(){
@@ -170,4 +170,19 @@ export class AppComponent {
       w.name?.toLowerCase().includes(query)
     );
   }
+  goToComprar() {
+  this.router.navigate(['/auctions']);
+}
+
+goToVender() {
+  this.router.navigate(['/auctions/vender']);
+}
+
+goToRecoger() {
+  this.router.navigate(['/auctions/recoger']);
+}
+
+goToMisPujas() {
+  this.router.navigate(['/auctions/mis-pujas']);
+}
 }

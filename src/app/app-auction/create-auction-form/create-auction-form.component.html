@@ -1,17 +1,49 @@
-<div class="form">
-  <label>Item
-    <select [(ngModel)]="form.itemId">
-      <option value="">-- seleccionar --</option>
-      <option *ngFor="let it of availableItems" [value]="it.id">{{ it.name }}</option>
+<form (ngSubmit)="submit()" class="border p-4 rounded mb-4">
+  <div *ngIf="loading">Cargando items...</div>
+
+  <label class="block mb-2">
+    Item:
+    <select [(ngModel)]="itemId" name="itemId" class="border p-1 w-full" *ngIf="!loading">
+      <option value="">-- Selecciona un item --</option>
+      <option *ngFor="let item of availableItems" [value]="item.id">{{ item.name }}</option>
     </select>
   </label>
 
-  <label>Título <input [(ngModel)]="form.title" /></label>
-  <label>Descripción <textarea [(ngModel)]="form.description"></textarea></label>
-  <label>Precio inicial <input type="number" [(ngModel)]="form.startingPrice" /></label>
-  <label>Compra ya <input type="number" [(ngModel)]="form.buyNowPrice" /></label>
-  <label>Duración (h) <input type="number" [(ngModel)]="form.durationHours" /></label>
+  <label class="block mb-2">
+    Precio inicial:
+    <input
+      type="number"
+      placeholder="Precio inicial"
+      [value]="form.startingPrice"
+      (input)="handleInputChange('startingPrice', $event)"
+      class="border p-1 w-full"
+    />
+  </label>
 
-  <button (click)="submit()">Crear Subasta</button>
-</div>
+  <label class="block mb-2">
+    Compra rápida:
+    <input
+      type="number"
+      placeholder="Compra rápida"
+      [value]="form.buyNowPrice || ''"
+      (input)="handleInputChange('buyNowPrice', $event)"
+      class="border p-1 w-full"
+    />
+  </label>
 
+  <label class="block mb-2">
+    Duración:
+    <select
+      [value]="form.durationHours"
+      (change)="handleInputChange('durationHours', $event)"
+      class="border p-1 w-full"
+    >
+      <option [value]="24">24 horas</option>
+      <option [value]="48">48 horas</option>
+    </select>
+  </label>
+
+  <button type="submit" class="bg-blue-500 text-white px-2 py-1 rounded mt-2">
+    Crear Subasta
+  </button>
+</form>

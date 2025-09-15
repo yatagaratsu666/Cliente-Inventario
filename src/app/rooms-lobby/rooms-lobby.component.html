@@ -20,8 +20,8 @@
         <span>Ataque: {{ heroStats.hero.attack }}</span>
       </div>
       <div class="hero-stats">
-        <span>Boost: {{ heroStats.hero.attackBoostMax }}-{{ heroStats.hero.attackBoostMin }}</span>
-        <span>Daño: {{ heroStats.hero.damageMax }}-{{ heroStats.hero.damageMin }}</span>
+        <span>Boost: {{ heroStats.hero.attackBoost.min }}-{{ heroStats.hero.attackBoost.max }}</span>
+        <span>Daño: {{ heroStats.hero.damage.min }}-{{ heroStats.hero.damage.max }}</span>
       </div>
     </div>
 
@@ -123,7 +123,7 @@
   <div class="right-panel">
     <app-chat
       [serverUrl]="'http://localhost:4000'"
-      [myPlayerId]="id"
+      [myPlayerId]="userId"
       [canChat]="true"
       [channel]=  `battle-${roomId}`
       >
@@ -143,20 +143,25 @@
       <div 
         *ngFor="let item of getAvailableItems(selectedSlot)" 
         class="equipment-item"
-        [class.equipped]="isEquipped(item)"
-        (click)="equipItem(item)">
+        [class.equipped-slot]="isEquipped(item) === 'slot'"
+        [class.equipped-other]="isEquipped(item) === 'other'"
+        [class.not-equipped]="isEquipped(item) === 'none'"
+        (click)="selectedItem = item">
         <img [src]="item.image" [alt]="item.name">
         <div class="item-info">
           <span class="item-name">{{ item.name }}</span>
-          <span class="item-stats" *ngIf="item.stats">{{ item.stats }}</span>
+          <span *ngIf="isEquipped(item) === 'slot'" class="item-status">Equipado aquí</span>
+          <span *ngIf="isEquipped(item) === 'other'" class="item-status">Equipado en otro slot</span>
+          <span *ngIf="isEquipped(item) === 'none'" class="item-status">No equipado</span>
         </div>
+        <div *ngIf="selectedItem === item" class="item-selected-overlay"></div>
       </div>
     </div>
 
     <div class="modal-actions">
-      <button (click)="unequipSlot()" class="unequip-btn" *ngIf="equippedItems[selectedSlot]">
-        Desequipar
-      </button>
+      <button *ngIf="selectedItem && isEquipped(selectedItem) === 'none'" (click)="equipSelectedItem()" class="equip-btn">Equipar</button>
+      <button *ngIf="selectedItem && isEquipped(selectedItem) === 'slot'" (click)="unequipSelectedItem()" class="unequip-btn">Desequipar</button>
+      <button *ngIf="selectedItem && isEquipped(selectedItem) === 'other'" (click)="equipSelectedItem()" class="move-btn">Mover aquí</button>
       <button (click)="closeEquipmentModal()" class="cancel-btn">Cerrar</button>
     </div>
   </div>

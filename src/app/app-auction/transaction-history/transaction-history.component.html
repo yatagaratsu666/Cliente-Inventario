@@ -1,0 +1,36 @@
+<div class="auction-page">
+  <!-- 🔹 Barra superior con acciones -->
+  <div class="toolbar">
+    <button (click)="goToComprar()">🛒 Comprar</button>
+    <button (click)="goToVender()">📦 Vender</button>
+    <button (click)="goToRecoger()">🎁 Recoger</button>
+    <button (click)="goToMisPujas()">💰 Mis pujas</button>
+    <button (click)="fetchHistory()">🔄 Refresh</button>
+  </div>
+
+  <!-- 🔹 Debug -->
+  <p>DEBUG: {{ purchased.length }} compradas, {{ sold.length }} vendidas</p>
+
+  <!-- 🔹 Historial de compras -->
+  <h3>Compradas</h3>
+  <ul>
+    <li *ngFor="let a of purchased">
+      {{ a.item?.name || a.title }} -
+      {{ a.highestBid?.amount || a.buyNowPrice || 0 }} -
+      Vendedor: {{ getSellerName(a) }}
+    </li>
+  </ul>
+
+  <!-- 🔹 Historial de ventas -->
+  <h3>Vendidas</h3>
+  <ul>
+    <li *ngFor="let a of sold">
+      {{ a.item?.name || a.title }} -
+      {{ a.highestBid?.amount || a.buyNowPrice || 0 }} -
+      Comprador: {{ getBuyerName(a) }}
+    </li>
+  </ul>
+
+  <!-- 🔹 Mensaje si no hay transacciones -->
+  <p *ngIf="purchased.length === 0 && sold.length === 0">No hay transacciones para mostrar.</p>
+</div>

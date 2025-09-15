@@ -12,5 +12,8 @@ export const environment = {
 
   inventarySocket: 'http://localhost:1882',
 
-  chatUrlSocket: 'http://speedorz.bucaramanga.upb.edu.co:4000'
+  chatUrlSocket: 'http://speedorz.bucaramanga.upb.edu.co:4000',
+
+  api: { base: 'http://localhost:3000/api' },
+  socket: { base: 'http://localhost:3000' }
 };

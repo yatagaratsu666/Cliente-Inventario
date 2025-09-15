@@ -14,7 +14,6 @@ export default class User {
   equipados: Equipamiento;
 
   constructor(
-    id: string = '',
     nombreUsuario: string = '',
     rol: Roles = Roles.JUGADOR,
     creditos: number = 0,

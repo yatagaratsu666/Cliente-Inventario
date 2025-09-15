@@ -1,59 +1,83 @@
-/* Contenedor principal de la página */
-body {
+/* Caja principal del inventario */
+.inventario-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: radial-gradient(circle at center, #1c1c2b, #0e0e17);
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #f1f1f1;
-}
-
-/* Panel del inventario */
-.inventario {
-  width: 85%;
-  max-width: 950px;
+  gap: 20px;
+  max-width: 1100px;
   padding: 25px;
   background-color: #2a2a3d;
   border-radius: 15px;
+  margin: auto; 
   border: 3px solid #444;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;    
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+/* Menú lateral */
+.inventario-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 180px;
+}
+
+.heroe-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  margin-bottom: 10px;
+}
+
+.inventario-menu button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #1e1e2f;
+  color: #f1f1f1;
+  font-weight: bold;
+  cursor: pointer;
   text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid #333;
 }
 
-/* Título principal */
-.inventario h2 {
-  margin-bottom: 25px;
-  color: #ffd700;
-  text-shadow: 2px 2px 5px #000;
-  font-size: 1.8rem;
+.inventario-menu button:hover {
+  background: #2f2f45;
+  border-color: #00c3ff;
+  transform: scale(1.05);
 }
 
-/* Secciones (armas, armaduras, items, épicas) */
-.inventario section {
-  margin-bottom: 25px;
-  padding: 15px;
+.inventario-menu button.active {
+  background: linear-gradient(135deg, #0077ff, #005ecb);
+  border-color: #00c3ff;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(0, 195, 255, 0.6);
+}
+
+/* Panel derecho */
+.inventario-panel {
+  flex: 1;
+  padding: 20px;
+  background-color: #1e1e2f;
   border-radius: 12px;
   border: 2px solid #555;
-  background-color: #1e1e2f;
-  transition: transform 0.2s;
+  overflow-y: auto;
 }
 
-.inventario section:hover {
-  transform: scale(1.01);
-}
-
-/* Subtítulos */
-.inventario h3,
-.inventario h4 {
+/* Títulos */
+.inventario-panel h3,
+.inventario-panel h4 {
   margin-bottom: 12px;
   color: #00c3ff;
   text-shadow: 1px 1px 3px #000;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
-/* Listas de objetos en rejilla */
+/* Lista de ítems */
 ul {
   list-style: none;
   padding: 0;
@@ -62,7 +86,6 @@ ul {
   gap: 14px;
 }
 
-/* Cada ítem */
 li {
   background-color: #2f2f45;
   padding: 12px;
@@ -107,7 +130,7 @@ button:hover {
 }
 
 /* Paginación */
-.paginacion {
+.pagination {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,13 +138,72 @@ button:hover {
   margin-top: 20px;
 }
 
-.paginacion button {
+.pagination button {
   padding: 6px 12px;
   font-size: 0.9rem;
 }
 
-.paginacion span {
+.pagination span {
   font-size: 1rem;
   font-weight: bold;
   color: #fff;
+}
+
+.heroe-equipado {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.dress-up {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-visualizer {
+  position: relative;
+  width: 250px;
+  height: 350px;
+}
+
+.hero-base {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 3px solid #00c3ff;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.7);
+  background: #1a1a2f;
+}
+
+.hero-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.hero-weapon { z-index: 2; }
+.hero-armor { z-index: 3; }
+.hero-epic { z-index: 4; }
+
+.btn-desequipar {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.btn-desequipar:hover {
+  background: linear-gradient(135deg, #cc0000, #990000);
+  transform: scale(1.05);
 }

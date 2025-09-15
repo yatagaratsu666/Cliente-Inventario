@@ -16,11 +16,9 @@ import { Observable, of, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class LoginService {
-  private readonly USERNAME = 'admin'; 
-  private readonly PASSWORD = '1234'; 
-  private readonly USERNAME2 = 'hatsune';
+  private readonly USERNAME2 = 'Mikudayo';
   private readonly PASSWORD2 = '5678';
-  private readonly USERNAME3 = 'mikunano';
+  private readonly USERNAME3 = 'CallmeDrift';
   private readonly PASSWORD3 = '5678';
 
   constructor() {}
@@ -38,11 +36,7 @@ export class LoginService {
 
 
   login(username: string, password: string): Observable<boolean> {
-    if (username === this.USERNAME && password === this.PASSWORD ) {
-      localStorage.setItem('loggedIn', 'true');
-      localStorage.setItem('username', username);
-      return of(true);
-    } else if (username === this.USERNAME2 && password === this.PASSWORD2) {
+    if (username === this.USERNAME2 && password === this.PASSWORD2) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
       return of(true);

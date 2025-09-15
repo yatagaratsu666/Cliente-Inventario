@@ -13,47 +13,47 @@ export class UsuarioService {
   constructor(private http: HttpClient) {
   }
 
-  getUsuarioById(id: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}`);
+  getUsuarioById(nombreUsuario: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${nombreUsuario}`);
   }
 
-  equipArmor(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/equipArmor`, { armorName: name });
+  equipArmor(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/equipArmor`, { armorName: name });
   }
 
-  equipWeapon(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/equipWeapon`, { weaponName: name });
+  equipWeapon(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/equipWeapon`, { weaponName: name });
   }
 
-  equipItem(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/equipItem`, { itemName: name });
+  equipItem(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/equipItem`, { itemName: name });
   }
 
-  equipEpic(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/equipEpic`, { epicName: name });
+  equipEpic(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/equipEpic`, { epicName: name });
   }
 
-  equipHero(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/equipHero`, { heroName: name });
+  equipHero(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/equipHero`, { heroName: name });
   }
 
-  unequipArmor(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/unequipArmor`, { armorName: name });
+  unequipArmor(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/unequipArmor`, { armorName: name });
   }
 
-  unequipWeapon(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/unequipWeapon`, { weaponName: name });
+  unequipWeapon(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/unequipWeapon`, { weaponName: name });
   }
 
-  unequipItem(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/unequipItem`, { itemName: name });
+  unequipItem(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/unequipItem`, { itemName: name });
   }
 
-  unequipEpic(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/unequipEpic`, { epicName: name });
+  unequipEpic(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/unequipEpic`, { epicName: name });
   }
 
-  unequipHero(userId: string, name: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/unequipHero`, { heroName: name });
+  unequipHero(nombreUsuario: string, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${nombreUsuario}/unequipHero`, { heroName: name });
   }
 }

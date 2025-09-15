@@ -20,7 +20,7 @@ export class LoginService {
   private readonly PASSWORD = '1234'; 
   private readonly USERNAME2 = 'hatsune';
   private readonly PASSWORD2 = '5678';
-  private readonly USERNAME3 = 'mikunano';
+  private readonly USERNAME3 = 'drift';
   private readonly PASSWORD3 = '5678';
 
   constructor() {}

@@ -1,33 +1,73 @@
-.mi-cuenta {
-    background-color: #0D1B2A; /* Rich Black */
-    padding: 10px;
-    border-radius: 8px;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
-  
-  .mi-cuenta-button {
-    background-color: #56CFE1; /* Sky Blue */
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .mi-cuenta-button:hover {
-    background-color: #0F4C75; /* Indigo Dye */
-  }
-  
-  .cuenta-contenedor {
-    background-color: #1B262C; /* Gunmetal */
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  .cuenta-contenedor p {
-    margin: 5px 0;
-  }
-  
+.cuenta-card {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 40px;
+  background: linear-gradient(to bottom right, #1b262c, #0f4c75); /* Fondo RPG azulado */
+  border: 3px ridge #56cfe1; /* Borde estilo ficha RPG */
+  border-radius: 16px;
+  color: #d4f1f4;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15); /* Resplandor azul */
+  font-family: 'Cinzel', serif; /* Fuente de estilo medieval/RPG si la cargas */
+}
+
+.cuenta-card h2 {
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #bbe1fa;
+  text-shadow: 0 0 10px #3282b8;
+  border-bottom: 2px solid #56cfe1;
+  padding-bottom: 10px;
+}
+
+.info-section {
+  margin-bottom: 30px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.info-row span:first-child {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.info-row span:last-child {
+  color: #bbe1fa;
+}
+
+hr {
+  border: none;
+  border-top: 2px dashed #3282b8;
+  margin: 20px 0;
+}
+
+.cuenta-card h3 {
+  font-size: 28px;
+  color: #56cfe1;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #bbe1fa;
+  padding-bottom: 6px;
+  text-shadow: 0 0 6px #0f4c75;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 14px;
+  background: #3282b8;
+  color: #eaf6f6;
+  border-radius: 8px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-right: 10px;
+  border: 1px solid #bbe1fa;
+  box-shadow: 0 0 6px rgba(86, 207, 225, 0.4);
+}

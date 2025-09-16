@@ -1,8 +1,25 @@
-<div class="mi-cuenta">
-    <button (click)="toggleCuenta()" class="mi-cuenta-button">Mi cuenta</button>
-    <div *ngIf="mostrarCuenta" class="cuenta-contenedor">
-      <p><strong>Jugador:</strong> {{ jugadorNombre }}</p>
-      <p><strong>Tokens:</strong> {{ cantidadTokens }}</p>
-    </div>
+<div class="cuenta-card" *ngIf="user">
+  <h2>👤 Mi Cuenta</h2>
+
+  <div class="info-row">
+    <span><strong>Nombre de usuario:</strong></span>
+    <span>{{ user.nombreUsuario }}</span>
   </div>
-  
+
+  <div class="info-row">
+    <span><strong>Rol:</strong></span>
+    <span>{{ role }}</span>
+  </div>
+
+  <div class="info-row">
+    <span><strong>Créditos:</strong></span>
+    <span>{{ user.creditos }}</span>
+  </div>
+
+  <div class="info-row">
+    <span><strong>Experiencia:</strong></span>
+    <span>{{ user.exp }}</span>
+  </div>
+
+  <hr />
+</div>

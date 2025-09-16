@@ -45,7 +45,7 @@
           
           <!-- Avatar del jugador -->
           <div class="player-avatar">
-            <img [src]="getImageById(player.username)" [alt]="player.username">
+            <img [src]="player.heroStats.hero.image" [alt]="player.username">
             <div class="power-indicator">{{ player.heroStats.hero.power }}</div>
           </div>
 
@@ -79,7 +79,7 @@
           
           <!-- Avatar del jugador -->
           <div class="player-avatar">
-            <img [src]="getImageById(player.username)" [alt]="player.username" class="flipped">
+            <img [src]="player.heroStats.hero.image" [alt]="player.username" class="flipped">
             <div class="power-indicator">{{ player.heroStats.hero.power }}</div>
           </div>
 

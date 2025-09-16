@@ -12,18 +12,21 @@ export default class User {
   creditos: number;
   inventario: Inventario;
   equipados: Equipamiento;
+  exp: number;
 
   constructor(
     nombreUsuario: string = '',
     rol: Roles = Roles.JUGADOR,
     creditos: number = 0,
     inventario: Inventario = new Inventario(),
-    equipados: Equipamiento = new Equipamiento()
+    equipados: Equipamiento = new Equipamiento(),
+    exp: number = 0
   ) {
     this.nombreUsuario = nombreUsuario;
     this.rol = rol;
     this.creditos= creditos;
     this.inventario = inventario;
     this.equipados = equipados;
+    this.exp = exp
   }
 }

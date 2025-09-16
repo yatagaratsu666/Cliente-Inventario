@@ -123,18 +123,18 @@ ngOnInit(): void {
       next: (data) => {
         this.user = data;
         this.equippedItems = {
-          helmet: this.user.equipados.armors?.find((item) => item.armorType === 'HELMET')?.name || null,
-          chest: this.user.equipados.armors?.find((item) => item.armorType === 'CHEST')?.name || null,
-          gloves: this.user.equipados.armors?.find((item) => item.armorType === 'GLOVERS')?.name || null,
-          bracerLeft: this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS')?.name || null,
-          bracerRight: this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS')?.name || null,
-          pants: this.user.equipados.armors?.find((item) => item.armorType === 'PANTS')?.name || null,
-          shoes: this.user.equipados.armors?.find((item) => item.armorType === 'BOOTS')?.name || null,
-          weapon1: this.user.equipados.weapons?.[0]?.name || null,
-          weapon2: this.user.equipados.weapons?.[1]?.name || null,
-          item1: this.user.equipados.items?.[0]?.name || null,
-          item2: this.user.equipados.items?.[1]?.name || null,
-          epicSkill: this.user.equipados.epicAbility?.[0]?.name || null
+          helmet: this.user.equipados.armors?.find((item) => item.armorType === 'HELMET') || null,
+          chest: this.user.equipados.armors?.find((item) => item.armorType === 'CHEST') || null,
+          gloves: this.user.equipados.armors?.find((item) => item.armorType === 'GLOVERS') || null,
+          bracerLeft: this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS') || null,
+          bracerRight: this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS') || null,
+          pants: this.user.equipados.armors?.find((item) => item.armorType === 'PANTS') || null,
+          shoes: this.user.equipados.armors?.find((item) => item.armorType === 'BOOTS') || null,
+          weapon1: this.user.equipados.weapons?.[0] || null,
+          weapon2: this.user.equipados.weapons?.[1] || null,
+          item1: this.user.equipados.items?.[0] || null,
+          item2: this.user.equipados.items?.[1] || null,
+          epicSkill: this.user.equipados.epicAbility?.[0] || null
         };
 
         if (this.firstCharge) {
@@ -153,6 +153,23 @@ ngOnInit(): void {
       },
     });
   }
+
+  getImageByItemName(itemName: string): string | undefined {
+  const sources = [
+    ...(this.user.inventario.weapons || []),
+    ...(this.user.inventario.armors || []),
+    ...(this.user.inventario.items || []),
+    ...(this.user.inventario.epicAbility || []),
+    ...(this.user.equipados.weapons || []),
+    ...(this.user.equipados.armors || []),
+    ...(this.user.equipados.items || []),
+    ...(this.user.equipados.epicAbility || [])
+  ];
+
+  const foundItem = sources.find(item => item?.name === itemName);
+  return foundItem?.image;
+}
+
 
 
   updateStats(effect: Effect, equip: boolean) {
@@ -426,16 +443,24 @@ ngOnInit(): void {
     }
   }
 
-  isEquipped(item: any): 'slot' | 'other' | 'none' {
-    if (this.equippedItems[this.getSlotKey(this.selectedSlot)] && this.equippedItems[this.getSlotKey(this.selectedSlot)] === item.name) {
-      return 'slot';
-    }
-    // ¿Está equipado en otro slot?
-    if (Object.values(this.equippedItems).includes(item.name)) {
+isEquipped(item: any): 'slot' | 'other' | 'none' {
+  const slotKey = this.getSlotKey(this.selectedSlot);
+  const equippedInSlot = this.equippedItems[slotKey];
+
+  if (equippedInSlot && equippedInSlot.name === item.name) {
+    return 'slot';
+  }
+
+  // ¿Está en otro slot?
+  for (let key in this.equippedItems) {
+    if (key !== slotKey && this.equippedItems[key]?.name === item.name) {
       return 'other';
     }
-    return 'none';
   }
+
+  return 'none';
+}
+
   equipSelectedItem() {
     if (!this.selectedItem) return;
     this.equipProduct(this.selectedItem.name, this.selectedSlot);
@@ -542,9 +567,28 @@ sendReadyStatus() {
         console.error('Slot desconocido:', slot);
         break;
     }
-    this.equippedItems[slot] = itemName;
+    const slotKey = this.getSlotKey(slot);
+const item = this.getItemByName(itemName);
+this.equippedItems[slotKey] = item;
+
     this.updateHeroStats(itemName, true, slot);
   }
+
+  getItemByName(itemName: string): any | null {
+  const allItems = [
+    ...(this.user.inventario?.items || []),
+    ...(this.user.inventario?.armors || []),
+    ...(this.user.inventario?.weapons || []),
+    ...(this.user.inventario?.epicAbility || []),
+    ...(this.user.equipados?.items || []),
+    ...(this.user.equipados?.armors || []),
+    ...(this.user.equipados?.weapons || []),
+    ...(this.user.equipados?.epicAbility || []),
+  ];
+
+  return allItems.find(item => item?.name === itemName) || null;
+}
+
 
 
     unequipProduct(itemName: string, slot: string): void {
@@ -590,7 +634,9 @@ sendReadyStatus() {
         break;
     }
     this.updateHeroStats(itemName, false, slot);
-    this.equippedItems[slot] = null;
+    const slotKey = this.getSlotKey(slot);
+this.equippedItems[slotKey] = null;
+
   }
 
   equipItem(itemName: string): void {

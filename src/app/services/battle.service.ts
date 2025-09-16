@@ -205,6 +205,7 @@ export class BattleService {
               name: hero.name,
               heroType: hero.heroType,
               level: hero.level,
+              image: hero.image,
               power: hero.power,
               health: hero.health,
               defense: hero.defense,

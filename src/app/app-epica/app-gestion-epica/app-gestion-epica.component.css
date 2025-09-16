@@ -1,8 +1,7 @@
 .epic-list {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 50px 25px;
-  background: #f8f0e3;
+  padding: 50px 25px; /* Fondo oscuro gris-azulado */
   border-radius: 14px;
 }
 
@@ -11,16 +10,16 @@
   font-size: 40px;
   font-weight: bold;
   margin-bottom: 50px;
-  color: #2f3640;
+  color: #bbe1fa; /* Azul claro elegante */
 }
 
 .epic-card {
   display: flex;
   gap: 30px;
   align-items: flex-start;
-  border: 2px solid #2f3640;
+  border: 2px solid #0f4c75; /* Azul oscuro elegante */
   border-radius: 14px;
-  background: #2f3640;
+  background: #1b262c; /* Azul-gris muy serio */
   padding: 30px;
   margin-bottom: 35px;
 }
@@ -28,7 +27,7 @@
 .epic-image {
   width: 200px;
   height: 200px;
-  border: 3px solid #f8f0e3;
+  border: 3px solid #bbe1fa; /* Azul claro para contraste */
   border-radius: 10px;
 }
 
@@ -37,7 +36,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  color: #f8f0e3;
+  color: #d4f1f4; /* Azul-verde suave */
 }
 
 .epic-info p {
@@ -52,11 +51,11 @@
 .epic-effect {
   margin-top: 20px;
   padding: 12px 16px;
-  background: rgba(248,240,227,0.2);
-  border-left: 5px solid #f8f0e3;
+  background: rgba(212, 241, 244, 0.1); /* Azul-verde translúcido */
+  border-left: 5px solid #56cfe1; /* Azul brillante */
   border-radius: 8px;
   font-size: 18px;
-  color: #f8f0e3;
+  color: #d4f1f4;
   font-style: italic;
 }
 
@@ -72,36 +71,35 @@
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  background: #f8f0e3;
-  color: #2f3640;
+  background: linear-gradient(to right, #3282b8, #0f4c75); /* Azul serio */
+  color: #eaf6f6;
   cursor: pointer;
   transition: background-color .3s, transform .2s;
 }
 
 .epic-actions button:hover {
-  background: #e6d8c2;
-  color: #2f3640;
-}
-
-.btn-agregar:hover {
-    background: #3ea053;
-
-}
-
-.btn-agregar:active {
-    transform: scale(0.95);
+  background: linear-gradient(to right, #56cfe1, #48bfe3); /* Azul más vivo */
+  color: #1b262c; /* Texto oscuro para contraste */
 }
 
 .btn-agregar {
-    margin-right: 10px;
-    margin-bottom: 15px;
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background: linear-gradient(to right, #36724a, #1e4b28);
-    border: black 1px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(to right, #1f7a7a, #145252); /* Verde-azulado */
+  border: 1px solid #0d2b2b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.btn-agregar:hover {
+  background: #2b9c9c; /* Hover verde-azulado más brillante */
+}
+
+.btn-agregar:active {
+  transform: scale(0.95);
 }

@@ -9,7 +9,7 @@
     font-size: 32px;
     font-weight: bold;
     margin-bottom: 30px;
-    color: #4b2e05;
+    color: #d4f1f4; /* gris oscuro para títulos */
 }
 
 .input-group,
@@ -23,12 +23,12 @@
 select {
     padding: 14px 18px;
     font-size: 18px;
-    border: #3e2a14 1px solid;
+    border: 1px solid black;
     border-radius: 4px;
-    background: #c2aa82;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    background: #f5f5f5; /* gris claro */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
     font-weight: bold;
-    color: #2f1f0f;
+    color: #444; /* gris oscuro */
     width: 100%;
     max-width: 389px;
 }
@@ -38,24 +38,24 @@ label {
     font-weight: bold;
     margin-bottom: 6px;
     text-align: center;
-    color: #5a3e1b;
+    color: #d4f1f4;
 }
 
 input {
     padding: 14px 18px;
     font-size: 18px;
-    border: #3e2a14 1px solid;
+    border: 1px solid black;
     border-radius: 4px;
-    background: #c2aa82;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    background: #f5f5f5;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
     font-weight: bold;
-    color: #2f1f0f;
+    color: #444;
     width: 100%;
     max-width: 350px;
 }
 
 ::placeholder {
-    color: #7a5c3a;
+    color: #888; /* gris medio */
     font-weight: normal;
     font-size: 16px;
 }
@@ -64,7 +64,7 @@ input {
     margin-top: 15px;
     max-width: 200px;
     max-height: 200px;
-    border: 4px solid#cb9557;
+    border: 4px solid #629762; /* verde de la paleta */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
@@ -86,7 +86,7 @@ input {
     font-weight: bold;
     margin-bottom: 15px;
     text-align: center;
-    color: #4b2e05;
+    color: #444;
 }
 
 .register-btn {
@@ -97,13 +97,13 @@ input {
     font-weight: bold;
     border: none;
     border-radius: 12px;
-    background: #6b532f;
-    color: #f5deb3;
+    background: #629762; /* verde principal */
+    color: white; /* contraste limpio */
     cursor: pointer;
     transition: background-color .3s, color .3s;
 }
 
 .register-btn:hover {
-    background: #372715; 
-    color: #d4af37;
+    background: #5f593e; /* marrón-oliva */
+    color: #c5a253; /* dorado */
 }

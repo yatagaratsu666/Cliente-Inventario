@@ -9,7 +9,7 @@
     font-size: 32px;
     font-weight: bold;
     margin-bottom: 30px;
-    color: #4b2e05;
+    color: #e0e0e0;
 }
 
 .input-group,
@@ -25,7 +25,7 @@ select {
     font-size: 18px;
     border: #3e2a14 1px solid;
     border-radius: 4px;
-    background: #c2aa82;
+    background: #e0e0e0;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     font-weight: bold;
     color: #2f1f0f;
@@ -38,7 +38,7 @@ select {
     font-weight: bold;
     margin-bottom: 6px;
     text-align: center;
-    color: #5a3e1b;
+    color: #e0e0e0;
 }
 
 input {
@@ -46,7 +46,7 @@ input {
     font-size: 18px;
     border: #3e2a14 1px solid;
     border-radius: 4px;
-    background: #c2aa82;
+    background: #e0e0e0;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     font-weight: bold;
     color: #2f1f0f;
@@ -60,15 +60,15 @@ input {
     font-size: 16px;
 }
 
-.effect-group select{
+.effect-group select {
     margin-top: 10px;
 }
 
-.effect-group input{
+.effect-group input {
     margin-top: 10px;
 }
 
-.effect-group label{
+.effect-group label {
     margin-top: 10px;
 }
 
@@ -82,7 +82,7 @@ input {
     font-weight: bold;
     margin-bottom: 15px;
     text-align: center;
-    color: #4b2e05;
+    color: #e0e0e0;
 }
 
 .register-btn {
@@ -93,12 +93,12 @@ input {
     font-weight: bold;
     border: none;
     border-radius: 12px;
-    background: #6b532f;
-    color: #f5deb3;
+    background: #629762;
     cursor: pointer;
     transition: background-color .3s, color .3s;
 }
 
 .register-btn:hover {
-    background: #372715;
+    background: #5f593e;
+    color: #c5a253;
 }

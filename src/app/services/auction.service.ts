@@ -39,33 +39,44 @@ export class AuctionService {
   }
 
   // Crear una subasta
-createAuction(payload: any) {
-  const username = localStorage.getItem('username') || '';
+  createAuction(payload: any) {
+    const username = localStorage.getItem('username') || '';
+    return lastValueFrom(
+      this.http.post<AuctionDTO>(`${this.base}/auctions`, { ...payload, username })
+    );
+  }
+
+// Historial de compras
+getPurchasedAuctions(username: string): Promise<AuctionDTO[]> {
   return lastValueFrom(
-    this.http.post<AuctionDTO>(`${this.base}/auctions`, { ...payload, username })
-  );
+    this.http.get<AuctionDTO[]>(`${this.base}/auctions/history/purchased/${username}`)
+  ).then(res => {
+    console.log('[AuctionService] purchased raw:', res);
+    return res;
+  });
 }
 
-  // Historial de compras
-getPurchasedAuctions(username: string) {
+// Historial de ventas
+getSoldAuctions(username: string): Promise<AuctionDTO[]> {
   return lastValueFrom(
-    this.http.post<{ data: AuctionDTO[] }>(`${this.base}/auctions/history/purchased`, { username })
-  ).then(res => res?.data ?? []);
+    this.http.get<AuctionDTO[]>(`${this.base}/auctions/history/sold/${username}`)
+  ).then(res => {
+    console.log('[AuctionService] sold raw:', res);
+    return res;
+  });
 }
 
-  // Historial de ventas
-getSoldAuctions(username: string) {
-  return lastValueFrom(
-    this.http.post<{ data: AuctionDTO[] }>(`${this.base}/auctions/history/sold`, { username })
-  ).then(res => res?.data ?? []);
-}
+
 
   // Obtener items de un usuario
-getUserItems(username: string) {
-  return lastValueFrom(
-    this.http.post<{ data: { id: string; name: string }[] }>(`${this.base}/items/user`, { username })
-  ).then(res => res?.data ?? []);
-}
+  getUserItems(username: string) {
+    return lastValueFrom(
+      this.http.post<{ data: { id: string; name: string }[] }>(
+        `${this.base}/items/user`, 
+        { username }
+      )
+    ).then(res => res?.data ?? []);
+  }
 
   // Todos los items
   getAllItems() {

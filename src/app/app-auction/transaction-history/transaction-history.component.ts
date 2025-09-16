@@ -19,7 +19,7 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
   sold: AuctionDTO[] = [];
   usernames: Record<string, string> = {};
 
-  private userId?: string;
+  private username?: string;
   private subs: Subscription[] = [];
 
   constructor(
@@ -30,10 +30,10 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userId = localStorage.getItem('userId') || undefined;
+    this.username = localStorage.getItem('username') || undefined;
 
-    if (!this.userId) {
-      console.log('[TransactionHistory] esperando userId...');
+    if (!this.username) {
+      console.log('[TransactionHistory] esperando username...');
       return;
     }
 
@@ -45,7 +45,6 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
     // 🔹 Escuchar transacciones nuevas
     this.subs.push(
       this.auctionSocket.onTransactionCreated().subscribe(() => {
-        // Recargar historial cada vez que hay transacción nueva
         this.fetchHistory();
       })
     );
@@ -57,13 +56,16 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
   }
 
   async fetchHistory() {
-    if (!this.userId) return;
+    if (!this.username) return;
 
     try {
       const [purchasedRes, soldRes] = await Promise.all([
-        this.auctionService.getPurchasedAuctions(this.userId),
-        this.auctionService.getSoldAuctions(this.userId)
+        this.auctionService.getPurchasedAuctions(this.username),
+        this.auctionService.getSoldAuctions(this.username)
       ]);
+
+      console.log('[fetchHistory] purchased:', purchasedRes);
+      console.log('[fetchHistory] sold:', soldRes);
 
       this.purchased = purchasedRes ?? [];
       this.sold = soldRes ?? [];
@@ -109,4 +111,3 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
 }
-

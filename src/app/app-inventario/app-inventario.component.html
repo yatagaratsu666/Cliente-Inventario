@@ -1,3 +1,7 @@
+<div *ngIf="alertMessage" [ngClass]="['alert-box', alertType]">
+  {{ alertMessage }}
+</div>
+
 <div class="inventario-container">
   <!-- Menú lateral -->
   <aside class="inventario-menu">

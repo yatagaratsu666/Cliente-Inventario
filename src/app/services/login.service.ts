@@ -10,6 +10,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import { RedirectCommand, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
@@ -18,10 +19,12 @@ import { Observable, of, throwError } from 'rxjs';
 export class LoginService {
   private readonly USERNAME2 = 'Mikudayo';
   private readonly PASSWORD2 = '5678';
+  private readonly ROLE2 = 'administrator'
   private readonly USERNAME3 = 'CallmeDrift';
   private readonly PASSWORD3 = '5678';
+  private readonly ROLE3 = 'player'
 
-  constructor() {}
+  constructor(private readonly router: Router) {}
 
     /**
    * Intenta iniciar sesión con las credenciales proporcionadas.
@@ -39,10 +42,18 @@ export class LoginService {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
+      if(this.ROLE2 === 'administrator'){
+        this.router.navigate(['/gestion']);
+      }
+      localStorage.setItem('role',this.ROLE2)
       return of(true);
     }  else if (username === this.USERNAME3 && password === this.PASSWORD3) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
+      if(this.ROLE3 === 'player'){
+        this.router.navigate(['/battles']);
+      }
+      localStorage.setItem('role',this.ROLE3)
       return of(true);
     } else {
       return throwError(() => new Error('Usuario o contraseña incorrectos'));

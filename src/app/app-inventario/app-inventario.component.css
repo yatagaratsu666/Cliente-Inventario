@@ -207,3 +207,56 @@ button:hover {
   background: linear-gradient(135deg, #cc0000, #990000);
   transform: scale(1.05);
 }
+
+/* Alerta general */
+.alert-box {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 18px 30px;
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 9999;
+  max-width: 80%;
+  border-radius: 16px;
+  text-align: center;
+  font-family: 'Cinzel', serif; /* Fuente estilo RPG */
+  box-shadow: 0 0 20px rgba(86, 207, 225, 0.4); /* Glow mágico */
+  animation: fadeInOut 3.8s ease-in-out;
+  border: 3px ridge #bbe1fa; /* Estilo de borde RPG */
+  letter-spacing: 0.8px;
+  user-select: none;
+}
+
+/* Tipo: Éxito */
+.alert-box.success {
+  background: linear-gradient(to right, #1b4b4b, #145252);
+  color: #d4f1f4;
+  box-shadow: 0 0 12px #56cfe1;
+}
+
+/* Tipo: Error */
+.alert-box.error {
+  background: linear-gradient(to right, #5d1e1e, #320f0f);
+  color: #ffdede;
+  box-shadow: 0 0 12px #ff4d4d;
+  border-color: #ff4d4d;
+}
+
+/* Tipo: Advertencia */
+.alert-box.warning {
+  background: linear-gradient(to right, #7f6000, #4e3f00);
+  color: #fff8d4;
+  box-shadow: 0 0 12px #fce473;
+  border-color: #fce473;
+}
+
+/* Animación de aparición y desaparición */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+

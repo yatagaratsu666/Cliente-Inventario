@@ -35,8 +35,8 @@ export class RoomsListComponent implements OnInit {
       id: [''],
       mode: ['1v1'],
       allowAI: [false],
-      credits: [100],
-      heroLevel: [5],
+      credits: [0],
+      heroLevel: [1],
       ownerId: [this.playerId]
     });
   }
@@ -53,7 +53,15 @@ export class RoomsListComponent implements OnInit {
 
   closeModal(): void {
     this.showModal = false;
-    this.roomForm.reset();
+    this.roomForm.reset(
+      {
+        mode: '1v1',
+        allowAI: false,
+        credits: 0,
+        heroLevel: 1,
+        ownerId: this.playerId
+      }
+    );
   }
 
   createRoomSubmit() {

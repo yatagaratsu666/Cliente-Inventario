@@ -199,10 +199,6 @@ export class BattleComponent implements OnInit, OnDestroy {
     this.showResult = true;
     
     this.addSystemLog(this.isWinner ? '¡Victoria!' : 'Derrota');
-    
-    setTimeout(() => {
-      this.router.navigate(['/battles']);
-    }, 3000);
   }
 
   /**

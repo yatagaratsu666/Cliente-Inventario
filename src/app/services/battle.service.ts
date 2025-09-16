@@ -21,6 +21,18 @@ export class BattleService {
   private socket!: Socket;
   private currentBattle: any;
 
+  private masterMap: Record<string, string> = {
+    "Golpe de defensa": "MASTER.TANK_GOLPE_DEFENSA",
+    "Segundo Impulso": "MASTER.ARMS_SEGUNDO_IMPULSO",
+    "Luz cegadora": "MASTER.FIRE_LUZ_CEGADORA",
+    "Frio concentrado": "MASTER.ICE_FRIO_CONCENTRADO",
+    "Toma Y Lleva": "MASTER.VENENO_TOMA_LLEVA",
+    "Intimidacion sangrienta": "MASTER.MACHETE_INTIMIDACION_SANGRIENTA",
+    "Te Changua": "MASTER.SHAMAN_TE_CHANGUA",
+    "Reanimador 3000": "MASTER.MEDIC_REANIMADOR_3000",
+  };
+
+
   constructor(
     private http: HttpClient,
     private apiConfigService: ApiConfigService,
@@ -126,7 +138,7 @@ export class BattleService {
       type: 'MASTER_SKILL' as ActionType,
       sourcePlayerId,
       targetPlayerId: targetId,
-      skillId,
+      skillId: this.masterMap[skillId] || skillId,
     };
     this.socket.emit('submitAction', { roomId, action });
     console.log(`[SEND] MASTER_SKILL skillId=${skillId}`);
@@ -193,6 +205,7 @@ export class BattleService {
               name: hero.name,
               heroType: hero.heroType,
               level: hero.level,
+              image: hero.image,
               power: hero.power,
               health: hero.health,
               defense: hero.defense,
@@ -215,6 +228,7 @@ export class BattleService {
                 name: armor.name,
                 image: armor.image,
                 heroType: armor.heroType,
+                armorType: armor.armorType,
                 effects: armor.effects,
                 dropRate: armor.dropRate,
               })),
@@ -236,7 +250,6 @@ export class BattleService {
               })),
             },
           };
-
           observer.next(heroStats);
           observer.complete();
         },

@@ -5,6 +5,10 @@ import { BattleService } from '../services/battle.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppChatComponent } from "../app-chat/app-chat.component";
+import User from '../domain/user.model';
+import { UsuarioService } from '../services/usuario.service';
+import { Epic } from '../domain/epic.model';
+import { Effect } from '../domain/effect.model';
 
 /**
  * Componente Angular que gestiona el lobby de una sala de batalla (pre-combate).
@@ -24,6 +28,7 @@ import { AppChatComponent } from "../app-chat/app-chat.component";
   imports: [CommonModule, FormsModule, AppChatComponent]
 })
 export class RoomLobbyComponent implements OnInit, OnDestroy {
+  message = '';
   /** ID de la sala actual extraído de la URL */
   roomId!: string;
 
@@ -34,7 +39,7 @@ export class RoomLobbyComponent implements OnInit, OnDestroy {
   heroStats: any;
 
   /** ID del jugador actual (obtenido del localStorage) */
-  id: string = localStorage.getItem('username') || '';
+  userId: string = localStorage.getItem('username') || '';
 
   /** Equipo del jugador (puede ser 'A' o 'B') */
   team: string = 'A';
@@ -43,67 +48,16 @@ export class RoomLobbyComponent implements OnInit, OnDestroy {
   isReady: boolean = false;
   showEquipmentModal: boolean = false;
   selectedSlot: string = '';
+  selectedItem: any = null;
 
   /** Suscripciones a observables para limpiar en ngOnDestroy */
   private subs: Subscription[] = [];
   battle: any;
 
-  /**
-   * Constructor del componente.
-   *
-   * @param route - Servicio para acceder a parámetros de la ruta.
-   * @param router - Servicio de enrutamiento Angular.
-   * @param battleService - Servicio que maneja la lógica de batallas.
-   */
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private battleService: BattleService
-  ) {}
+  user: User = new User();
 
-  /**
-   * Hook de inicialización del componente.
-   * - Obtiene `roomId` desde la ruta.
-   * - Recupera las estadísticas del héroe.
-   * - Se suscribe al evento `battleStarted` para redirigir al campo de batalla.
-   */
-ngOnInit(): void {
-  this.roomId = this.route.snapshot.paramMap.get('id') || '';
+  firstCharge = true;
 
-  const heroSub = this.battleService.getHeroStatsByPlayerId(this.id).subscribe(hero => {
-    this.heroStats = hero;
-    console.log("Nivel del héroe:", this.heroStats?.hero?.level);
-    console.log("Tipo de héroe:", this.heroStats?.hero.heroType);
-    console.log("maximo damage:", this.heroStats?.hero.damage.min)
-    console.log("maximo damage:", this.heroStats?.hero.damage.max)
-  });
-
-  this.subs.push(heroSub);
-
-  const battleSub = this.battleService.listen<any>('battleStarted').subscribe(event => {
-    this.battleService.setCurrentBattle(event);
-    this.battleService.joinBattle(this.roomId, this.id);
-    this.router.navigate([`/battle/${this.roomId}`]);
-  });
-
-  this.subs.push(battleSub);
-}
-
-
-  /**
-   * Notifica al servidor que el jugador está listo para iniciar la batalla.
-   */
-
-  /**
-   * Hook de destrucción del componente.
-   * Libera todas las suscripciones a observables para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.subs.forEach(s => s.unsubscribe());
-  }
-
-
-  // Objeto para almacenar items equipados
   equippedItems: any = {
     helmet: null,
     chest: null,
@@ -119,74 +73,268 @@ ngOnInit(): void {
     epicSkill: null
   };
 
-  // Datos de ejemplo para los items disponibles (reemplaza con tu lógica real)
-  availableItems: any = {
-    helmet: [
-      { id: 1, name: 'Casco de Hierro', image: 'assets/items/helmet1.png', stats: '+10 DEF' },
-      { id: 2, name: 'Casco Dorado', image: 'assets/items/helmet2.png', stats: '+15 DEF' },
-    ],
-    chest: [
-      { id: 1, name: 'Bata de Cirujano', image: 'https://i.ibb.co/XfZyd4Pr/Bata-de-cirujano.png', stats: '+20 DEF' },
-      { id: 2, name: 'Atadura Carmesí', image: 'https://i.ibb.co/Rn2207B/Atadura-carmes.png', stats: '+30 DEF' },
-    ],
-    gloves: [
-      { id: 1, name: 'Guantes de Cuero', image: 'assets/items/gloves1.png', stats: '+5 ATK' },
-      { id: 2, name: 'Guantes de Malla', image: 'assets/items/gloves2.png', stats: '+8 ATK' },
-    ],
-    bracerLeft: [
-      { id: 1, name: 'Brazal Simple', image: 'assets/items/bracer1.png', stats: '+3 DEF' },
-      { id: 2, name: 'Brazal Reforzado', image: 'assets/items/bracer2.png', stats: '+6 DEF' },
-    ],
-    bracerRight: [
-      { id: 1, name: 'Brazal Simple', image: 'assets/items/bracer1.png', stats: '+3 DEF' },
-      { id: 2, name: 'Brazal Reforzado', image: 'assets/items/bracer2.png', stats: '+6 DEF' },
-    ],
-    pants: [
-      { id: 1, name: 'Pantalones de Cuero', image: 'assets/items/pants1.png', stats: '+12 DEF' },
-      { id: 2, name: 'Pantalones de Malla', image: 'assets/items/pants2.png', stats: '+18 DEF' },
-    ],
-    shoes: [
-      { id: 1, name: 'Pie de atleta', image: 'assets/items/shoes1.png', stats: '+7 DEF' },
-      { id: 2, name: 'Botas de Guerra', image: 'assets/items/shoes2.png', stats: '+12 DEF' },
-    ],
-    weapon1: [
-      { id: 1, name: 'Báculo de Permafrost', image: 'https://i.ibb.co/zH8mC2ZF/B-culo-de-permafrost.png', stats: '+15 ATK' },
-      { id: 2, name: 'Cierra Sangrienta', image: 'https://i.ibb.co/7dQ1RRhq/Cierra-sangrienta.png', stats: '+25 ATK' },
-    ],
-    weapon2: [
-      { id: 1, name: 'Daga', image: 'assets/items/dagger1.png', stats: '+10 ATK' },
-      { id: 2, name: 'Hacha', image: 'assets/items/axe1.png', stats: '+20 ATK' },
-    ],
-    item1: [
-      { id: 1, name: 'Anillo Piro Explosión', image: 'https://i.ibb.co/XrSLqDnL/anillo-para-piro-explosion.png', stats: '+50 HP' },
-      { id: 2, name: 'Curitas', image: 'https://i.ibb.co/4nfWw5XZ/curitas.png', stats: '+10 ATK' },
-    ],
-    item2: [
-      { id: 1, name: 'Amuleto', image: 'assets/items/amulet1.png', stats: '+5 DEF' },
-      { id: 2, name: 'Gema Mágica', image: 'assets/items/gem1.png', stats: '+8 MAG' },
-    ],
-    epicSkill: [
-      { id: 1, name: 'Frío concentrado', image: 'https://i.ibb.co/x8dRsjk1/Frio-Concentrado.png', stats: 'Daño épico' },
-      { id: 2, name: 'Golpe de Defensa', image: 'https://i.ibb.co/DHf6dcpb/Golpe-de-defensa.png', stats: 'Congelamiento' },
-    ]
-  };
+  /**
+   * Constructor del componente.
+   *
+   * @param route - Servicio para acceder a parámetros de la ruta.
+   * @param router - Servicio de enrutamiento Angular.
+   * @param battleService - Servicio que maneja la lógica de batallas.
+   */
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private battleService: BattleService,
+    private userService: UsuarioService
+  ) {}
+
+  /**
+   * Hook de inicialización del componente.
+   * - Obtiene `roomId` desde la ruta.
+   * - Recupera las estadísticas del héroe.
+   * - Se suscribe al evento `battleStarted` para redirigir al campo de batalla.
+   */
+ngOnInit(): void {
+  this.roomId = this.route.snapshot.paramMap.get('id') || '';
+
+  const heroSub = this.battleService.getHeroStatsByPlayerId(this.userId).subscribe(hero => {
+    this.heroStats = hero;
+    console.log("Estadísticas del héroe cargadas:", this.heroStats);
+    console.log("Nivel del héroe:", this.heroStats?.hero?.level);
+    console.log("Tipo de héroe:", this.heroStats?.hero.heroType);
+    console.log("maximo damage:", this.heroStats?.hero.damage.min)
+    console.log("maximo damage:", this.heroStats?.hero.damage.max)
+  });
+
+  this.subs.push(heroSub);
+
+  this.showInventory();
+
+  const battleSub = this.battleService.listen<any>('battleStarted').subscribe(event => {
+    this.battleService.setCurrentBattle(event);
+    this.battleService.joinBattle(this.roomId, this.userId);
+    this.router.navigate([`/battle/${this.roomId}`]);
+  });
+
+  this.subs.push(battleSub);
+}
+
+  showInventory(): void{
+    this.userService.getUsuarioById(this.userId).subscribe({
+      next: (data) => {
+        this.user = data;
+        this.equippedItems = {
+          helmet: this.user.equipados.armors?.find((item) => item.armorType === 'HELMET') || null,
+          chest: this.user.equipados.armors?.find((item) => item.armorType === 'CHEST') || null,
+          gloves: this.user.equipados.armors?.find((item) => item.armorType === 'GLOVERS') || null,
+          bracerLeft: this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS') || null,
+          bracerRight: this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS') || null,
+          pants: this.user.equipados.armors?.find((item) => item.armorType === 'PANTS') || null,
+          shoes: this.user.equipados.armors?.find((item) => item.armorType === 'BOOTS') || null,
+          weapon1: this.user.equipados.weapons?.[0] || null,
+          weapon2: this.user.equipados.weapons?.[1] || null,
+          item1: this.user.equipados.items?.[0] || null,
+          item2: this.user.equipados.items?.[1] || null,
+          epicSkill: this.user.equipados.epicAbility?.[0] || null
+        };
+
+        if (this.firstCharge) {
+          for (let slot in this.equippedItems) {
+            if (this.equippedItems[slot]) {
+              const slotName = this.getSlotName(slot); // Convierte a español
+              this.updateHeroStats(this.equippedItems[slot], true, slotName);
+            }
+          }
+          this.firstCharge = false;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar items:', error);
+        alert('No se pudo obtener la lista de items.');
+      },
+    });
+  }
+
+  getImageByItemName(itemName: string): string | undefined {
+  const sources = [
+    ...(this.user.inventario.weapons || []),
+    ...(this.user.inventario.armors || []),
+    ...(this.user.inventario.items || []),
+    ...(this.user.inventario.epicAbility || []),
+    ...(this.user.equipados.weapons || []),
+    ...(this.user.equipados.armors || []),
+    ...(this.user.equipados.items || []),
+    ...(this.user.equipados.epicAbility || [])
+  ];
+
+  const foundItem = sources.find(item => item?.name === itemName);
+  return foundItem?.image;
+}
+
+
+
+  updateStats(effect: Effect, equip: boolean) {
+    if (!this.heroStats?.hero) {
+      console.log("No se pueden actualizar las estadísticas del héroe: heroStats o hero no definido");
+      return;
+    }
+    const multiplier = equip ? 1 : -1;
+    switch(effect.effectType){
+      case "DAMAGE":
+        this.heroStats.hero.damage.min += effect.value * multiplier;
+        this.heroStats.hero.damage.max += effect.value * multiplier;
+        break;
+      case "HEAL":
+        this.heroStats.hero.health += effect.value * multiplier;
+        break;
+      case "BOOST_ATTACK":
+        this.heroStats.hero.attack += effect.value * multiplier;
+        break;
+      case "BOOST_DEFENSE":
+        this.heroStats.hero.defense += effect.value * multiplier;
+        break;
+      case "DEFENSE":
+        this.heroStats.hero.defense += effect.value * multiplier;
+        break;
+      default:
+        console.log("Tipo de efecto no manejado:", effect.effectType);
+        break;
+    }
+  }
+
+  // Actualizar estadísticas del héroe basado en equipamiento
+  updateHeroStats(itemName: string, equip: boolean, slot: string) {
+    if (!this.heroStats?.hero) {
+      console.log("No se pueden actualizar las estadísticas del héroe: heroStats o hero no definido");
+      return;
+    };
+      switch(slot) {
+      case 'Casco':
+        const helmet = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (helmet) {
+          for (let effect of helmet.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Pecho':
+        const chest = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (chest) {
+          for (let effect of chest.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Guantes':
+        const gloves = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (gloves) {
+          for (let effect of gloves.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Brazalete Izquierdo':
+        const bracerLeft = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (bracerLeft) {
+          for (let effect of bracerLeft.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Brazalete Derecho':
+        const bracerRight = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (bracerRight) {
+          for (let effect of bracerRight.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Pantalón':
+        const pants = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (pants) {
+          for (let effect of pants.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Zapatos':
+        const boots = this.user.inventario.armors?.find(item => item.name === itemName) || this.user.equipados.armors?.find(item => item.name === itemName);
+        if (boots) {
+          for (let effect of boots.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Arma Principal':
+        const weapon = this.user.inventario.weapons?.find(item => item.name === itemName) || this.user.equipados.weapons?.find(item => item.name === itemName);
+        if (weapon) {
+          for (let effect of weapon.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Arma Secundaria':
+        const secondaryWeapon = this.user.inventario.weapons?.find(item => item.name === itemName) || this.user.equipados.weapons?.find(item => item.name === itemName);
+        if (secondaryWeapon) {
+          for (let effect of secondaryWeapon.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Item 1':
+        const item1 = this.user.inventario.items?.find(item => item.name === itemName) || this.user.equipados.items?.find(item => item.name === itemName);
+        if (item1) {
+          for (let effect of item1.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+
+        break;
+      case 'Item 2':
+        const item2 = this.user.inventario.items?.find(item => item.name === itemName) || this.user.equipados.items?.find(item => item.name === itemName);
+        if (item2) {
+          for (let effect of item2.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      case 'Habilidad Épica':
+        const epic = this.user.inventario.epicAbility?.find(item => item.name === itemName) || this.user.equipados.epicAbility?.find(item => item.name === itemName);
+        if (epic) {
+          for (let effect of epic.effects) {
+            this.updateStats(effect, equip);
+          }
+        }
+        break;
+      default:
+        console.error('Slot desconocido:', slot);
+        break;
+        
+    }
+  }
+  /**
+   * Notifica al servidor que el jugador está listo para iniciar la batalla.
+   */
+
+  /**
+   * Hook de destrucción del componente.
+   * Libera todas las suscripciones a observables para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
 
   // Métodos para el modal de equipamiento
   openEquipmentModal(slot: string) {
     if (this.isReady) return; // No permitir cambios si ya está listo
-    
-    this.selectedSlot = slot;
+    this.selectedSlot = this.getSlotName(slot);
+    this.selectedItem = null;
     this.showEquipmentModal = true;
   }
 
   closeEquipmentModal() {
     this.showEquipmentModal = false;
     this.selectedSlot = '';
-  }
-
-  // Obtener items disponibles para un slot específico
-  getAvailableItems(slot: string) {
-    return this.availableItems[slot] || [];
+    this.selectedItem = null;
   }
 
   // Obtener nombre del slot en español
@@ -208,86 +356,135 @@ ngOnInit(): void {
     return slotNames[slot] || slot;
   }
 
-  // Verificar si un item está equipado
-  isEquipped(item: any): boolean {
-    return Object.values(this.equippedItems).some((equippedItem: any) =>
-      equippedItem && equippedItem.id === item.id
-    );
+
+  getSlotKey(slotName: string): string {
+    const slotKeys: any = {
+      'Casco': 'helmet',
+      'Pecho': 'chest',
+      'Guantes': 'gloves',
+      'Brazalete Izquierdo': 'bracerLeft',
+      'Brazalete Derecho': 'bracerRight',
+      'Pantalón': 'pants',
+      'Zapatos': 'shoes',
+      'Arma Principal': 'weapon1',
+      'Arma Secundaria': 'weapon2',
+      'Item 1': 'item1',
+      'Item 2': 'item2',
+      'Habilidad Épica': 'epicSkill'
+    };
+    return slotKeys[slotName] || slotName;
   }
 
-  // Equipar un item
-  equipItem(item: any) {
-    if (this.isReady) return;
 
-    // Desequipar item anterior si existe
-    if (this.equippedItems[this.selectedSlot]) {
-      this.unequipSlot();
+  getAvailableItems(selectedSlot: string): any[] {
+    switch (selectedSlot) {
+      case 'Casco':
+        const helmetItems = this.user.inventario.armors?.filter((item) => item.armorType === 'HELMET');
+        const newHelmetItems = [...helmetItems, this.user.equipados.armors?.find((item) => item.armorType === 'HELMET')].filter(item => item !== undefined);
+        return newHelmetItems;
+        break;
+      case 'Pecho':
+        const chestItems = this.user.inventario.armors?.filter((item) => item.armorType === 'CHEST');
+        const newChestItems = [...chestItems, this.user.equipados.armors?.find((item) => item.armorType === 'CHEST')].filter(item => item !== undefined);
+        return newChestItems;
+      case 'Guantes':
+        const glovesItems = this.user.inventario.armors?.filter((item) => item.armorType === 'GLOVERS');
+        const newGlovesItems = [...glovesItems, this.user.equipados.armors?.find((item) => item.armorType === 'GLOVERS')].filter(item => item !== undefined);
+        return newGlovesItems;
+        break;
+      case 'Brazalete Izquierdo':
+        const bracerLeftItems = this.user.inventario.armors?.filter((item) => item.armorType === 'BRACERS');
+        const newBracerLeftItems = [...bracerLeftItems, this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS')].filter(item => item !== undefined);
+        return newBracerLeftItems;
+        break;
+      case 'Brazalete Derecho':
+        const bracerRightItems = this.user.inventario.armors?.filter((item) => item.armorType === 'BRACERS');
+        const newBracerRightItems = [...bracerRightItems, this.user.equipados.armors?.find((item) => item.armorType === 'BRACERS')].filter(item => item !== undefined);
+        return newBracerRightItems;
+        break;
+      case 'Pantalón':
+        const pantsItems = this.user.inventario.armors?.filter((item) => item.armorType === 'PANTS');
+        const newPantsItems = [...pantsItems, this.user.equipados.armors?.find((item) => item.armorType === 'PANTS')].filter(item => item !== undefined);
+        return newPantsItems;
+        break;
+      case 'Zapatos':
+        const bootsItems = this.user.inventario.armors?.filter((item) => item.armorType === 'BOOTS');
+        const newBootsItems = [...bootsItems, this.user.equipados.armors?.find((item) => item.armorType === 'BOOTS')].filter(item => item !== undefined);
+        return newBootsItems;
+        break;
+      case 'Arma Principal':
+        const weaponItems = this.user.inventario.weapons;
+        const newWeaponItems = [...weaponItems, ...this.user.equipados.weapons].filter(item => item !== undefined);
+        console.log('Items de arma principal disponibles:', newWeaponItems);
+        return newWeaponItems;
+        break;
+      case 'Arma Secundaria':
+        const secondaryWeaponItems = this.user.inventario.weapons
+        const newSecondaryWeaponItems = [...secondaryWeaponItems, ...this.user.equipados.weapons].filter(item => item !== undefined);
+        return newSecondaryWeaponItems;        
+        break;
+      case 'Item 1':
+        const item1 = this.user.inventario.items
+        const newItem1 = [...item1, ...this.user.equipados.items].filter(item => item !== undefined);
+        return newItem1;
+      case 'Item 2':
+        const item2 = this.user.inventario.items
+        const newItem2 = [...item2, ...this.user.equipados.items].filter(item => item !== undefined);
+        return newItem2;
+        break;
+      case 'Habilidad Épica':
+        const epicItems = this.user.inventario.epicAbility;
+        const newEpicItems = [...epicItems, ...this.user.equipados.epicAbility].filter(item => item !== undefined);
+        console.log('Items épicos disponibles:', newEpicItems);
+        return newEpicItems;
+        break;
+      default:
+        return [];
     }
-
-    // Equipar nuevo item
-    this.equippedItems[this.selectedSlot] = { ...item };
-    this.closeEquipmentModal();
-    
-    // Aquí puedes agregar lógica para actualizar stats del héroe
-    this.updateHeroStats();
   }
 
-  // Desequipar item de un slot
-  unequipSlot() {
-    if (this.isReady) return;
-    
-    this.equippedItems[this.selectedSlot] = null;
-    this.closeEquipmentModal();
-    
-    // Actualizar stats del héroe
-    this.updateHeroStats();
+isEquipped(item: any): 'slot' | 'other' | 'none' {
+  const slotKey = this.getSlotKey(this.selectedSlot);
+  const equippedInSlot = this.equippedItems[slotKey];
+
+  if (equippedInSlot && equippedInSlot.name === item.name) {
+    return 'slot';
   }
 
-  // Actualizar estadísticas del héroe basado en equipamiento
-updateHeroStats() {
-  if (!this.heroStats?.hero) return;
-
-  // Valores base
-  const baseAttack = this.heroStats.hero.attack;
-  const baseDefense = this.heroStats.hero.defense;
-  const baseHealth = this.heroStats.hero.health;
-
-  let bonusAttack = 0;
-  let bonusDefense = 0;
-  let bonusHealth = 0;
-
-  // Recorrer items equipados y sumar bonuses
-  Object.values(this.equippedItems).forEach((item: any) => {
-    if (!item || !item.stats) return;
-
-    if (item.stats.includes('ATK')) {
-      const match = item.stats.match(/\+(\d+) ATK/);
-      if (match) bonusAttack += parseInt(match[1]);
+  // ¿Está en otro slot?
+  for (let key in this.equippedItems) {
+    if (key !== slotKey && this.equippedItems[key]?.name === item.name) {
+      return 'other';
     }
-    if (item.stats.includes('DEF')) {
-      const match = item.stats.match(/\+(\d+) DEF/);
-      if (match) bonusDefense += parseInt(match[1]);
-    }
-    if (item.stats.includes('HP')) {
-      const match = item.stats.match(/\+(\d+) HP/);
-      if (match) bonusHealth += parseInt(match[1]);
-    }
-  });
+  }
 
-  // Actualizar heroStats con los bonuses
-  this.heroStats.hero.attack = baseAttack + bonusAttack;
-  this.heroStats.hero.defense = baseDefense + bonusDefense;
-  this.heroStats.hero.health = baseHealth + bonusHealth;
-
-  console.log('Hero stats actualizados:', this.heroStats.hero);
+  return 'none';
 }
 
+  equipSelectedItem() {
+    if (!this.selectedItem) return;
+    this.equipProduct(this.selectedItem.name, this.selectedSlot);
+    this.selectedItem = null;
+    this.closeEquipmentModal();
+  }
+
+  unequipSelectedItem() {
+    if (!this.selectedItem) return;
+    this.unequipProduct(this.selectedItem.name, this.selectedSlot);
+    this.selectedItem = null;
+    this.closeEquipmentModal();
+  }
+
+  unequipSlot() {
+    if (this.isReady) return; // No permitir cambios si ya está listo
+    if (this.equippedItems[this.selectedSlot]) {
+      this.unequipItem(this.equippedItems[this.selectedSlot]);
+      this.equippedItems[this.selectedSlot] = null;
+    }
+  }
 
 onReady() {
   if (this.isReady) return;
-
-  // Actualizar stats antes de enviar
-  this.updateHeroStats();
 
   this.isReady = true;
 
@@ -297,16 +494,16 @@ onReady() {
 
 sendReadyStatus() {
   const readyData = {
-    playerId: this.id,
+    playerId: this.userId,
     team: this.team,
-    equippedItems: this.getEquippedItemsData(),
+    equippedItems: null,
     heroStats: this.heroStats, // <- stats ya actualizados
     isReady: true
   };
 
   this.battleService.onReady(
     this.roomId,
-    this.id,
+    this.userId,
     this.heroStats,
     this.team
   );
@@ -320,48 +517,260 @@ sendReadyStatus() {
     return !this.isReady;
   }
 
-  // Obtener todos los items equipados para enviar al servidor
-  getEquippedItemsData() {
-    const equippedData: any = {};
-    
-    Object.keys(this.equippedItems).forEach(slot => {
-      if (this.equippedItems[slot]) {
-        equippedData[slot] = {
-          id: this.equippedItems[slot].id,
-          name: this.equippedItems[slot].name,
-          stats: this.equippedItems[slot].stats
-        };
-      }
-    });
-    
-    return equippedData;
-  }
-
-  // Cargar configuración guardada (si tienes persistencia)
-  loadSavedConfiguration() {
-    // Ejemplo de carga desde localStorage o servidor
-    const savedConfig = localStorage.getItem(`player-${this.id}-equipment`);
-    if (savedConfig) {
-      try {
-        this.equippedItems = JSON.parse(savedConfig);
-        this.updateHeroStats();
-      } catch (e) {
-        console.error('Error cargando configuración guardada:', e);
-      }
-    }
-  }
-
-  // Guardar configuración actual
-  saveConfiguration() {
-    const configToSave = JSON.stringify(this.equippedItems);
-    localStorage.setItem(`player-${this.id}-equipment`, configToSave);
-  }
-
   // Inicialización del componente
   initializeComponent() {
     // Aquí puedes agregar lógica de inicialización adicional
     // como cargar items disponibles desde el servidor
     console.log('Lobby inicializado para la sala:', this.roomId);
+  }
+
+
+  equipProduct(itemName: string, slot: string): void {
+    switch(slot) {
+      case 'Casco':
+        this.equipArmor(itemName);
+        break;
+      case 'Pecho':
+        this.equipArmor(itemName);
+        break;
+      case 'Guantes':
+        this.equipArmor(itemName);
+        break;
+      case 'Brazalete Izquierdo':
+        this.equipArmor(itemName);
+        break;
+      case 'Brazalete Derecho':
+        this.equipArmor(itemName);
+        break;
+      case 'Pantalón':
+        this.equipArmor(itemName);
+        break;
+      case 'Zapatos':
+        this.equipArmor(itemName);
+        break;
+      case 'Arma Principal':
+        this.equipWeapon(itemName);
+        break;
+      case 'Arma Secundaria':
+        this.equipWeapon(itemName);
+        break;
+      case 'Item 1':
+        this.equipItem(itemName);
+        break;
+      case 'Item 2':
+        this.equipItem(itemName);
+        break;
+      case 'Habilidad Épica':
+        this.equipEpic(itemName);
+        break;
+      default:
+        console.error('Slot desconocido:', slot);
+        break;
+    }
+    const slotKey = this.getSlotKey(slot);
+const item = this.getItemByName(itemName);
+this.equippedItems[slotKey] = item;
+
+    this.updateHeroStats(itemName, true, slot);
+  }
+
+  getItemByName(itemName: string): any | null {
+  const allItems = [
+    ...(this.user.inventario?.items || []),
+    ...(this.user.inventario?.armors || []),
+    ...(this.user.inventario?.weapons || []),
+    ...(this.user.inventario?.epicAbility || []),
+    ...(this.user.equipados?.items || []),
+    ...(this.user.equipados?.armors || []),
+    ...(this.user.equipados?.weapons || []),
+    ...(this.user.equipados?.epicAbility || []),
+  ];
+
+  return allItems.find(item => item?.name === itemName) || null;
+}
+
+
+
+    unequipProduct(itemName: string, slot: string): void {
+    switch(slot) {
+      case 'Casco':
+        this.unequipArmor(itemName);
+        break;
+      case 'Pecho':
+        this.unequipArmor(itemName);
+        break;
+      case 'Guantes':
+        this.unequipArmor(itemName);
+        break;
+      case 'Brazalete Izquierdo':
+        this.unequipArmor(itemName);
+        break;
+      case 'Brazalete Derecho':
+        this.unequipArmor(itemName);
+        break;
+      case 'Pantalón':
+        this.unequipArmor(itemName);
+        break;
+      case 'Zapatos':
+        this.unequipArmor(itemName);
+        break;
+      case 'Arma Principal':
+        this.unequipWeapon(itemName);
+        break;
+      case 'Arma Secundaria':
+        this.unequipWeapon(itemName);
+        break;
+      case 'Item 1':
+        this.unequipItem(itemName);
+        break;
+      case 'Item 2':
+        this.unequipItem(itemName);
+        break;
+      case 'Habilidad Épica':
+        this.unequipEpic(itemName);
+        break;
+      default:
+        console.error('Slot desconocido:', slot);
+        break;
+    }
+    this.updateHeroStats(itemName, false, slot);
+    const slotKey = this.getSlotKey(slot);
+this.equippedItems[slotKey] = null;
+
+  }
+
+  equipItem(itemName: string): void {
+    if (this.isReady) return; // No permitir cambios si ya está listo
+    this.userService.equipItem(this.userId, itemName).subscribe({
+      next: () => {
+        this.message = `Ítem ${itemName} equipado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar item:', err);
+        this.message = `No se pudo equipar el ítem ${itemName}.`;
+      }
+    });
+  }
+
+  equipHero(heroName: string): void {
+    this.userService.equipHero(this.userId, heroName).subscribe({
+      next: () => {
+        this.message = `heroe ${heroName} equipado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar heroe:', err);
+        this.message = `No se pudo equipar el heroe ${heroName}.`;
+      }
+    });
+  }
+
+    equipWeapon(weaponName: string): void {
+    this.userService.equipWeapon(this.userId, weaponName).subscribe({
+      next: () => {
+        this.message = `Arma ${weaponName} equipada con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar arma:', err);
+        this.message = `No se pudo equipar el arma ${weaponName}.`;
+      }
+    });
+  }
+
+  /** Equipar una armadura */
+  equipArmor(armorName: string): void {
+    this.userService.equipArmor(this.userId, armorName).subscribe({
+      next: () => {
+        this.message = `Armadura ${armorName} equipada con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar armadura:', err);
+        this.message = `No se pudo equipar la armadura ${armorName}.`;
+      }
+    });
+  }
+
+  /** Equipar una épica */
+  equipEpic(epicName: string): void {
+    this.userService.equipEpic(this.userId, epicName).subscribe({
+      next: () => {
+        this.message = `Épica ${epicName} equipada con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar épica:', err);
+        this.message = `No se pudo equipar la épica ${epicName}.`;
+      }
+    });
+  }
+
+  unequipItem(itemName: string): void {
+    this.userService.unequipItem(this.userId, itemName).subscribe({
+      next: () => {
+        this.message = `Ítem ${itemName} quitado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar item:', err);
+        this.message = `No se pudo equipar el ítem ${itemName}.`;
+      }
+    });
+  }
+
+  unequipHero(heroName: string): void {
+    this.userService.unequipHero(this.userId, heroName).subscribe({
+      next: () => {
+        this.message = `heroe ${heroName} quitado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar heroe:', err);
+        this.message = `No se pudo equipar el heroe ${heroName}.`;
+      }
+    });
+  }
+
+  unequipWeapon(weaponName: string): void {
+    this.userService.unequipWeapon(this.userId, weaponName).subscribe({
+      next: () => {
+        this.message = `Arma ${weaponName} quitado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar arma:', err);
+        this.message = `No se pudo equipar el arma ${weaponName}.`;
+      }
+    });
+  }
+
+  /** Equipar una armadura */
+  unequipArmor(armorName: string): void {
+    this.userService.unequipArmor(this.userId, armorName).subscribe({
+      next: () => {
+        this.message = `Armadura ${armorName} quitado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar armadura:', err);
+        this.message = `No se pudo equipar la armadura ${armorName}.`;
+      }
+    });
+  }
+
+  unequipEpic(epicName: string): void {
+    this.userService.unequipEpic(this.userId, epicName).subscribe({
+      next: () => {
+        this.message = `Épica ${epicName} quitado con éxito.`;
+        this.showInventory();
+      },
+      error: (err) => {
+        console.error('Error al equipar épica:', err);
+        this.message = `No se pudo equipar la épica ${epicName}.`;
+      }
+    });
   }
 
 }

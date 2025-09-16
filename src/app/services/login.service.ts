@@ -17,12 +17,15 @@ import { Observable, of, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class LoginService {
-  private readonly USERNAME2 = 'Mikudayo';
+  private readonly USERNAME1 = 'jugador1';
+  private readonly PASSWORD1 = '5678';
+  private readonly ROLE1 = 'player';
+  private readonly USERNAME2 = 'admin1';
   private readonly PASSWORD2 = '5678';
-  private readonly ROLE2 = 'administrator'
-  private readonly USERNAME3 = 'CallmeDrift';
+  private readonly ROLE2 = 'administrator';
+  private readonly USERNAME3 = 'jugador2';
   private readonly PASSWORD3 = '5678';
-  private readonly ROLE3 = 'player'
+  private readonly ROLE3 = 'player';
 
   constructor(private readonly router: Router) {}
 
@@ -47,10 +50,10 @@ export class LoginService {
       }
       localStorage.setItem('role',this.ROLE2)
       return of(true);
-    }  else if (username === this.USERNAME3 && password === this.PASSWORD3) {
+    }  else if ((username === this.USERNAME3 && password === this.PASSWORD3) || (username === this.USERNAME1 && password === this.PASSWORD1)) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
-      if(this.ROLE3 === 'player'){
+      if(this.ROLE3 || this.ROLE1 === 'player'){
         this.router.navigate(['/battles']);
       }
       localStorage.setItem('role',this.ROLE3)

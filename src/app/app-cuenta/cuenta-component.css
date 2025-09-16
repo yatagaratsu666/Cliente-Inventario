@@ -2,23 +2,45 @@
   max-width: 700px;
   margin: 60px auto;
   padding: 40px;
-  background: linear-gradient(to bottom right, #1b262c, #0f4c75); /* Fondo RPG azulado */
-  border: 3px ridge #56cfe1; /* Borde estilo ficha RPG */
-  border-radius: 16px;
+  background: linear-gradient(145deg, #1b262c 0%, #0f4c75 100%);
+  border: 4px groove #56cfe1; /* Borde más 3D */
+  border-radius: 20px;
   color: #d4f1f4;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15); /* Resplandor azul */
-  font-family: 'Cinzel', serif; /* Fuente de estilo medieval/RPG si la cargas */
+  font-family: 'Cinzel', serif;
+  box-shadow:
+    inset 0 0 15px rgba(0, 255, 255, 0.08),
+    0 0 25px rgba(86, 207, 225, 0.3),
+    0 0 50px rgba(86, 207, 225, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decoración de marco mágico */
+.cuenta-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px dashed rgba(86, 207, 225, 0.3);
+  border-radius: 20px;
+  pointer-events: none;
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px #56cfe1; opacity: 0.6; }
+  50% { box-shadow: 0 0 20px #56cfe1; opacity: 1; }
 }
 
 .cuenta-card h2 {
-  font-size: 40px;
+  font-size: 42px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 30px;
   color: #bbe1fa;
-  text-shadow: 0 0 10px #3282b8;
+  text-shadow: 0 0 12px #3282b8;
   border-bottom: 2px solid #56cfe1;
-  padding-bottom: 10px;
+  padding-bottom: 12px;
+  letter-spacing: 2px;
 }
 
 .info-section {
@@ -28,34 +50,49 @@
 .info-row {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding: 12px 0;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.15);
   font-size: 20px;
-  letter-spacing: 0.5px;
 }
 
 .info-row span:first-child {
   font-weight: bold;
   color: #ffffff;
+  text-shadow: 0 0 5px #bbe1fa;
 }
 
 .info-row span:last-child {
-  color: #bbe1fa;
-}
-
-hr {
-  border: none;
-  border-top: 2px dashed #3282b8;
-  margin: 20px 0;
-}
-
-.cuenta-card h3 {
-  font-size: 28px;
   color: #56cfe1;
-  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+/* Barras RPG para stats visuales */
+.stat-bar-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #56cfe1;
+  border-radius: 10px;
+  height: 24px;
+  margin: 6px 0 16px;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px #3282b8;
+}
+
+.stat-bar {
+  height: 100%;
+  background: linear-gradient(to right, #00d4ff, #56cfe1);
+  border-radius: 10px;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Subtítulos */
+.cuenta-card h3 {
+  font-size: 26px;
+  color: #56cfe1;
+  margin-top: 30px;
+  margin-bottom: 12px;
   border-bottom: 1px solid #bbe1fa;
   padding-bottom: 6px;
-  text-shadow: 0 0 6px #0f4c75;
+  text-shadow: 0 0 8px #0f4c75;
 }
 
 .badge {

@@ -29,4 +29,17 @@ export class CuentaComponent implements OnInit {
       });
     }
   }
+
+  getNivel(): number {
+  return Math.floor(this.user?.exp || 0 / 100);
+}
+
+getExpActual(): number {
+  return (this.user?.exp || 0) % 100;
+}
+
+getExpProgreso(): number {
+  return (this.getExpActual() / 100) * 100;
+}
+
 }

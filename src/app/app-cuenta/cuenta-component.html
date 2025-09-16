@@ -1,24 +1,36 @@
 <div class="cuenta-card" *ngIf="user">
   <h2>👤 Mi Cuenta</h2>
 
-  <div class="info-row">
-    <span><strong>Nombre de usuario:</strong></span>
-    <span>{{ user.nombreUsuario }}</span>
-  </div>
+  <div class="info-section">
+    <div class="info-row">
+      <span>🧝‍♂️ <strong>Nombre de usuario:</strong></span>
+      <span>{{ user.nombreUsuario }}</span>
+    </div>
 
-  <div class="info-row">
-    <span><strong>Rol:</strong></span>
-    <span>{{ role }}</span>
-  </div>
+    <div class="info-row">
+      <span>🎖️ <strong>Rol:</strong></span>
+      <span>{{ role | titlecase }}</span>
+    </div>
 
-  <div class="info-row">
-    <span><strong>Créditos:</strong></span>
-    <span>{{ user.creditos }}</span>
-  </div>
+    <div class="info-row">
+      <span>💰 <strong>Créditos:</strong></span>
+      <span>{{ user.creditos }} 🪙</span>
+    </div>
 
-  <div class="info-row">
-    <span><strong>Experiencia:</strong></span>
-    <span>{{ user.exp }}</span>
+    <div class="info-row">
+      <span>📊 <strong>Nivel:</strong></span>
+      <span>{{ getNivel() }}</span>
+    </div>
+
+    <div class="info-row">
+      <span>📈 <strong>Experiencia:</strong></span>
+      <span>{{ getExpActual() }}/100 XP</span>
+    </div>
+
+    <!-- Barra de experiencia -->
+    <div class="stat-bar-container">
+      <div class="stat-bar" [style.width.%]="getExpProgreso()"></div>
+    </div>
   </div>
 
   <hr />

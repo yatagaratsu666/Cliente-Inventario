@@ -10,18 +10,6 @@
     "test": "ng test",
     "docs": "typedoc --options typedoc.json"
   },
-  "budgets": [
-    {
-      "type": "initial",
-      "maximumWarning": "1mb",
-      "maximumError": "2mb"
-    },
-    {
-      "type": "anyComponentStyle",
-      "maximumWarning": "10kb",
-      "maximumError": "15kb"
-    }
-  ],
   "dependencies": {
     "@angular/animations": "^19.2.14",
     "@angular/common": "^19.2.14",

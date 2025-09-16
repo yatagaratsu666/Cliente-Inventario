@@ -69,14 +69,12 @@ getSoldAuctions(username: string): Promise<AuctionDTO[]> {
 
 
   // Obtener items de un usuario
-  getUserItems(username: string) {
-    return lastValueFrom(
-      this.http.post<{ data: { id: string; name: string }[] }>(
-        `${this.base}/items/user`, 
-        { username }
-      )
-    ).then(res => res?.data ?? []);
-  }
+getUserItems(username: string) {
+  return lastValueFrom(
+    this.http.get<ItemRef[]>(`${this.base}/items/${username}`)
+  ).then(res => res ?? []);
+}
+
 
   // Todos los items
   getAllItems() {

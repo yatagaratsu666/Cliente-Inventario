@@ -16,12 +16,11 @@ import { AuctionSocketService } from '../../services/auctionSocket.service';
 })
 export class AuctionDetailsComponent implements OnInit, OnDestroy {
   @Input() auction!: AuctionDTO | null;
-  @Input() token: string = '';
   @Output() onClose = new EventEmitter<void>();
   @Output() onBought = new EventEmitter<AuctionDTO>();
-  freshAuction!: AuctionDTO | null;
-  editingBid?: number;
 
+  freshAuction!: AuctionDTO;
+  editingBid?: number;
   private sub?: Subscription;
 
   constructor(
@@ -30,8 +29,13 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.freshAuction = this.auction;
-    if (this.token && this.auction) {
+    if (this.auction) {
+      // Merge inicial para asegurar que freshAuction tenga siempre item
+      this.freshAuction = this.mergeAuctionLocal(this.auction, this.auction);
+      console.log('Auction inicial:', this.freshAuction);
+    }
+
+    if (this.auction) {
       this.fetchAuction();
       this.subscribeToSocket();
     }
@@ -39,65 +43,103 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.auctionSocket.disconnect();
   }
 
   private subscribeToSocket() {
-    this.auctionSocket.connect(this.token);
+    const username = localStorage.getItem('username');
+    this.auctionSocket.connect(username || undefined);
 
     this.sub = this.auctionSocket.onAuctionUpdated().subscribe(updated => {
-  if (this.freshAuction && updated.id === this.freshAuction.id) {
-    // 🔹 reemplazar referencia para que Angular refresque la vista
-    this.freshAuction = { ...this.freshAuction, 
-                          currentPrice: updated.currentPrice, 
-                          highestBidderId: updated.highestBidderId, 
-                          endsAt: updated.endsAt ?? this.freshAuction.endsAt, 
-                          isClosed: updated.isClosed ?? this.freshAuction.isClosed };
-  }
-});
-
+      if (updated.id === this.freshAuction.id) {
+        this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+        console.log('Auction actualizada por socket:', this.freshAuction);
+      }
+    });
 
     this.auctionSocket.onAuctionClosed().subscribe(closed => {
-  if (this.freshAuction && closed.id === this.freshAuction.id) {
-    this.freshAuction = { ...this.freshAuction, 
-                          currentPrice: closed.currentPrice, 
-                          highestBidderId: closed.highestBidderId, 
-                          endsAt: closed.endsAt ?? this.freshAuction.endsAt, 
-                          isClosed: closed.isClosed ?? this.freshAuction.isClosed };
-  }
-});
-
+      if (closed.id === this.freshAuction.id) {
+        this.freshAuction = this.mergeAuctionLocal(this.freshAuction, closed);
+        console.log('Auction cerrada por socket:', this.freshAuction);
+      }
+    });
   }
 
-  /** 🔹 Merge parcial para mantener datos locales */
   private mergeAuctionLocal(local: AuctionDTO, updated: AuctionDTO): AuctionDTO {
-    return {
-      ...local,
-      currentPrice: updated.currentPrice,
-      highestBidderId: updated.highestBidderId,
-      endsAt: updated.endsAt ?? local.endsAt,
-      isClosed: updated.isClosed ?? local.isClosed
-    };
-  }
+  const merged: AuctionDTO = {
+    ...local,
+    currentPrice: updated.currentPrice ?? local.currentPrice ?? 0,
+    highestBid: updated.highestBid
+      ? {
+          ...updated.highestBid,
+          userId: updated.highestBid.userId ?? local.highestBid?.userId ?? 'N/A'
+        }
+      : local.highestBid ?? null,
+    highestBidderId: updated.highestBidderId ?? local.highestBidderId ?? 'N/A',
+    bids: updated.bids ?? local.bids ?? [],
+    endsAt: updated.endsAt ?? local.endsAt ?? undefined,
+    isClosed: updated.isClosed ?? local.isClosed ?? false,
+    item: {
+      id: updated.item?.id ?? local.item?.id ?? 'N/A',
+      userId: updated.item?.userId ?? local.item?.userId ?? 'N/A',
+      name: updated.item?.name ?? local.item?.name ?? 'Sin nombre',
+      isAvailable: updated.item?.isAvailable ?? local.item?.isAvailable ?? false,
+      type: updated.item?.type ?? local.item?.type ?? 'Desconocido',
+      description: updated.item?.description ?? local.item?.description ?? '',
+      imagen: updated.item?.imagen ?? local.item?.imagen ?? ''
+    }
+  };
+
+  console.log('Merge Auction:', merged);
+  return merged;
+}
+
+
+
 
   async fetchAuction() {
-    if (!this.auction) return;
-    try {
-      const updated = await this.auctionService.getAuction(this.auction.id, this.token || undefined);
-      if (updated) this.freshAuction = updated;
-    } catch (err) {
-      console.error('Error fetching auction details:', err);
-    }
+  if (!this.auction) return;
+  try {
+    const updated = await this.auctionService.getAuction(this.auction.id);
+    if (updated) this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+    console.log('Auction fetch:', updated);
+  } catch (err) {
+    console.error('Error fetching auction details:', err);
   }
+}
 
   close() { this.onClose.emit(); }
 
   async placeBid() {
-  if (!this.freshAuction || !this.editingBid) return;
+  // Validar que haya subasta y un valor de puja definido
+  if (!this.freshAuction || this.editingBid === undefined || this.editingBid === null) return;
+
+  const bidAmount = Number(this.editingBid);
+
+  // Validar que la puja sea mayor al precio actual
+  if (bidAmount <= this.freshAuction.currentPrice) {
+    console.error('La puja debe ser mayor que el precio actual');
+    return;
+  }
+
+  // Validar que haya usuario logueado
+  const username = localStorage.getItem('username');
+  if (!username) {
+    console.error('No hay usuario logueado');
+    return;
+  }
+
   try {
-    await this.auctionService.placeBid(this.freshAuction.id, this.editingBid, this.token || undefined);
-    // 🔹 refrescar datos completos
-    const updated = await this.auctionService.getAuction(this.freshAuction.id, this.token);
-    if (updated) this.freshAuction = updated;
+    console.log('Pujando:', { auctionId: this.freshAuction.id, amount: bidAmount, username });
+    
+    // Llamar al servicio para hacer la puja
+    await this.auctionService.placeBid(this.freshAuction.id, bidAmount);
+
+    // Actualizar la subasta con los datos más recientes
+    const updated = await this.auctionService.getAuction(this.freshAuction.id);
+    if (updated) this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+
+    console.log('Auction después de pujar:', this.freshAuction);
   } catch (err) {
     console.error('Error placing bid:', err);
   }
@@ -107,16 +149,16 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
   async buyNow() {
   if (!this.freshAuction) return;
   try {
-    const updated = await this.auctionService.buyNow(this.freshAuction.id, this.token || undefined);
+    const updated = await this.auctionService.buyNow(this.freshAuction.id);
     if (updated) {
-      this.freshAuction = updated;
-      this.onBought.emit(updated); // 🔹 avisamos al padre
+      this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+      this.onBought.emit(this.freshAuction);
+      console.log('Auction comprada ahora:', this.freshAuction);
     }
   } catch (err) {
     console.error('Error buying now:', err);
   }
 }
-
 
 
   getRemaining(endIso?: string) {
@@ -128,3 +170,6 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
     return `${h}h ${m}m`;
   }
 }
+
+
+

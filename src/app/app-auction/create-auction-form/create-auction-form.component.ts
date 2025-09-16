@@ -34,19 +34,20 @@ export class CreateAuctionFormComponent {
 
   async loadUserItems() {
     try {
-      const userId = localStorage.getItem('userId');
-      if (!userId) throw new Error('Usuario no logueado');
+      const username = localStorage.getItem('username');
+      if (!username) throw new Error('Usuario no logueado');
 
-      const allItems: ItemRef[] = await this.auctionService.getAllItems();
-      this.allItems = allItems;
+      // 🚨 Llamamos solo a los items del usuario logueado
+      const userItems = await this.auctionService.getUserItems(username);
+      this.availableItems = userItems.map(i => ({ id: i.id, name: i.name ?? 'Sin nombre' }));
 
-      const userItems = allItems.filter(i => i.userId && String(i.userId) === userId && i.isAvailable);
-      this.availableItems = userItems.map(i => ({ id: String(i.id), name: i.name ?? 'Sin nombre' }));
+      if (userItems.length > 0) this.itemId = userItems[0].id;
 
-      if (userItems.length > 0) this.itemId = String(userItems[0].id);
     } catch (err) {
       console.error('Error cargando items:', err);
-    } finally { this.loading = false; }
+    } finally {
+      this.loading = false;
+    }
   }
 
   handleInputChange(field: keyof Omit<CreateAuctionInput, 'itemId'>, event: Event) {

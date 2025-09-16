@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuctionDTO } from '../domain/auction.model';
+import { HttpClient } from '@angular/common/http';
+import { AuctionDTO, ItemRef } from '../domain/auction.model';
 import { environment } from '../environment/environment';
 import { lastValueFrom } from 'rxjs';
-import { ItemRef } from '../domain/auction.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuctionService {
@@ -11,98 +10,74 @@ export class AuctionService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔑 ahora siempre intenta usar el token del localStorage
-  private authHeaders(token?: string) {
-    const t = token || localStorage.getItem("token"); 
-    return {
-      headers: new HttpHeaders(
-        t ? { Authorization: `Bearer ${t}` } : {}
-      )
-    };
+  // Listar todas las subastas
+  listAuctions(): Promise<AuctionDTO[]> {
+    return lastValueFrom(
+      this.http.get<{ data: AuctionDTO[] }>(`${this.base}/auctions`)
+    ).then(res => res?.data ?? []);
   }
 
-  listAuctions(token?: string): Promise<AuctionDTO[]> {
-    return lastValueFrom(
-      this.http.get<{ data: AuctionDTO[] }>(
-        `${this.base}/auctions`,
-        this.authHeaders(token)
-      )
-    ).then(res => {
-      console.log("📦 Respuesta cruda del backend:", res);
-      return res?.data ?? [];
-    });
+  // Obtener una subasta por id
+  getAuction(id: string) {
+    return lastValueFrom(this.http.get<AuctionDTO>(`${this.base}/auctions/${id}`));
   }
 
-  getAuction(id: string, token?: string) {
+  // Pujar en una subasta
+  placeBid(id: string, amount: number) {
+    const username = localStorage.getItem('username') || '';
     return lastValueFrom(
-      this.http.get<AuctionDTO>(
-        `${this.base}/auctions/${id}`,
-        this.authHeaders(token)
-      )
+      this.http.post<AuctionDTO>(`${this.base}/auctions/${id}/bid`, { amount, username })
     );
   }
 
-  placeBid(id: string, amount: number, token?: string) {
+  // Comprar ahora
+  buyNow(id: string) {
+    const username = localStorage.getItem('username') || '';
     return lastValueFrom(
-      this.http.post<AuctionDTO>(
-        `${this.base}/auctions/${id}/bid`,
-        { amount },
-        this.authHeaders(token)
-      )
+      this.http.post<AuctionDTO>(`${this.base}/auctions/${id}/buy`, { username })
     );
   }
 
-  buyNow(id: string, token?: string) {
+  // Crear una subasta
+  createAuction(payload: any) {
+    const username = localStorage.getItem('username') || '';
     return lastValueFrom(
-      this.http.post<AuctionDTO>(
-        `${this.base}/auctions/${id}/buy`,
-        {},
-        this.authHeaders(token)
-      )
+      this.http.post<AuctionDTO>(`${this.base}/auctions`, { ...payload, username })
     );
   }
 
-  createAuction(payload: any, token?: string) {
-    return lastValueFrom(
-      this.http.post<AuctionDTO>(
-        `${this.base}/auctions`,
-        payload,
-        this.authHeaders(token)
-      )
-    );
+// Historial de compras
+getPurchasedAuctions(username: string): Promise<AuctionDTO[]> {
+  return lastValueFrom(
+    this.http.get<AuctionDTO[]>(`${this.base}/auctions/history/purchased/${username}`)
+  ).then(res => {
+    console.log('[AuctionService] purchased raw:', res);
+    return res;
+  });
+}
+
+// Historial de ventas
+getSoldAuctions(username: string): Promise<AuctionDTO[]> {
+  return lastValueFrom(
+    this.http.get<AuctionDTO[]>(`${this.base}/auctions/history/sold/${username}`)
+  ).then(res => {
+    console.log('[AuctionService] sold raw:', res);
+    return res;
+  });
+}
+
+
+
+  // Obtener items de un usuario
+getUserItems(username: string) {
+  return lastValueFrom(
+    this.http.get<ItemRef[]>(`${this.base}/items/${username}`)
+  ).then(res => res ?? []);
+}
+
+
+  // Todos los items
+  getAllItems() {
+    return lastValueFrom(this.http.get<ItemRef[]>(`${this.base}/items`));
   }
-
-  getPurchasedAuctions(userId: string, token?: string) {
-  return lastValueFrom(
-    this.http.get<AuctionDTO[]>(
-      `${this.base}/auctions/history/purchased/${userId}`,
-      this.authHeaders(token)
-    )
-  );
-}
-
-getSoldAuctions(userId: string, token?: string) {
-  return lastValueFrom(
-    this.http.get<AuctionDTO[]>(
-      `${this.base}/auctions/history/sold/${userId}`,
-      this.authHeaders(token)
-    )
-  );
-}
-
-  getUserItems(userId: string, token?: string) {
-  return lastValueFrom(
-    this.http.get<{ data: { id: string; name: string }[] }>(
-      `${this.base}/items/${userId}`,
-      this.authHeaders(token)
-    )
-  ).then(res => res?.data ?? []);
-}
-  getAllItems(token?: string) {
-  return lastValueFrom(
-    this.http.get<ItemRef[]>(`${this.base}/items`, this.authHeaders(token))
-  );
-}
-
-
 }

@@ -54,11 +54,11 @@
 
   <!-- 🔹 Detalle -->
   <app-auction-details
-    *ngIf="selected"
-    [auction]="selected"
-    [token]="token || ''"
-    (onClose)="closeDetails()"
-    (onBought)="handleBought($event)"
-  ></app-auction-details>
+  *ngIf="selected"
+  [auction]="selected"
+  (onClose)="closeDetails()"
+  (onBought)="handleBought($event)"
+></app-auction-details>
+
 
 </div>

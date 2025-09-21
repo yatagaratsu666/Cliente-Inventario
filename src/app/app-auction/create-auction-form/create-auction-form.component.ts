@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuctionService } from '../../services/auction.service';
 import { ItemRef } from '../../domain/auction.model';
+import { ItemsService } from '../../services/items.service';
+import { firstValueFrom } from 'rxjs';
+import { Item } from '../../domain/item.model';
 
 export interface CreateAuctionInput {
   startingPrice: number;
@@ -17,6 +20,7 @@ export interface CreateAuctionInput {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './create-auction-form.component.html',
+  styleUrls: ['./create-auction-form.component.css']
 })
 export class CreateAuctionFormComponent {
   @Output() create = new EventEmitter<CreateAuctionInput>();
@@ -28,7 +32,7 @@ export class CreateAuctionFormComponent {
   form: CreateAuctionInput = { startingPrice: 0, buyNowPrice: null, durationHours: 24 };
   loading = true;
 
-  constructor(private auctionService: AuctionService, private router: Router) {
+  constructor(private auctionService: AuctionService, private router: Router, private itemsService: ItemsService) {
     this.loadUserItems();
   }
 
@@ -75,4 +79,24 @@ export class CreateAuctionFormComponent {
   goToVender() { this.router.navigate(['/auctions/vender']); }
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
+
+
+  filterByCategory(_category: string): void {
+    this.loading = true;
+    this.itemsService.showAllItems().subscribe({
+      next: (items: Item[]) => {
+        // 👇 Convertimos Item → ItemRef
+        this.allItems = items.map(i => ({
+          ...i,
+          id: String(i.id) // 🔹 forzamos id a string
+        })) as ItemRef[];
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando items:', err);
+        this.loading = false;
+      }
+    });
+  }
 }

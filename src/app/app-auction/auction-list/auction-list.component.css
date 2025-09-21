@@ -94,3 +94,43 @@ app-auction-details {
   padding: 20px;
   box-shadow: 0 0 14px rgba(86, 207, 225, 0.2);
 }
+
+/* 🔹 Layout principal */
+.content-layout {
+  display: flex;
+  gap: 20px;
+}
+
+/* 🔹 Sidebar */
+.sidebar {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar button {
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: #0d1b2a;
+  color: #56cfe1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.sidebar button:hover {
+  background: linear-gradient(to right, #1f7a7a, #145252);
+  color: #eaf6f6;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
+}
+
+/* 🔹 Contenido principal */
+.main-content {
+  flex: 1;
+}
+
+

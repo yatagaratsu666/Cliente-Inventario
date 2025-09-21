@@ -1,60 +1,65 @@
 <div class="auction-page">
-  <!-- 🔹 Barra superior con acciones -->
-  <div class="toolbar">
-  <button (click)="goToComprar()">🛒 Comprar</button>
-  <button (click)="goToVender()">📦 Vender</button>
-  <button (click)="goToRecoger()">🎁 Recoger</button>
-  <button (click)="goToMisPujas()">💰 Mis pujas</button>
-  <div class="toolbar">
+  <!-- 🔹 Layout principal con sidebar -->
+  <div class="content-layout">
+
+    <!-- 🔹 Sidebar de categorías -->
+    <div class="sidebar">
+      <button (click)="filterByCategory('armas')">⚔️ Armas</button>
+      <button (click)="filterByCategory('items')">🎒 Ítems</button>
+      <button (click)="filterByCategory('armaduras')">🛡️ Armaduras</button>
+      <button (click)="filterByCategory('epicas')">🌟 Épicas</button>
+      <button (click)="filterByCategory('heroes')">🦸 Héroes</button>
+      <button (click)="filterByCategory('all')">📦 Ver Todo</button>
+    </div>
+
+    <!-- 🔹 Contenido principal -->
+    <div class="main-content">
+
+      <!-- Barra superior -->
+      <div class="toolbar">
+        <button (click)="goToComprar()">🛒 Comprar</button>
+        <button (click)="goToVender()">📦 Vender</button>
+        <button (click)="goToRecoger()">🎁 Recoger</button>
+        <button (click)="goToMisPujas()">💰 Mis pujas</button>
+      </div>
+
+      <!-- Formulario -->
+      <form (ngSubmit)="submit()" class="form-container">
+
+        <div *ngIf="loading">Cargando items...</div>
+
+        <!-- 🔹 Grid de ítems en lugar de select -->
+        <div class="items-grid" *ngIf="!loading">
+          <div class="item-card" *ngFor="let item of allItems" (click)="itemId = '' + item.id"
+            [class.selected]="itemId === '' + item.id">
+            <h4>{{ item.name }}</h4>
+          </div>
+        </div>
+
+        <label class="block">
+          Precio inicial:
+          <input type="number" placeholder="Precio inicial" [value]="form.startingPrice"
+            (input)="handleInputChange('startingPrice', $event)" />
+        </label>
+
+        <label class="block">
+          Compra rápida:
+          <input type="number" placeholder="Compra rápida" [value]="form.buyNowPrice || ''"
+            (input)="handleInputChange('buyNowPrice', $event)" />
+        </label>
+
+        <label class="block">
+          Duración:
+          <select [value]="form.durationHours" (change)="handleInputChange('durationHours', $event)">
+            <option [value]="24">24 horas</option>
+            <option [value]="48">48 horas</option>
+          </select>
+        </label>
+
+        <button type="submit" class="submit-btn">
+          Crear Subasta
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
-
-</div>
-<form (ngSubmit)="submit()" class="border p-4 rounded mb-4">
-  <div *ngIf="loading">Cargando items...</div>
-
-  <label class="block mb-2">
-    Item:
-    <select [(ngModel)]="itemId" name="itemId" class="border p-1 w-full" *ngIf="!loading">
-      <option value="">-- Selecciona un item --</option>
-      <option *ngFor="let item of availableItems" [value]="item.id">{{ item.name }}</option>
-    </select>
-  </label>
-
-  <label class="block mb-2">
-    Precio inicial:
-    <input
-      type="number"
-      placeholder="Precio inicial"
-      [value]="form.startingPrice"
-      (input)="handleInputChange('startingPrice', $event)"
-      class="border p-1 w-full"
-    />
-  </label>
-
-  <label class="block mb-2">
-    Compra rápida:
-    <input
-      type="number"
-      placeholder="Compra rápida"
-      [value]="form.buyNowPrice || ''"
-      (input)="handleInputChange('buyNowPrice', $event)"
-      class="border p-1 w-full"
-    />
-  </label>
-
-  <label class="block mb-2">
-    Duración:
-    <select
-      [value]="form.durationHours"
-      (change)="handleInputChange('durationHours', $event)"
-      class="border p-1 w-full"
-    >
-      <option [value]="24">24 horas</option>
-      <option [value]="48">48 horas</option>
-    </select>
-  </label>
-
-  <button type="submit" class="bg-blue-500 text-white px-2 py-1 rounded mt-2">
-    Crear Subasta
-  </button>
-</form>

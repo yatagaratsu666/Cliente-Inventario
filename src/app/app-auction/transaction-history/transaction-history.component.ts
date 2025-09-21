@@ -12,7 +12,8 @@ import { Subscription } from 'rxjs';
   selector: 'app-transaction-history',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './transaction-history.component.html'
+  templateUrl: './transaction-history.component.html',
+  styleUrls: ['./transaction-history.component.css']
 })
 export class TransactionHistoryComponent implements OnInit, OnDestroy {
   purchased: AuctionDTO[] = [];

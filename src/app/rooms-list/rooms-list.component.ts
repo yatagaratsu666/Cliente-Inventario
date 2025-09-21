@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppChatComponent } from '../app-chat/app-chat.component';
+import { ToastService } from '../services/toast.service';
+import { ChatService } from '../services/chat.service';
 
 /**
  * Componente Angular que gestiona y visualiza la lista de salas de batalla disponibles.
@@ -25,10 +27,13 @@ export class RoomsListComponent implements OnInit {
   constructor(
     private battleService: BattleService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toast: ToastService,
+    private chatService: ChatService
   ) {}
 
   ngOnInit(): void {
+    this.chatService.connect(); // Conectar al socket para actualizaciones
     this.loadRooms();
 
     this.roomForm = this.fb.group({
@@ -38,6 +43,11 @@ export class RoomsListComponent implements OnInit {
       credits: [0],
       heroLevel: [1],
       ownerId: [this.playerId]
+    });
+
+    // Suscribirse a actualizaciones de salas vía WebSocket
+    this.chatService.listenRoomsUpdate().subscribe(() => {
+      this.loadRooms();
     });
   }
 
@@ -88,6 +98,7 @@ export class RoomsListComponent implements OnInit {
    * Intenta unir al jugador a una sala existente, usando datos de BD (UsuarioService).
    */
   joinRoom(roomId: string) {
+    this.chatService.sendRoomsUpdate(); // Notificar a otros usuarios que la lista de salas ha cambiado
     this.battleService.getHeroStatsByPlayerId(this.playerId).subscribe({
       next: (heroStats) => {
         this.battleService
@@ -99,13 +110,13 @@ export class RoomsListComponent implements OnInit {
             error: (err) => {
               console.error('Error al unirse a la sala:', err);
               const message = err.error?.error || 'Ocurrió un error inesperado';
-              alert(message);
+              this.toast.error(`No se pudo unir a la sala: ${message}`);
             }
           });
       },
       error: (err) => {
         console.error('No se pudieron obtener los stats del héroe:', err);
-        alert('Error cargando héroe. Verifica tu inventario.');
+        this.toast.error('Error cargando héroe. Héroe no equipado o inválido.');
       }
     });
   }

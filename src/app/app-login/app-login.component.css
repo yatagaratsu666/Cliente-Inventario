@@ -1,3 +1,10 @@
+.login-container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 .login-container h2 {
   text-align: center;
@@ -74,10 +81,20 @@
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
 }
 
-
-.error {
-  color: #ff4d6d; 
-  font-size: 14px;
-  font-weight: bold;
+.register-text {
   text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #eaf6f6;
+}
+
+.register-text a {
+  color: #56cfe1;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.register-text a:hover {
+  text-decoration: underline;
 }

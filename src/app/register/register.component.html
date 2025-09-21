@@ -1,0 +1,65 @@
+<div class="register-container">
+  <h2>Registro de Usuario</h2>
+
+  <form (ngSubmit)="onRegister()" #form="ngForm" enctype="multipart/form-data">
+    <div>
+      <label for="firstName">Nombres:</label>
+      <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required [disabled]="isLoading" />
+    </div>
+
+    <div>
+      <label for="lastName">Apellidos:</label>
+      <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required [disabled]="isLoading" />
+    </div>
+
+    <div>
+      <label for="username">Nombre de usuario:</label>
+      <input type="text" id="username" [(ngModel)]="username" name="username" required [disabled]="isLoading" />
+    </div>
+
+    <div>
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" required [disabled]="isLoading" />
+    </div>
+
+    <div>
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password"
+        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>?])[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>?]{8,}$"
+        required [disabled]="isLoading" />
+      <small>Mínimo 8 caracteres, con mayúsculas, minúsculas, número y símbolo especial.</small>
+    </div>
+
+    <div>
+      <label for="avatar">Avatar:</label>
+      <input type="file" id="avatar" name="avatar" (change)="onFileSelected($event)" accept=".png,.jpg,.jpeg" [disabled]="isLoading" />
+      <small>Selecciona una imagen PNG, JPG o JPEG (máximo 5MB)</small>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Debug info para ver el estado del formulario -->
+    <div class="debug-info" *ngIf="!form.valid">
+      <h4>Estado del formulario:</h4>
+      <ul>
+        <li *ngIf="form.controls['firstName'].invalid">Nombres: {{ form.controls['firstName'].errors | json }}</li>
+        <li *ngIf="form.controls['lastName'].invalid">Apellidos: {{ form.controls['lastName'].errors | json }}</li>
+        <li *ngIf="form.controls['username'].invalid">Usuario: {{ form.controls['username'].errors | json }}</li>
+        <li *ngIf="form.controls['email'].invalid">Email: {{ form.controls['email'].errors | json }}</li>
+        <li *ngIf="form.controls['password'].invalid">Contraseña: {{ form.controls['password'].errors | json }}</li>
+        <li *ngIf="form.controls['avatar'] && form.controls['avatar'].invalid">Avatar: {{ form.controls['avatar'].errors | json }}</li>
+        <li *ngIf="!avatarFile">⚠️ No se ha seleccionado archivo de avatar</li>
+      </ul>
+      <p>Formulario válido: {{ form.valid }}</p>
+      <p>Archivo seleccionado: {{ avatarFile?.name || 'Ninguno' }}</p>
+    </div>
+
+    <button type="submit" [disabled]="!form.valid || isLoading || !avatarFile">
+      <span *ngIf="isLoading">Registrando...</span>
+      <span *ngIf="!isLoading">Registrarse</span>
+    </button>
+  </form>
+</div>
+

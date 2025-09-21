@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import User from '../domain/user.model';
+import { ToastService } from '../services/toast.service';
 
 /**
  * AppLoginComponent
@@ -37,7 +38,7 @@ export class AppLoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router, private toast: ToastService) {}
 
   /**
    * onSubmit
@@ -55,10 +56,17 @@ export class AppLoginComponent {
     }
 
     this.loginService.login(this.username, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['/']); // redirección tras login
+      },
       error: (err) => {
         console.error('Error during login:', err);
-        this.errorMessage = err.message;
+        this.toast.error(err.message || 'Error en el inicio de sesión.');
       }
     });
+  }
+
+  goToRegister(): void {
+    this.router.navigate(['/register']);
   }
 }

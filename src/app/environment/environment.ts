@@ -12,9 +12,11 @@ export const environment = {
 
   inventarySocket: 'http://146.148.77.95:1882',
 
-  chatUrlSocket: 'http://34.71.235.33:4000',
+  chatUrlSocket: 'http://localhost:4000',
 
   api: { base: 'https://auction-deploy-272361825762.us-east1.run.app/api' },
-  socket: { base: 'https://auction-deploy-272361825762.us-east1.run.app' }
+  socket: { base: 'https://auction-deploy-272361825762.us-east1.run.app' },
+
+  usersUrl: 'https://nexus-battle-iv-users-295839446356.europe-west1.run.app/api'
 
 };

@@ -55,9 +55,6 @@ export class AppLoginComponent {
     }
 
     this.loginService.login(this.username, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['/battles']); // Aqui va el if :3
-      },
       error: (err) => {
         console.error('Error during login:', err);
         this.errorMessage = err.message;

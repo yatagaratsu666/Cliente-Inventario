@@ -57,8 +57,8 @@
           (click)="openDetails(a)"
         ></app-auction-card>
       </div>
-
-      <!-- Detalle -->
+<!-- 
+ 
       <app-auction-details
         *ngIf="selected"
         [auction]="selected"
@@ -67,5 +67,24 @@
         (onBought)="handleBought($event)"
       ></app-auction-details>
     </div>
+  </div> -->
+
+  <!-- 🔹 Listado -->
+  <div class="list">
+    <app-auction-card
+      *ngFor="let a of filtered"
+      [auction]="a"
+      (click)="openDetails(a)"
+    ></app-auction-card>
   </div>
+
+  <!-- 🔹 Detalle -->
+  <app-auction-details
+  *ngIf="selected"
+  [auction]="selected"
+  (onClose)="closeDetails()"
+  (onBought)="handleBought($event)"
+></app-auction-details>
+
+
 </div>

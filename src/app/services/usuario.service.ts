@@ -3,15 +3,22 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import User from '../domain/user.model';
+import { ApiConfigService } from './api.config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:1882/usuarios';
 
-  constructor(private http: HttpClient) {
-  }
+  private apiUrl: string;
+  
+    constructor(
+      private http: HttpClient,
+      private apiConfigService: ApiConfigService
+    ) {
+      // Construye la URL base combinando la URL de la API con el endpoint /heroes
+      this.apiUrl = `${apiConfigService.getApiUrl()}/usuarios`;
+    }
 
   getUsuarioById(nombreUsuario: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${nombreUsuario}`);

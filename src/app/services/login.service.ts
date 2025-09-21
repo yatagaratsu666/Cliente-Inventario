@@ -10,18 +10,24 @@
  */
 
 import { Injectable } from '@angular/core';
+import { RedirectCommand, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private readonly USERNAME2 = 'Mikudayo';
+  private readonly USERNAME1 = 'jugador1';
+  private readonly PASSWORD1 = '5678';
+  private readonly ROLE1 = 'player';
+  private readonly USERNAME2 = 'admin1';
   private readonly PASSWORD2 = '5678';
-  private readonly USERNAME3 = 'CallmeDrift';
+  private readonly ROLE2 = 'administrator';
+  private readonly USERNAME3 = 'jugador2';
   private readonly PASSWORD3 = '5678';
+  private readonly ROLE3 = 'player';
 
-  constructor() {}
+  constructor(private readonly router: Router) {}
 
     /**
    * Intenta iniciar sesión con las credenciales proporcionadas.
@@ -39,10 +45,18 @@ export class LoginService {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
+      if(this.ROLE2 === 'administrator'){
+        this.router.navigate(['/gestion']);
+      }
+      localStorage.setItem('role',this.ROLE2)
       return of(true);
-    }  else if (username === this.USERNAME3 && password === this.PASSWORD3) {
+    }  else if ((username === this.USERNAME3 && password === this.PASSWORD3) || (username === this.USERNAME1 && password === this.PASSWORD1)) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
+      if(this.ROLE3 || this.ROLE1 === 'player'){
+        this.router.navigate(['/battles']);
+      }
+      localStorage.setItem('role',this.ROLE3)
       return of(true);
     } else {
       return throwError(() => new Error('Usuario o contraseña incorrectos'));

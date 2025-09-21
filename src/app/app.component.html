@@ -1,7 +1,7 @@
 <header>
   <div class="logo">Nexus Battles IV</div>
 
-  <div class="nav-container">
+  <div *ngIf="!router.url.startsWith('/battle/')" class="nav-container">
     <nav class="nav-links">
       <a (click)="onPlay()">Jugar Online</a>
       <a (click)="onMission()">Misiones</a>
@@ -9,6 +9,9 @@
       <a (click)="onTournament()">Torneo</a>
       <a (click)="onInventory()">Mi Inventario</a>
       <a (click)="onAccount()">Mi Cuenta</a>
+      <div *ngIf="isRole()" class="nav-container">
+         <a (click)="onControl()">Panel Gestion</a>
+      </div>
     </nav>
     <input type="text" class="search-bar" placeholder="Buscar..." [(ngModel)]="searchQuery"
       (input)="onSearchChange()" />

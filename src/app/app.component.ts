@@ -45,6 +45,8 @@ export class AppComponent {
   allEpics: Epic[] = [];
   allWeapons: Weapon[] = [];
 
+  role: string = localStorage.getItem('role') || '';
+
   isBattleRoute = false;
 
   constructor(
@@ -62,6 +64,18 @@ export class AppComponent {
         this.isBattleRoute = event.urlAfterRedirects.startsWith('battle');
       }
     });
+  }
+
+  isRole(): boolean{
+    if(this.role === 'administrator'){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  onControl(){
+    this.router.navigate(['/gestion']);
   }
 
   ngOnInit() {

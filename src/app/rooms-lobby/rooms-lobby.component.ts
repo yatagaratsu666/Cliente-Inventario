@@ -356,6 +356,134 @@ ngOnInit(): void {
     return slotNames[slot] || slot;
   }
 
+  // Obtener tooltip para slots de equipamiento
+  getSlotTooltip(slot: string): string {
+    const slotName = this.getSlotName(slot);
+    const equippedItem = this.equippedItems[slot];
+    
+    if (equippedItem) {
+      return `${slotName}: ${equippedItem.name}`;
+    } else {
+      return `${slotName}: Vacío`;
+    }
+  }
+
+  // Obtener tooltip para items en el modal
+  getItemTooltip(item: any): string {
+    if (!item) return '';
+    
+    let tooltip = `${item.name}`;
+    
+    if (item.description) {
+      tooltip += `\n${item.description}`;
+    }
+    
+    // Agregar efectos si los tiene
+    if (item.effects && item.effects.length > 0) {
+      tooltip += '\nEfectos:';
+      item.effects.forEach((effect: any) => {
+        tooltip += `\n• ${this.getEffectDescription(effect)}`;
+      });
+    }
+    
+    return tooltip;
+  }
+
+  // Nuevas propiedades para tooltip personalizado
+  showTooltip = false;
+  tooltipContent = '';
+  tooltipStyle = {};
+
+  // Detectar posición y ajustar tooltip
+  onItemHover(event: MouseEvent, item: any) {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    
+    // Obtener contenido del tooltip
+    this.tooltipContent = this.getItemTooltip(item);
+    
+    // Calcular posición
+    this.calculateTooltipPosition(rect);
+    
+    // Mostrar tooltip
+    this.showTooltip = true;
+  }
+
+  // Calcular posición del tooltip
+  calculateTooltipPosition(rect: DOMRect) {
+    const tooltipWidth = Math.min(400, window.innerWidth - 40);
+    const tooltipHeight = 120; // Estimado
+    
+    // Calcular posición X centrada
+    let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+    
+    // Ajustar horizontalmente
+    if (left < 20) left = 20;
+    if (left + tooltipWidth > window.innerWidth - 20) {
+      left = window.innerWidth - tooltipWidth - 20;
+    }
+    
+    // Calcular posición Y - preferir arriba, pero cambiar a abajo si no hay espacio
+    let top = rect.top - tooltipHeight - 10;
+    let showBelow = false;
+    
+    if (top < 20) {
+      top = rect.bottom + 10;
+      showBelow = true;
+    }
+    
+    // Si tampoco hay espacio abajo, mantener arriba pero ajustar
+    if (showBelow && top + tooltipHeight > window.innerHeight - 20) {
+      top = rect.top - tooltipHeight - 10;
+      if (top < 20) top = 20;
+    }
+    
+    this.tooltipStyle = {
+      position: 'fixed',
+      left: `${left}px`,
+      top: `${top}px`,
+      width: `${tooltipWidth}px`,
+      zIndex: 99999,
+      background: 'rgba(0, 0, 0, 0.95)',
+      color: '#f5e6c4',
+      padding: '8px 12px',
+      borderRadius: '6px',
+      border: '2px solid #c2b97f',
+      fontSize: '12px',
+      whiteSpace: 'pre-line',
+      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.8)',
+      wordWrap: 'break-word',
+      lineHeight: '1.4',
+      maxHeight: '200px',
+      overflow: 'auto'
+    };
+  }
+
+  // Limpiar clases de tooltip al salir del hover
+  onItemLeave(event: MouseEvent) {
+    this.showTooltip = false;
+    this.tooltipContent = '';
+    this.tooltipStyle = {};
+  }
+
+  // Obtener descripción de un efecto
+  getEffectDescription(effect: any): string {
+    switch(effect.effectType) {
+      case 'DAMAGE':
+        return `Daño +${effect.value}`;
+      case 'HEAL':
+        return `Vida +${effect.value}`;
+      case 'BOOST_ATTACK':
+        return `Ataque +${effect.value}`;
+      case 'BOOST_DEFENSE':
+        return `Defensa +${effect.value}`;
+      case 'DEFENSE':
+        return `Defensa +${effect.value}`;
+      default:
+        return `${effect.effectType}: ${effect.value}`;
+    }
+  }
+
 
   getSlotKey(slotName: string): string {
     const slotKeys: any = {

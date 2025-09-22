@@ -26,6 +26,7 @@ export class ApiConfigService {
   private readonly battleSocket: string = environment.battleSocket;
   private readonly chatUrl: string = environment.chatUrlSocket;
   private readonly inventarySocket: string = environment.inventarySocket
+  private readonly usersUrl: string = environment.usersUrl;
 
   getApiUrl(): string {
     return this.apiUrl;
@@ -45,6 +46,10 @@ export class ApiConfigService {
 
   getInventarySocket(): string {
     return this.inventarySocket;
+  }
+
+  getUsersUrl(): string {
+    return this.usersUrl;
   }
 }
 

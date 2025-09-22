@@ -193,12 +193,11 @@ export class BattleService {
     return new Observable((observer) => {
       this.usuarioService.getUsuarioById(playerId).subscribe({
         next: (user: User) => {
-          if (!user || !user.equipados || !user.equipados.hero) {
+          const hero = user.equipados.hero[0];
+          if (!user || !user.equipados || !user.equipados.hero || !hero) {
             observer.error('El usuario no tiene héroe equipado');
             return;
           }
-
-          const hero = user.equipados.hero[0];
 
           const heroStats = {
             hero: {

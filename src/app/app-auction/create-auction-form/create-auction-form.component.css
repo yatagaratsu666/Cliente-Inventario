@@ -138,3 +138,24 @@
   transform: scale(1.05);
   background: #3282b8;
 }
+
+.item-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 10px;
+  transition: border-color 0.2s ease;
+}
+
+.item-card.selected {
+  border-color: #4cafef; /* Azul cuando se selecciona */
+}
+
+.item-card img {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: contain;
+}

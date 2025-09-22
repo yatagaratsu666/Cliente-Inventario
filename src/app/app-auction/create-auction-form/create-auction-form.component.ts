@@ -7,6 +7,8 @@ import { ItemRef } from '../../domain/auction.model';
 import { ItemsService } from '../../services/items.service';
 import { firstValueFrom } from 'rxjs';
 import { Item } from '../../domain/item.model';
+import { UsuarioService } from '../../services/usuario.service';
+import User from '../../domain/user.model';
 
 export interface CreateAuctionInput {
   startingPrice: number;
@@ -32,7 +34,7 @@ export class CreateAuctionFormComponent {
   form: CreateAuctionInput = { startingPrice: 0, buyNowPrice: null, durationHours: 24 };
   loading = true;
 
-  constructor(private auctionService: AuctionService, private router: Router, private itemsService: ItemsService) {
+  constructor(private auctionService: AuctionService, private router: Router, private itemsService: ItemsService, private usuarioService: UsuarioService) {
     this.loadUserItems();
   }
 
@@ -82,22 +84,77 @@ export class CreateAuctionFormComponent {
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
 
 
-  filterByCategory(_category: string): void {
-    this.loading = true;
-    this.itemsService.showAllItems().subscribe({
-      next: (items: Item[]) => {
-        // 👇 Convertimos Item → ItemRef
-        this.allItems = items.map(i => ({
-          ...i,
-          id: String(i.id) // 🔹 forzamos id a string
-        })) as ItemRef[];
+filterByCategory(category: string): void {
+  this.loading = true;
 
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error cargando items:', err);
-        this.loading = false;
-      }
-    });
+  // Siempre leemos el username desde localStorage
+  const username = localStorage.getItem('username');
+
+  if (!username) {
+    console.error("❌ No se encontró username en localStorage");
+    this.loading = false;
+    return;
   }
+
+  console.log("✅ Username encontrado en localStorage:", username);
+  console.log("📡 Pidiendo datos de usuario al backend...");
+
+  this.usuarioService.getUsuarioById(username).subscribe({
+    next: (usuario: User) => {
+      console.log("✅ Usuario recibido del backend:", usuario);
+
+      let items: any[] = [];
+
+      // Filtramos según la categoría
+      switch (category) {
+        case 'armas':
+          items = usuario.inventario?.weapons || [];
+          console.log("⚔️ Armas encontradas:", items);
+          break;
+        case 'armaduras':
+          items = usuario.inventario?.armors || [];
+          console.log("🛡️ Armaduras encontradas:", items);
+          break;
+        case 'items':
+          items = usuario.inventario?.items || [];
+          console.log("🎒 Items encontrados:", items);
+          break;
+        case 'epicas':
+          items = usuario.inventario?.epicAbility || [];
+          console.log("🌟 Épicas encontradas:", items);
+          break;
+        case 'heroes':
+          items = usuario.inventario?.hero || [];
+          console.log("🦸 Héroes encontrados:", items);
+          break;
+        case 'all':
+        default:
+          items = [
+            ...(usuario.inventario?.weapons || []),
+            ...(usuario.inventario?.armors || []),
+            ...(usuario.inventario?.items || []),
+            ...(usuario.inventario?.epicAbility || []),
+            ...(usuario.inventario?.hero || [])
+          ];
+          console.log("📦 Todos los items del inventario:", items);
+          break;
+      }
+
+      // Normalizamos IDs a string
+      this.allItems = items.map(i => ({
+        ...i,
+        id: String(i.id)
+      })) as ItemRef[];
+
+      console.log("🎯 Items normalizados listos para renderizar:", this.allItems);
+
+      this.loading = false;
+    },
+    error: (err: any) => {
+      console.error("❌ Error cargando inventario:", err);
+      this.loading = false;
+    }
+  });
+}
+
 }

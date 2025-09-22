@@ -30,6 +30,11 @@ import { CommonModule } from '@angular/common';
 })
 export class AppGestionItemComponent {
   items: Item[] = [];
+  paginatedItems: Item[] = [];
+currentPage: number = 1;
+itemsPerPage: number = 8;
+selectedSlot: string = 'all'; // o el filtro que uses
+selectedItem: Item | null = null;
 
   constructor(private router: Router, private itemService: ItemsService) {}
 
@@ -46,17 +51,68 @@ export class AppGestionItemComponent {
    * y los asigna a la propiedad `items`.
    * @returns {void}
    */
-  showItems(): void {
-    this.itemService.showAllItems().subscribe({
-      next: (data) => {
-        this.items = data;
-      },
-      error: (error) => {
-        console.error('Error al cargar items:', error);
-        alert('No se pudo obtener la lista de items.');
-      },
-    });
+// Después de cargar los items
+showItems(): void {
+  this.itemService.showAllItems().subscribe({
+    next: (data) => {
+      this.items = data;
+
+      // Inicializar paginación
+      this.currentPage = 1;
+      this.paginatedItems = this.getPaginatedItems(this.selectedSlot);
+    },
+    error: (error) => {
+      console.error('Error al cargar items:', error);
+      alert('No se pudo obtener la lista de items.');
+    },
+  });
+}
+
+// Paginación
+getPaginatedItems(slot: string) {
+  const allItems = this.getAvailableItems(slot) || [];
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  return allItems.slice(startIndex, startIndex + this.itemsPerPage);
+}
+
+getTotalPages(slot: string): number {
+  const allItems = this.getAvailableItems(slot) || [];
+  return Math.max(1, Math.ceil(allItems.length / this.itemsPerPage));
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.selectedItem = null;
+    this.paginatedItems = this.getPaginatedItems(this.selectedSlot);
   }
+}
+
+nextPage(slot: string) {
+  if (this.currentPage < this.getTotalPages(slot)) {
+    this.currentPage++;
+    this.selectedItem = null;
+    this.paginatedItems = this.getPaginatedItems(slot);
+  }
+}
+
+openModal(item: Item) {
+  this.selectedItem = item;
+}
+
+closeModal() {
+  this.selectedItem = null;
+}
+
+getAvailableItems(slot: string): Item[] {
+  if (!slot || slot === 'all') {
+    return this.items;
+  }
+  // Filtra por heroType, categoría o lo que uses como "slot"
+  return this.items.filter(item => item.heroType === slot);
+}
+
+
 
   /**
    * Redirige al formulario de creación de un nuevo ítem.

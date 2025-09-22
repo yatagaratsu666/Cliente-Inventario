@@ -1,117 +1,225 @@
-.btn-agregar:hover {
-    background: #2b9c9c; /* Verde-azulado para hover */
+.options-list{
+    padding: 30px;
+    padding-bottom: 15px;
+    padding-top: 6px;
 }
 
-.btn-agregar:active {
-    transform: scale(0.95);
-}
-
-.gestion-heroes {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 50px 25px;
-  border-radius: 14px;
-}
-
-.gestion-heroes h2 {
-  text-align: center;
-  font-size: 40px;
-  font-weight: bold;
-  margin-bottom: 40px;
-  color: #bbe1fa; /* Azul profundo serio */
+.options-list h2{
+    font-size: 30px;
+    color: #bbe1fa;
 }
 
 .btn-agregar {
-    margin-left: auto;
     margin-right: 10px;
     margin-bottom: 15px;
     padding: 12px 25px;
     font-size: 16px;
     font-weight: bold;
     color: #ffffff;
-    background: linear-gradient(to right, #1f7a7a, #145252); /* Gradiente verde-azulado */
-    border: 1px solid #0d2b2b;
+    background: linear-gradient(to right, #1f7a7a, #145252);
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.3s, background 0.3s;
+    transition: background 0.3s, transform 0.3s;
 }
 
-.cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: 35px;
+.btn-agregar:hover {
+    background: #2b9c9c;
 }
 
-.hero-card {
-  display: flex;
-  gap: 30px;
-  align-items: flex-start;
-  border: 2px solid #0f4c75; /* Azul oscuro elegante */
-  border-radius: 14px;
-  background: #1b262c; /* Azul-gris muy serio */
-  padding: 30px;
+.btn-agregar:active {
+    transform: scale(0.95);
 }
 
-.hero-image {
-  width: 200px;
-  height: 200px;
-  border: 3px solid #bbe1fa; /* Azul claro para contraste */
-  border-radius: 10px;
+/* Grid compacto */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 0 30px;
+    justify-content: center;
 }
 
-.hero-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  color: #d4f1f4; /* Azul-verde muy suave */
+/* Tarjetas de armaduras */
+.armor-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #0f4c75;
+    border-radius: 12px;
+    background: #1b262c;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.hero-info p {
-  font-size: 20px;
-  margin: 0;
+.armor-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Imagen y nombre */
+.armor-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: 3px solid #bbe1fa;
+    object-fit: cover;
+}
+
+.item-name {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #d4f1f4;
+}
+
+/* Modal (centrado y espacioso) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.modal-content {
+    background: #1b262c;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 700px; /* Aumentamos para dos columnas */
+    width: 90%;
+    color: #d4f1f4;
+    position: relative;
+    font-size: 15px;
+}
+
+.modal h2 {
+    font-size: 25px;
+    text-align: center;
+}
+
+.modal-content p {
+    margin: 10px 0;
+}
+
+/* Imagen centrada */
+.modal-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #56cfe1;
+    display: block;
+    margin: 0 auto 15px;
+}
+
+/* Grid de dos columnas dentro del modal */
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
 }
 
 .variable {
-  font-weight: bold;
+    font-weight: bold;
 }
 
-.hero-actions {
-  margin-top: 16px;
-  display: flex;
-  gap: 20px;
+.item-effects {
+    margin: 5px 0;
+    padding: 2px 6px;
+    background: rgba(212, 241, 244, 0.1);
+    border-left: 5px solid #56cfe1;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #d4f1f4;
+    font-style: italic;
 }
 
-.hero-actions button {
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(to right, #3282b8, #0f4c75); /* Azul serio elegante */
-  color: #eaf6f6;
-  cursor: pointer;
-  transition: background-color .3s, transform .2s;
+/* Botón cerrar */
+.close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #56cfe1;
 }
 
-.hero-actions button:hover {
-  background: linear-gradient(to right, #56cfe1, #48bfe3); /* Azul más vivo en hover */
-  color: #1b262c; /* Texto oscuro para contraste */
+/* Acciones dentro del modal */
+.item-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
 }
 
-.hero-effects {
-  margin-top: 12px;
-  padding: 12px 16px;
-  background: rgba(212, 241, 244, 0.1); /* Azul-verde transparente */
-  border-left: 4px solid #56cfe1; /* Azul brillante para detalles */
-  border-radius: 8px;
-  display: flex;
-  gap: 30px;      
-  font-size: 18px;
-  color: #d4f1f4;
+.item-actions button {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: none;
+    background: linear-gradient(to right, #3282b8, #0f4c75);
+    color: #eaf6f6;
+    cursor: pointer;
 }
 
-.hero-effects p {
-  margin: 0;
-  font-size: 18px;
+.item-actions button:hover {
+    background: linear-gradient(to right, #56cfe1, #48bfe3);
+    color: #1b262c;
+}
+
+/* Paginación */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #bbe1fa;
+}
+
+.pagination-controls button {
+    padding: 6px 12px;
+    background: linear-gradient(to right, #3282b8, #0f4c75);
+    color: #eaf6f6;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background: linear-gradient(to right, #56cfe1, #48bfe3);
+    color: #1b262c;
+}
+
+.pagination-controls button:disabled {
+    background: #1b262c;
+    color: #555;
+    cursor: not-allowed;
+}
+
+.pagination-controls span {
+    min-width: 100px;
+    text-align: center;
+}
+
+/* Responsive para móviles */
+@media screen and (max-width: 500px) {
+    .modal-content {
+        max-width: 90%;
+    }
+    .modal-grid {
+        grid-template-columns: 1fr; /* Una columna en móvil */
+    }
 }

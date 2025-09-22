@@ -5,19 +5,16 @@ header {
   align-items: center;
   background: linear-gradient(160deg, #0d1b2a, #1b2b43);
   color: #eaf6f6;
-  font-size: 16px;
-  padding: 0;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  font-size: 15px;
+  padding: 25px 0;
   border-bottom: 2px solid #56cfe1;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
   position: relative;
 }
 
-
 /* Logo */
 .logo {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   color: #eaf6f6;
   cursor: pointer;
@@ -26,7 +23,6 @@ header {
   transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
-
 /* Contenedor central (links + buscador) */
 .nav-container {
   display: flex;
@@ -34,6 +30,7 @@ header {
   align-items: center;
   gap: 25px; 
   margin-right: 20%;
+  position: relative; /* para que la ventana se posicione respecto al input */
 }
 
 /* Links del nav */
@@ -59,7 +56,7 @@ header {
 
 /* Buscador */
 .search-container {
-  position: relative;
+  position: relative; /* importante para posicionar la ventana debajo */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,32 +82,73 @@ header {
 /* Dropdown resultados */
 .search-results {
   position: absolute;
-  top: 100%; 
+  top: 100%; /* justo debajo del input */
   left: 0;
-  width: 100%;
-  background: #1b2b43;
+  width: 280px; /* ventana pequeña y compacta */
+  background: #0d1b2a;
   border: 1px solid #56cfe1;
-  border-top: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
-  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+  max-height: 250px;
   overflow-y: auto;
   z-index: 1000;
   font-size: 14px;
-  padding: 8px;
+  padding: 10px 0;
   color: #eaf6f6;
 }
 
-.search-results li {
-  padding: 6px 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+/* Categorías dentro de los resultados */
+.search-results strong {
+  display: block;
+  padding: 6px 15px;
+  font-weight: bold;
+  color: #56cfe1;
+  background: rgba(86, 207, 225, 0.05);
+  border-bottom: 1px solid rgba(86, 207, 225, 0.3);
 }
 
+/* Lista de elementos */
+.search-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ítems individuales */
+.search-results li {
+  padding: 6px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(86, 207, 225, 0.2);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Hover sobre cada ítem */
 .search-results li:hover {
   background: rgba(86, 207, 225, 0.15);
+  color: #56cfe1;
 }
 
-/* Botón logout a la derecha */
+/* Quitar borde del último ítem de cada categoría */
+.search-results ul li:last-child {
+  border-bottom: none;
+}
+
+/* Scroll personalizado */
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background-color: #56cfe1;
+  border-radius: 3px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: #0d1b2a;
+  border-radius: 3px;
+}
+
+/* Botón logout */
 button.logout-button {
   padding: 8px 16px;
   font-size: 14px;
@@ -127,4 +165,71 @@ button.logout-button:hover {
   background: linear-gradient(to right, #1f7a7a, #145252);
   color: #eaf6f6;
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
+}
+
+/* Dropdown Panel Gestión */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  font-weight: bold;
+  color: #eaf6f6;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.dropdown-toggle:hover {
+  color: #56cfe1;
+  text-shadow: 0 0 8px rgba(86, 207, 225, 0.8);
+}
+
+/* Menú desplegable */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  text-align: justify;
+  top: 100%;
+  left: 0;
+  background: #0d1b2a;
+  border: 1px solid #56cfe1;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+  min-width: 200px;
+  z-index: 2000;
+  flex-direction: column;
+  padding: 8px 0;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Mostrar menú cuando el contenedor esté en hover */
+.dropdown:hover .dropdown-menu {
+  display: flex;
+}
+
+/* Links del menú */
+.dropdown-menu a {
+  padding: 10px 15px;
+  color: #eaf6f6;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+  background: rgba(86, 207, 225, 0.15);
+  color: #56cfe1;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

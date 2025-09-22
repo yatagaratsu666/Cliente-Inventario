@@ -18,13 +18,13 @@ import { Observable, of, throwError } from 'rxjs';
 })
 export class LoginService {
   private readonly USERNAME1 = 'jugador1';
-  private readonly PASSWORD1 = '5678';
+  private readonly PASSWORD1 = '8765';
   private readonly ROLE1 = 'player';
   private readonly USERNAME2 = 'admin1';
-  private readonly PASSWORD2 = '5678';
+  private readonly PASSWORD2 = '8765';
   private readonly ROLE2: string = 'administrator';
   private readonly USERNAME3 = 'jugador2';
-  private readonly PASSWORD3 = '5678';
+  private readonly PASSWORD3 = '8765';
   private readonly ROLE3 = 'player';
 
   constructor(private readonly router: Router) {}

@@ -94,6 +94,11 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+.form-container select option {
+  background: rgba(86, 207, 225, 0.05);
+  color: #615858;
+}
+
 .form-container input:focus,
 .form-container select:focus {
   border-color: #48bfe3;

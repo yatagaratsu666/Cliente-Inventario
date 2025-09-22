@@ -143,7 +143,8 @@ filterByCategory(category: string): void {
       // Normalizamos IDs a string
       this.allItems = items.map(i => ({
         ...i,
-        id: String(i.id)
+        id: String(i.id),
+        imagen: i.image || 'https://via.placeholder.com/150' // Placeholder si no hay imagen
       })) as ItemRef[];
 
       console.log("🎯 Items normalizados listos para renderizar:", this.allItems);

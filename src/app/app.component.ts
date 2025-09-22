@@ -15,12 +15,13 @@ import { HeroesService } from './services/heroes.service';
 import { ArmorsService } from './services/armors.service';
 import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
+import { ToastComponent } from "./toast/toast.component";
 import User from './domain/user.model';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, ToastComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

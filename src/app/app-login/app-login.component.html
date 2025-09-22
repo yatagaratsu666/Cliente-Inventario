@@ -3,8 +3,8 @@
 
   <form (ngSubmit)="onSubmit()">
     <div>
-      <label for="user">User:</label>
-      <input type="user" id="user" [(ngModel)]="username" name="username" required />
+      <label for="user">Usuario:</label>
+      <input type="text" id="user" [(ngModel)]="username" name="username" required />
     </div>
 
     <div>
@@ -13,5 +13,10 @@
     </div>
 
     <button type="submit">Ingresar</button>
+
+    <p class="register-text">
+      ¿No tienes cuenta?
+      <a (click)="goToRegister()">Regístrate aquí</a>
+    </p>
   </form>
 </div>

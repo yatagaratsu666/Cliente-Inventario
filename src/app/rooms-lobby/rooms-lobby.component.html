@@ -6,22 +6,45 @@
 
     <!-- Información del héroe -->
     <div class="hero-info">
-      <div class="hero-name">
-        <strong>{{ heroStats.hero.name }}</strong>
+      <div class="hero-header">
+        <div class="hero-name">
+          <strong>{{ heroStats.hero.name }}</strong>
+        </div>
       </div>
-      <div class="hero-stats">
-        <span>{{ heroStats.hero.heroType }}</span>
-        <span>Nivel: {{ heroStats.hero.level }}</span>
-        <span>Poder: {{ heroStats.hero.power }}</span>
-      </div>
-      <div class="hero-stats">
-        <span>Vida: {{ heroStats.hero.health }}</span>
-        <span>Defensa: {{ heroStats.hero.defense }}</span>
-        <span>Ataque: {{ heroStats.hero.attack }}</span>
-      </div>
-      <div class="hero-stats">
-        <span>Boost: {{ heroStats.hero.attackBoost.min }}-{{ heroStats.hero.attackBoost.max }}</span>
-        <span>Daño: {{ heroStats.hero.damage.min }}-{{ heroStats.hero.damage.max }}</span>
+      
+      <div class="hero-stats-container">
+        <div class="stats-row primary-stats">
+          <div class="stat-item">
+            <span class="stat-label">Nivel</span>
+            <span class="stat-value">{{ heroStats.hero.level }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Poder</span>
+            <span class="stat-value">{{ heroStats.hero.power }}</span>
+          </div>
+        </div>
+        
+        <div class="stats-row combat-stats">
+          <div class="stat-item">
+            <span class="stat-label">Vida</span>
+            <span class="stat-value health">{{ heroStats.hero.health }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Defensa</span>
+            <span class="stat-value defense">{{ heroStats.hero.defense }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Ataque</span>
+            <span class="stat-value attack">{{heroStats.hero.attack + heroStats.hero.attackBoost.min}} - {{heroStats.hero.attack + heroStats.hero.attackBoost.max}}</span>
+          </div>
+        </div>
+        
+        <div class="stats-row damage-stats">
+          <div class="stat-item">
+            <span class="stat-label">Daño</span>
+            <span class="stat-value damage">{{ heroStats.hero.damage.min }}-{{ heroStats.hero.damage.max }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -29,7 +52,9 @@
     <div class="equipment-panel">
       <!-- Fila superior: Casco -->
       <div class="equipment-row top-row">
-        <div class="equipment-slot helmet" (click)="openEquipmentModal('helmet')">
+        <div class="equipment-slot helmet" 
+             (click)="openEquipmentModal('helmet')"
+             [title]="getSlotTooltip('helmet')">
           <img *ngIf="equippedItems.helmet" [src]="equippedItems.helmet.image" [alt]="equippedItems.helmet.name">
           <span *ngIf="!equippedItems.helmet" class="slot-label">Casco</span>
         </div>
@@ -38,29 +63,39 @@
       <!-- Fila media: Armas y armadura central -->
       <div class="equipment-row middle-row">
         <div class="left-weapon">
-          <div class="equipment-slot weapon-left" (click)="openEquipmentModal('weapon1')">
+          <div class="equipment-slot weapon-left" 
+               (click)="openEquipmentModal('weapon1')"
+               [title]="getSlotTooltip('weapon1')">
             <img *ngIf="equippedItems.weapon1" [src]="equippedItems.weapon1.image" [alt]="equippedItems.weapon1.name">
             <span *ngIf="!equippedItems.weapon1" class="slot-label">Arma 1</span>
           </div>
-          <div class="equipment-slot bracer-left" (click)="openEquipmentModal('bracerLeft')">
+          <div class="equipment-slot bracer-left" 
+               (click)="openEquipmentModal('bracerLeft')"
+               [title]="getSlotTooltip('bracerLeft')">
             <img *ngIf="equippedItems.bracerLeft" [src]="equippedItems.bracerLeft.image" [alt]="equippedItems.bracerLeft.name">
             <span *ngIf="!equippedItems.bracerLeft" class="slot-label">Brazal</span>
           </div>
         </div>
 
         <div class="center-armor">
-          <div class="equipment-slot chest" (click)="openEquipmentModal('chest')">
+          <div class="equipment-slot chest" 
+               (click)="openEquipmentModal('chest')"
+               [title]="getSlotTooltip('chest')">
             <img *ngIf="equippedItems.chest" [src]="equippedItems.chest.image" [alt]="equippedItems.chest.name">
             <span *ngIf="!equippedItems.chest" class="slot-label">Pecho</span>
           </div>
         </div>
 
         <div class="right-weapon">
-          <div class="equipment-slot weapon-right" (click)="openEquipmentModal('weapon2')">
+          <div class="equipment-slot weapon-right" 
+               (click)="openEquipmentModal('weapon2')"
+               [title]="getSlotTooltip('weapon2')">
             <img *ngIf="equippedItems.weapon2" [src]="equippedItems.weapon2.image" [alt]="equippedItems.weapon2.name">
             <span *ngIf="!equippedItems.weapon2" class="slot-label">Arma 2</span>
           </div>
-          <div class="equipment-slot bracer-right" (click)="openEquipmentModal('bracerRight')">
+          <div class="equipment-slot bracer-right" 
+               (click)="openEquipmentModal('bracerRight')"
+               [title]="getSlotTooltip('bracerRight')">
             <img *ngIf="equippedItems.bracerRight" [src]="equippedItems.bracerRight.image" [alt]="equippedItems.bracerRight.name">
             <span *ngIf="!equippedItems.bracerRight" class="slot-label">Brazal</span>
           </div>
@@ -69,11 +104,15 @@
 
       <!-- Fila inferior: Guantes y pantalones -->
       <div class="equipment-row bottom-row">
-        <div class="equipment-slot gloves" (click)="openEquipmentModal('gloves')">
+        <div class="equipment-slot gloves" 
+             (click)="openEquipmentModal('gloves')"
+             [title]="getSlotTooltip('gloves')">
           <img *ngIf="equippedItems.gloves" [src]="equippedItems.gloves.image" [alt]="equippedItems.gloves.name">
           <span *ngIf="!equippedItems.gloves" class="slot-label">Guantes</span>
         </div>
-        <div class="equipment-slot pants" (click)="openEquipmentModal('pants')">
+        <div class="equipment-slot pants" 
+             (click)="openEquipmentModal('pants')"
+             [title]="getSlotTooltip('pants')">
           <img *ngIf="equippedItems.pants" [src]="equippedItems.pants.image" [alt]="equippedItems.pants.name">
           <span *ngIf="!equippedItems.pants" class="slot-label">Pantalón</span>
         </div>
@@ -81,7 +120,9 @@
 
       <!-- Fila final: Zapatos -->
       <div class="equipment-row shoes-row">
-        <div class="equipment-slot shoes" (click)="openEquipmentModal('shoes')">
+        <div class="equipment-slot shoes" 
+             (click)="openEquipmentModal('shoes')"
+             [title]="getSlotTooltip('shoes')">
           <img *ngIf="equippedItems.shoes" [src]="equippedItems.shoes.image" [alt]="equippedItems.shoes.name">
           <span *ngIf="!equippedItems.shoes" class="slot-label">Zapatos</span>
         </div>
@@ -89,15 +130,21 @@
 
       <!-- Items y habilidad épica -->
       <div class="equipment-row extras-row">
-        <div class="equipment-slot item1" (click)="openEquipmentModal('item1')">
+        <div class="equipment-slot item1" 
+             (click)="openEquipmentModal('item1')"
+             [title]="getSlotTooltip('item1')">
           <img *ngIf="equippedItems.item1" [src]="equippedItems.item1.image" [alt]="equippedItems.item1.name">
           <span *ngIf="!equippedItems.item1" class="slot-label">Item 1</span>
         </div>
-        <div class="equipment-slot epic-skill" (click)="openEquipmentModal('epicSkill')">
+        <div class="equipment-slot epic-skill" 
+             (click)="openEquipmentModal('epicSkill')"
+             [title]="getSlotTooltip('epicSkill')">
           <img *ngIf="equippedItems.epicSkill" [src]="equippedItems.epicSkill.image" [alt]="equippedItems.epicSkill.name">
           <span *ngIf="!equippedItems.epicSkill" class="slot-label">Épica</span>
         </div>
-        <div class="equipment-slot item2" (click)="openEquipmentModal('item2')">
+        <div class="equipment-slot item2" 
+             (click)="openEquipmentModal('item2')"
+             [title]="getSlotTooltip('item2')">
           <img *ngIf="equippedItems.item2" [src]="equippedItems.item2.image" [alt]="equippedItems.item2.name">
           <span *ngIf="!equippedItems.item2" class="slot-label">Item 2</span>
         </div>
@@ -146,6 +193,8 @@
         [class.equipped-slot]="isEquipped(item) === 'slot'"
         [class.equipped-other]="isEquipped(item) === 'other'"
         [class.not-equipped]="isEquipped(item) === 'none'"
+        (mouseenter)="onItemHover($event, item)"
+        (mouseleave)="onItemLeave($event)"
         (click)="selectedItem = item">
         <img [src]="item.image" [alt]="item.name">
         <div class="item-info">
@@ -165,4 +214,9 @@
       <button (click)="closeEquipmentModal()" class="cancel-btn">Cerrar</button>
     </div>
   </div>
+</div>
+
+<!-- Tooltip personalizado -->
+<div *ngIf="showTooltip" class="custom-tooltip" [ngStyle]="tooltipStyle">
+  {{ tooltipContent }}
 </div>

@@ -32,6 +32,7 @@ import { AuctionListComponent } from './app-auction/auction-list/auction-list.co
 import { AuctionDetailsComponent } from './app-auction/auction-details/auction-details.component';
 import { TransactionHistoryComponent } from './app-auction/transaction-history/transaction-history.component';
 import { CreateAuctionFormComponent } from './app-auction/create-auction-form/create-auction-form.component';
+import { RegisterComponent } from './register/register.component';
 
 /**
  * Definición de rutas principales de la app.
@@ -203,7 +204,10 @@ const routeConfig: Routes = [
   { path: 'auctions', 
     component: AuctionListComponent, 
     canActivate: [AuthGuard] },
-
+  {
+    path: 'register',
+    component: RegisterComponent
+  }
 ];
 
 export default routeConfig;

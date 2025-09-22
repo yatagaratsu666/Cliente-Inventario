@@ -50,10 +50,10 @@
               <option *ngFor="let type of effectTypes" [value]="type">
                 {{ type }}
               </option>
-            </select>
-            <label>Valor:</label>
-            <input type="number" placeholder="Valor" [(ngModel)]="effect.value" [name]="'effectValue' + i" />
-            <label>Duración:</label>
+            </select><br />
+            <label>Valor:</label><br />
+            <input type="number" placeholder="Valor" [(ngModel)]="effect.value" [name]="'effectValue' + i" /><br />
+            <label>Duración:</label><br />
             <input type="number" placeholder="Duración (turnos)" [(ngModel)]="effect.durationTurns"
               [name]="'effectDuration' + i" />
           </div>

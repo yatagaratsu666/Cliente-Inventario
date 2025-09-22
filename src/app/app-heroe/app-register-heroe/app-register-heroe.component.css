@@ -1,85 +1,102 @@
 .hero-form {
   max-width: 1000px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background: #1b262c;
+  color: #d4f1f4;
+  box-shadow: 0 0 15px rgba(86, 207, 225, 0.25);
+  border: 2px solid #56cfe1;
+  font-family: "Segoe UI", Roboto, sans-serif;
 }
 
 .hero-form h2 {
   text-align: center;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 50px;
+  color: #bbe1fa;
 }
-
 
 .form-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
-  gap: 30px 40px;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 20px;
 }
 
 .form-col {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  gap: 8px;
 }
 
-label {
-  font-size: 24px;
+.form-group label {
   font-weight: bold;
   margin-bottom: 6px;
-  text-align: center;
+  color: #bbe1fa;
 }
 
 input,
 textarea,
 select {
-  padding: 14px 18px;
-  font-size: 20px;
-  border: black 1px solid;
-  border-radius: 2px;
-  background: #e0e0e0;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
-  font-weight: bold;
-  color: #444;
-  width: 100%;
-  max-width: 350px;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: rgba(86, 207, 225, 0.05);
+  color: #eaf6f6;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-::placeholder {
-  color: #888;
-  font-weight: normal;
-  font-size: 17px;
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #bbe1fa;
+  box-shadow: 0 0 6px #3282b8;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* 🔹 Select personalizado */
+select option {
+  color: black; /* Opciones disponibles en negro */
+}
+
+select option:checked {
+  color: white; /* Opción seleccionada en blanco */
+  background: #3282b8;
 }
 
 .row {
   display: flex;
-  gap: 10px;
-  width: 100%;
-  justify-content: center;
+  gap: 12px;
 }
 
 .button {
-  grid-column: span 2; 
-  margin-top: 30px;
-  width: 100%;
-  padding: 16px 20px;
-  font-size: 18px;
+  background: #56cfe1;
+  color: #0d1b2a;
+  padding: 12px 20px;
+  font-size: 16px;
   font-weight: bold;
   border: none;
-  border-radius: 12px;
-  background: #629762;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color .3s;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 0 auto;
 }
 
 .button:hover {
-  background: #5f593e;
-  color: #c5a253;
+  background: #48bfe3;
+  box-shadow: 0 0 12px rgba(72, 191, 227, 0.6);
 }

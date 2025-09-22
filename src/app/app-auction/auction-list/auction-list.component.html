@@ -1,8 +1,8 @@
 <div class="auction-page">
-  <!-- 🔹 Layout principal con sidebar -->
+
   <div class="content-layout">
     
-    <!-- 🔹 Sidebar de categorías -->
+
     <div class="sidebar">
       <button (click)="filterByCategory('armas')">⚔️ Armas</button>
       <button (click)="filterByCategory('items')">🎒 Ítems</button>
@@ -11,9 +11,9 @@
       <button (click)="filterByCategory('heroes')">🦸 Héroes</button>
     </div>
 
-    <!-- 🔹 Contenido principal -->
+
     <div class="main-content">
-      <!-- Barra superior -->
+
       <div class="toolbar">
         <button (click)="goToComprar()">🛒 Comprar</button>
         <button (click)="goToVender()">📦 Vender</button>
@@ -21,7 +21,7 @@
         <button (click)="goToMisPujas()">💰 Mis pujas</button>
       </div>
 
-      <!-- Filtros -->
+
       <div class="filters">
         <input
           type="text"
@@ -49,7 +49,7 @@
         />
       </div>
 
-      <!-- Listado -->
+
       <div class="list">
         <app-auction-card
           *ngFor="let a of filtered"
@@ -69,7 +69,7 @@
     </div>
   </div> -->
 
-  <!-- 🔹 Listado -->
+
   <div class="list">
     <app-auction-card
       *ngFor="let a of filtered"
@@ -78,7 +78,7 @@
     ></app-auction-card>
   </div>
 
-  <!-- 🔹 Detalle -->
+
   <app-auction-details
   *ngIf="selected"
   [auction]="selected"

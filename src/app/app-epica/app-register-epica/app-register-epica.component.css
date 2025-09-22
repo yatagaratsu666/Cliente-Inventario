@@ -1,103 +1,103 @@
-/* Contenedor principal */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
 }
 
-.effect-group label {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    text-align: center;
+.content-box {
+  background: #1b262c; /* Fondo oscuro elegante */
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
-/* Título principal */
 .register-container h2 {
-    text-align: center;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 30px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #bbe1fa; /* Azul claro elegante */
 }
 
-/* Grupos de input */
 .input-group,
 .effect-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
-select {
-    padding: 14px 18px;
-    font-size: 18px;
-    border: black 1px solid;
-    border-radius: 4px;
-    background: #e0e0e0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
-    font-weight: bold;
-    color: #444;
-    width: 100%;
-    max-width: 389px;
+.input-group label,
+.effect-group label {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #eeeeee;
 }
 
-.input-group label {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    text-align: center;
+.input-group input,
+.input-group select,
+.effect-group input,
+.effect-group select {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: rgba(86, 207, 225, 0.05);
+  color: #eaf6f6;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Inputs, textarea y selects */
-input {
-    padding: 14px 18px;
-    font-size: 18px;
-    border: black 1px solid;
-    border-radius: 4px;
-    background: #e0e0e0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
-    font-weight: bold;
-    color: #444;
-    width: 100%;
-    max-width: 350px;
+.input-group input:focus,
+.input-group select:focus,
+.effect-group input:focus,
+.effect-group select:focus {
+  border-color: #bbe1fa;
 }
 
-/* Placeholders */
-::placeholder {
-    color: #888;
-    font-weight: normal;
-    font-size: 16px;
+/* Estilo especial para los selects */
+select option {
+  color: #000; /* Opciones disponibles en negro */
 }
-
-/* Grupo de efectos */
-.effect-group {
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.effect-group h3 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: center;
+select option:checked {
+  color: #fff; /* Opción seleccionada en blanco */
+  background: #3282b8;
 }
 
 /* Botón */
 .register-btn {
-    margin-top: 30px;
-    width: 100%;
-    padding: 16px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    background: #629762;
-    cursor: pointer;
-    transition: background-color .3s, color .3s;
+  width: 100%;
+  padding: 14px;
+  background: #3282b8;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
 }
 
 .register-btn:hover {
-    background: #5f593e;
-    color: #c5a253;
+  background: #0f4c75;
+}
+
+/* Imagen de preview */
+.preview-img {
+  display: block;
+  margin-top: 12px;
+  max-width: 200px;
+  border-radius: 10px;
+  border: 2px solid #3282b8;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Encabezado de efectos */
+.effect-group h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #bbe1fa;
 }

@@ -20,13 +20,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class LoginService {
   private readonly USERNAME1 = 'jugador1';
-  private readonly PASSWORD1 = '5678';
+  private readonly PASSWORD1 = '8765';
   private readonly ROLE1 = 'player';
   private readonly USERNAME2 = 'admin1';
-  private readonly PASSWORD2 = '5678';
-  private readonly ROLE2 = 'administrator';
+  private readonly PASSWORD2 = '8765';
+  private readonly ROLE2: string = 'administrator';
   private readonly USERNAME3 = 'jugador2';
-  private readonly PASSWORD3 = '5678';
+  private readonly PASSWORD3 = '8765';
   private readonly ROLE3 = 'player';
   
   private apiUrl: string;
@@ -133,8 +133,6 @@ export class LoginService {
       });
     });
   }
-
-
   /**
    * Registra un nuevo usuario en el sistema.
    *
@@ -182,13 +180,35 @@ export class LoginService {
         subscriber.error(error);
       });
     });
-  }
+  /*login(username: string, password: string): Observable<boolean> {
+    if (username === this.USERNAME2 && password === this.PASSWORD2) {
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', username);
+        this.router.navigate(['/battles']);
+      localStorage.setItem('role',this.ROLE2)
+      return of(true);
+    }  else if ((username === this.USERNAME3 && password === this.PASSWORD3) || (username === this.USERNAME1 && password === this.PASSWORD1)) {
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', username);
+        this.router.navigate(['/battles']);
+      localStorage.setItem('role',this.ROLE3)
+      return of(true);
+    } else {
+      return throwError(() => new Error('Usuario o contraseña incorrectos'));
+    }
+  }*/
   // Cierra la sesión del usuario limpiando el estado de LoggedIn
   logout(): void {
     localStorage.removeItem('loggedIn'); 
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
   }
   // Verifica si el usuario tiene sesión activa
   isLoggedIn(): boolean {
     return localStorage.getItem('loggedIn') === 'true';
   }
+
+  getRole(): string | null {
+  return localStorage.getItem('role');
+}
 }

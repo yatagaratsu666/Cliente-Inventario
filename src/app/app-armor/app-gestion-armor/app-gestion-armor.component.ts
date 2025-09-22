@@ -22,6 +22,11 @@ import { ArmorsService } from '../../services/armors.service';
 export class AppGestionArmorComponent {
   /** Lista de armaduras que se mostrarán en pantalla */
   armor: Armor[] = [];
+  paginatedItems: Armor[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+  selectedSlot: string = 'all'; // o el filtro que uses
+  selectedArmor: Armor | null = null;
 
   constructor(private router: Router, private armorService: ArmorsService) {}
 
@@ -53,6 +58,49 @@ export class AppGestionArmorComponent {
       },
     });
   }
+
+  getAvailableItems(slot: string): Armor[] {
+    if (!slot || slot === 'all') {
+      return this.armor;
+    }
+    return this.armor.filter(item => item.heroType === slot);
+  }
+
+  openModal(item: Armor) {
+    this.selectedArmor = item;
+  }
+  
+  closeModal() {
+    this.selectedArmor = null;
+  }
+
+  
+getPaginatedArmors(slot: string) {
+  const allItems = this.getAvailableItems(slot) || [];
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  return allItems.slice(startIndex, startIndex + this.itemsPerPage);
+}
+
+getTotalPages(slot: string): number {
+  const allItems = this.getAvailableItems(slot) || [];
+  return Math.max(1, Math.ceil(allItems.length / this.itemsPerPage));
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.selectedArmor = null;
+    this.paginatedItems = this.getPaginatedArmors(this.selectedSlot);
+  }
+}
+
+nextPage(slot: string) {
+  if (this.currentPage < this.getTotalPages(slot)) {
+    this.currentPage++;
+    this.selectedArmor = null;
+    this.paginatedItems = this.getPaginatedArmors(slot);
+  }
+}
 
   /**
    * Cambia el estado (activo/inactivo) de una armadura específica.

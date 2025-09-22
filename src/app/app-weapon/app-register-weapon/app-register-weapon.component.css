@@ -1,120 +1,98 @@
-/* Contenedor principal */
+/* 🔹 Contenedor general */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px 20px;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-/* Título principal */
+/* 🔹 Caja del contenido */
+.content-box {
+  background: #1b262c;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(86, 207, 225, 0.25);
+  border: 2px solid #56cfe1;
+  color: #d4f1f4;
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+/* 🔹 Títulos */
 .register-container h2 {
-    text-align: center;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-/* Grupos de input */
-.input-group,
-.effect-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-select {
-    padding: 14px 18px;
-    font-size: 18px;
-    border: black 1px solid;
-    border-radius: 4px;
-    background: #e0e0e0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
-    font-weight: bold;
-    color: #444;
-    width: 100%;
-    max-width: 389px;
-}
-
-.input-group label {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    text-align: center;
-}
-
-/* Inputs, textarea y selects */
-input {
-    padding: 14px 18px;
-    font-size: 18px;
-    border: black 1px solid;
-    border-radius: 4px;
-    background: #e0e0e0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
-    font-weight: bold;
-    color: #444;
-    width: 100%;
-    max-width: 350px;
-}
-
-/* Placeholders */
-::placeholder {
-    color: #888;
-    font-weight: normal;
-    font-size: 16px;
-}
-
-/* Grupo de efectos */
-.effect-group {
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.effect-group > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px; /* separa label y campos */
-    width: 100%;
-}
-
-/* Asegurar que labels se vean igual que los de arriba */
-.effect-group label {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    text-align: center;
-    padding: 6px;
-}
-
-/* Inputs y selects mantienen el estilo de los otros campos */
-.effect-group input,
-.effect-group select {
-    width: 100%;
-    max-width: 350px; /* igual que los demás */
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #bbe1fa;
+  margin-bottom: 25px;
 }
 
 .effect-group h3 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #bbe1fa;
+  margin-top: 20px;
+  margin-bottom: 12px;
 }
 
-/* Botón */
+/* 🔹 Grupos de entrada */
+.input-group,
+.effect-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #bbe1fa;
+}
+
+/* 🔹 Inputs, selects */
+input,
+select {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: rgba(86, 207, 225, 0.05);
+  color: #eaf6f6;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #bbe1fa;
+  box-shadow: 0 0 6px #3282b8;
+}
+
+/* 🔹 Select personalizado */
+select option {
+  color: black; /* Opciones disponibles */
+}
+
+select option:checked {
+  color: white; /* Seleccionada */
+  background: #3282b8;
+}
+
+/* 🔹 Botón */
 .register-btn {
-    margin-top: 30px;
-    width: 100%;
-    padding: 16px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    background: #629762;
-    cursor: pointer;
-    transition: background-color .3s, color .3s;
+  background: #56cfe1;
+  color: #0d1b2a;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 20px auto 0;
 }
 
 .register-btn:hover {
-    background: #5f593e;
-    color: #c5a253;
+  background: #48bfe3;
+  box-shadow: 0 0 12px rgba(72, 191, 227, 0.6);
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -23,6 +23,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   filter: string = '';
   selected?: AuctionDTO;
   userId?: string;
+  @Input() auction!: AuctionDTO;
 
   selectedType: string = '';
   selectedDuration: string = '';
@@ -124,13 +125,22 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   closeDetails() { this.selected = undefined; }
 
   handleBought(updated: AuctionDTO) {
-    this.auctions = this.auctions.filter(a => a.id !== updated.id);
-    this.applyFilter();
-    if (this.selected?.id === updated.id) this.closeDetails();
-  }
+  // 🔹 eliminamos la subasta comprada inmediatamente
+  this.auctions = this.auctions.filter(a => a.id !== updated.id);
+  this.applyFilter();
+  if (this.selected?.id === updated.id) this.closeDetails();
+}
 
+  //este mismo
   goToComprar() { this.router.navigate(['/auctions']); }
+  //create-auction-form
   goToVender() { this.router.navigate(['/auctions/vender']); }
+  //transaction-history
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }
+  //a este mismo
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
+
+  filterByCategory(category: string): void {this.router.navigate(['/auctions/vender']);
+}
+
 }

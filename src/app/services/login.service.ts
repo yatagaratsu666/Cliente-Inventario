@@ -180,6 +180,7 @@ export class LoginService {
         subscriber.error(error);
       });
     });
+  }
   /*login(username: string, password: string): Observable<boolean> {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {
       localStorage.setItem('loggedIn', 'true');

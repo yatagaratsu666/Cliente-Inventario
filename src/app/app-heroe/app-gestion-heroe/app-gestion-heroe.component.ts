@@ -26,10 +26,15 @@ import { HeroesService } from '../../services/heroes.service';
   selector: 'app-app-gestion-heroe',
   imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './app-gestion-heroe.component.html',
-  styleUrl: './app-gestion-heroe.component.css'
+  styleUrl: './app-gestion-heroe.component.css',
 })
 export class AppGestionHeroeComponent {
   heros: Hero[] = [];
+  paginatedItems: Hero[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+  selectedSlot: string = 'all'; // o el filtro que uses
+  selectedArmor: Hero | null = null;
 
   constructor(private router: Router, private heroService: HeroesService) {}
 
@@ -58,6 +63,48 @@ export class AppGestionHeroeComponent {
     });
   }
 
+  getAvailableItems(slot: string): Hero[] {
+    if (!slot || slot === 'all') {
+      return this.heros;
+    }
+    return this.heros.filter((item) => item.heroType === slot);
+  }
+
+  openModal(item: Hero) {
+    this.selectedArmor = item;
+  }
+
+  closeModal() {
+    this.selectedArmor = null;
+  }
+
+  getPaginatedArmors(slot: string) {
+    const allItems = this.getAvailableItems(slot) || [];
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return allItems.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  getTotalPages(slot: string): number {
+    const allItems = this.getAvailableItems(slot) || [];
+    return Math.max(1, Math.ceil(allItems.length / this.itemsPerPage));
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.selectedArmor = null;
+      this.paginatedItems = this.getPaginatedArmors(this.selectedSlot);
+    }
+  }
+
+  nextPage(slot: string) {
+    if (this.currentPage < this.getTotalPages(slot)) {
+      this.currentPage++;
+      this.selectedArmor = null;
+      this.paginatedItems = this.getPaginatedArmors(slot);
+    }
+  }
+
   /**
    * Redirige al formulario de creación de un nuevo héroe.
    * @returns {void}
@@ -74,14 +121,14 @@ export class AppGestionHeroeComponent {
   changeStatus(id: number): void {
     this.heroService.changeStatus(id).subscribe({
       next: () => {
-        const hero = this.heros.find((i) => i.id === id);
-        if (hero) {
-          hero.status = !hero.status;
+        const armor = this.heros.find((i) => i.id === id);
+        if (armor) {
+          armor.status = !armor.status;
         }
       },
       error: (error) => {
-        console.error('Error al cambiar el estado del héroe:', error);
-        alert('No se pudo cambiar el estado del héroe.');
+        console.error('Error al cambiar el estado de la armadura:', error);
+        alert('No se pudo cambiar el estado de la armadura.');
       },
     });
   }

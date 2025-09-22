@@ -15,6 +15,7 @@ import { HeroesService } from './services/heroes.service';
 import { ArmorsService } from './services/armors.service';
 import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
+import User from './domain/user.model';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent {
   searchQuery: string = '';
 
   mostrarCuenta = false;
-  jugadorNombre = 'Jugador1';
+  jugadorNombre: string = localStorage.getItem('username') || '';
   cantidadTokens = 150;
 
   // datos filtrados (lo que se muestra)
@@ -45,12 +46,13 @@ export class AppComponent {
   allEpics: Epic[] = [];
   allWeapons: Weapon[] = [];
 
+  user: User = new User();
+
   role: string = localStorage.getItem('role') || '';
 
   isBattleRoute = false;
 
   constructor(
-    public loginService: LoginService,
     public router: Router,
     private chatService: ChatService,
     private itemService: ItemsService,
@@ -58,6 +60,7 @@ export class AppComponent {
     private armorService: ArmorsService,
     private epicsService: EpicsService,
     private weaponService: WeaponsService,
+    public loginService: LoginService
   ) { 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -66,13 +69,11 @@ export class AppComponent {
     });
   }
 
-  isRole(): boolean{
-    if(this.role === 'administrator'){
-      return true;
-    }else{
-      return false;
-    }
-  }
+isRole(): boolean {
+  return this.loginService.getRole() === 'administrator';
+}
+
+
 
   onControl(){
     this.router.navigate(['/gestion']);
@@ -207,4 +208,33 @@ goToRecoger() {
 goToMisPujas() {
   this.router.navigate(['/auctions/mis-pujas']);
 }
+
+goToGestion(option: string) {
+  switch (option) {
+    case 'heroes':
+      this.router.navigate(['/heroes/control']);
+      break;
+
+    case 'items':
+      this.router.navigate(['/items/control']);
+      break;
+
+    case 'weapons':
+      this.router.navigate(['/weapons/control']);
+      break;
+
+    case 'armors':
+      this.router.navigate(['/armors/control']);
+      break;
+
+    case 'epics':
+      this.router.navigate(['/epics/control']);
+      break;
+
+    default:
+      console.warn('Opción de gestión no reconocida:', option);
+      break;
+  }
+}
+
 }

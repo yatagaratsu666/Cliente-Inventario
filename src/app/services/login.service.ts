@@ -22,7 +22,7 @@ export class LoginService {
   private readonly ROLE1 = 'player';
   private readonly USERNAME2 = 'admin1';
   private readonly PASSWORD2 = '5678';
-  private readonly ROLE2 = 'administrator';
+  private readonly ROLE2: string = 'administrator';
   private readonly USERNAME3 = 'jugador2';
   private readonly PASSWORD3 = '5678';
   private readonly ROLE3 = 'player';
@@ -45,17 +45,13 @@ export class LoginService {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
-      if(this.ROLE2 === 'administrator'){
-        this.router.navigate(['/gestion']);
-      }
+        this.router.navigate(['/battles']);
       localStorage.setItem('role',this.ROLE2)
       return of(true);
     }  else if ((username === this.USERNAME3 && password === this.PASSWORD3) || (username === this.USERNAME1 && password === this.PASSWORD1)) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('username', username);
-      if(this.ROLE3 || this.ROLE1 === 'player'){
         this.router.navigate(['/battles']);
-      }
       localStorage.setItem('role',this.ROLE3)
       return of(true);
     } else {
@@ -65,9 +61,15 @@ export class LoginService {
   // Cierra la sesión del usuario limpiando el estado de LoggedIn
   logout(): void {
     localStorage.removeItem('loggedIn'); 
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
   }
   // Verifica si el usuario tiene sesión activa
   isLoggedIn(): boolean {
     return localStorage.getItem('loggedIn') === 'true';
   }
+
+  getRole(): string | null {
+  return localStorage.getItem('role');
+}
 }

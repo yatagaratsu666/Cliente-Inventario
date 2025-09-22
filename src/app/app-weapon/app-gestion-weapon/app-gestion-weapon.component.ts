@@ -28,10 +28,15 @@ import { CommonModule } from '@angular/common';
   selector: 'app-app-gestion-weapon',
   imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './app-gestion-weapon.component.html',
-  styleUrl: './app-gestion-weapon.component.css'
+  styleUrl: './app-gestion-weapon.component.css',
 })
 export class AppGestionWeaponComponent {
   weapon: Weapon[] = [];
+  paginatedItems: Weapon[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+  selectedSlot: string = 'all'; // o el filtro que uses
+  selectedArmor: Weapon | null = null;
 
   constructor(private router: Router, private weaponService: WeaponsService) {}
 
@@ -68,6 +73,48 @@ export class AppGestionWeaponComponent {
     });
   }
 
+  getAvailableItems(slot: string): Weapon[] {
+    if (!slot || slot === 'all') {
+      return this.weapon;
+    }
+    return this.weapon.filter((item) => item.heroType === slot);
+  }
+
+  openModal(item: Weapon) {
+    this.selectedArmor = item;
+  }
+
+  closeModal() {
+    this.selectedArmor = null;
+  }
+
+  getPaginatedArmors(slot: string) {
+    const allItems = this.getAvailableItems(slot) || [];
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return allItems.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  getTotalPages(slot: string): number {
+    const allItems = this.getAvailableItems(slot) || [];
+    return Math.max(1, Math.ceil(allItems.length / this.itemsPerPage));
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.selectedArmor = null;
+      this.paginatedItems = this.getPaginatedArmors(this.selectedSlot);
+    }
+  }
+
+  nextPage(slot: string) {
+    if (this.currentPage < this.getTotalPages(slot)) {
+      this.currentPage++;
+      this.selectedArmor = null;
+      this.paginatedItems = this.getPaginatedArmors(slot);
+    }
+  }
+
   /**
    * Cambia el estado (activo/inactivo) de un arma según su ID.
    * @param {number} id ID del arma a modificar
@@ -76,14 +123,14 @@ export class AppGestionWeaponComponent {
   changeStatus(id: number): void {
     this.weaponService.changeStatus(id).subscribe({
       next: () => {
-        const weapon = this.weapon.find((i) => i.id === id);
-        if (weapon) {
-          weapon.status = !weapon.status;
+        const armor = this.weapon.find((i) => i.id === id);
+        if (armor) {
+          armor.status = !armor.status;
         }
       },
       error: (error) => {
-        console.error('Error al cambiar el estado del arma:', error);
-        alert('No se pudo cambiar el estado del arma.');
+        console.error('Error al cambiar el estado de la armadura:', error);
+        alert('No se pudo cambiar el estado de la armadura.');
       },
     });
   }

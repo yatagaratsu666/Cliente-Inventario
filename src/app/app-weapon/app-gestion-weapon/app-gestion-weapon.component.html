@@ -1,41 +1,57 @@
-<div class="weapon-list">
-  <h2>Lista de Armas</h2>
+<div class="armor-list">
+  <div class="options-list">
+    <h2>Lista de Armas</h2>
+    <button (click)="addWeapon()" class="btn-agregar">Agregar Armadura</button>
+  </div>
 
-    <button (click)="addWeapon()" class="btn-agregar">Agregar Arma</button>
+  <!-- Grid de armaduras paginadas -->
+  <div class="items-grid">
+    <div
+      class="armor-card"
+      *ngFor="let armor of getPaginatedArmors(selectedSlot)"
+      (click)="openModal(armor)"
+    >
+      <img *ngIf="armor.image" [src]="armor.image" alt="{{ armor.name }}" class="armor-image" />
+      <p class="item-name">{{ armor.name }}</p>
+    </div>
+  </div>
 
-  <div *ngFor="let weapon of weapon" class="weapon-card">
-    <img
-      *ngIf="weapon.image"
-      [src]="weapon.image"
-      alt="{{ weapon.name }}"
-      class="weapon-image"
-    />
+  <!-- Controles de paginación -->
+  <div class="pagination-controls">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+    <span>Página {{ currentPage }} de {{ getTotalPages(selectedSlot) }}</span>
+    <button (click)="nextPage(selectedSlot)" [disabled]="currentPage === getTotalPages(selectedSlot)">Siguiente</button>
+  </div>
+</div>
 
-    <div class="weapon-info">
-      <p><span class="variable">Nombre:</span> {{ weapon.name }}</p>
-      <p><span class="variable">Descripción:</span> {{ weapon.description }}</p>
-      <p><span class="variable">HeroType:</span> {{ weapon.heroType }}</p>
-      <p><span class="variable">Estado:</span> {{ weapon.status ? 'Activo' : 'Inactivo' }}</p>
-      <p><span class="variable">DropRate:</span> {{ weapon.dropRate }}</p>
-      <p><span class="variable">Stock:</span> {{ weapon.stock }}</p>
+<!-- Modal de armadura -->
+<div class="modal" *ngIf="selectedArmor">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>{{ selectedArmor.name }}</h2>
+    <img *ngIf="selectedArmor.image" [src]="selectedArmor.image" class="modal-image" />
+    <p><strong>Descripción:</strong> {{ selectedArmor.description }}</p>
+    <p><strong>Estado:</strong> {{ selectedArmor.status ? 'Activo' : 'Inactivo' }}</p>
+    <p><strong>Tipo de Heroe:</strong> {{ selectedArmor.heroType }}</p>
+    <p><strong>Drop Rate:</strong> {{ selectedArmor.dropRate }}%</p>
+    <p><strong>Stock:</strong> {{ selectedArmor.stock }}</p>
 
-      <div *ngIf="weapon.effects?.length">
-        <p><span class="variable">Efectos:</span></p>
-        <div *ngFor="let effect of weapon.effects" class="weapon-effect">
-          <p>
-            Tipo: {{ effect.effectType }},
-            Valor: {{ effect.value }},
-            Duración: {{ effect.durationTurns }} turnos
-          </p>
-        </div>
+    <div *ngIf="selectedArmor.effects?.length">
+      <p><span class="variable">Efectos:</span></p>
+      <div *ngFor="let effect of selectedArmor.effects" class="item-effects">
+        <p>
+          Tipo: {{ effect.effectType }},
+          Valor: {{ effect.value }},
+          Duración: {{ effect.durationTurns }} turnos
+        </p>
       </div>
+    </div>
 
-      <div class="weapon-actions">
-        <button (click)="changeStatus(weapon.id)">
-          {{ weapon.status ? 'Desactivar' : 'Activar' }}
-        </button>
-        <button (click)="modifyWeapon(weapon.id)">Modificar</button>
-      </div>
+    <div class="item-actions">
+      <button (click)="changeStatus(selectedArmor.id)">
+        {{ selectedArmor.status ? 'Desactivar' : 'Activar' }}
+      </button>
+      <button (click)="modifyWeapon(selectedArmor.id)">Modificar</button>
     </div>
   </div>
 </div>

@@ -1,110 +1,219 @@
+.options-list{
+    padding: 30px;
+    padding-bottom: 15px;
+    padding-top: 6px;
+}
+
+.options-list h2{
+    font-size: 30px;
+    color: #bbe1fa;
+}
+
 .btn-agregar {
     margin-right: 10px;
     margin-bottom: 15px;
     padding: 12px 25px;
     font-size: 16px;
     font-weight: bold;
-    color: #ffffff; /* texto claro */
-    background: linear-gradient(to right, #1f7a7a, #145252); /* gradiente verde-azulado */
+    color: #ffffff;
+    background: linear-gradient(to right, #1f7a7a, #145252);
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s, transform 0.3s;
 }
 
 .btn-agregar:hover {
-    background: #2b9c9c; /* verde-azulado para hover */
+    background: #2b9c9c;
 }
 
 .btn-agregar:active {
     transform: scale(0.95);
 }
 
-.variable {
+/* Grid compacto */
+/* Contenedor principal */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    /* más espacio entre items */
+    padding: 0 30px;
+    /* padding lateral más amplio */
+    justify-content: center;
+    /* centra los items si hay espacio extra */
+}
+
+/* Tarjetas de items */
+.item-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #0f4c75;
+    border-radius: 12px;
+    background: #1b262c;
+    padding: 15px;
+    /* más padding interno */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Imagen y nombre */
+.item-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: 3px solid #bbe1fa;
+    object-fit: cover;
+}
+
+.item-name {
+    margin-top: 10px;
+    font-size: 14px;
     font-weight: bold;
-    color: #d4f1f4; /* azul-verde suave */
+    color: #d4f1f4;
+}
+
+/* Modal (centrado más espacioso) */
+.modal-content {
+    max-width: 500px;
+    /* más ancho para que no se vea apretado */
+    width: 90%;
+    padding: 30px;
+    /* más padding interno */
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.modal h2 {
+    font-size: 25px;
+    text-align: center;
+}
+
+.modal-content {
+    background: #1b262c;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    color: #d4f1f4;
+    position: relative;
+    font-size: 15px;
+}
+
+.modal-content p {
+    margin: 10px;
+}
+
+.variable {
+  font-weight: bold;
 }
 
 .item-effects {
-    margin-top: 9px;
-    padding: 12px 16px;
-    background: rgba(212, 241, 244, 0.1); /* azul-verde transparente */
-    border-left: 5px solid #56cfe1; /* azul brillante */
+    margin: 10px;
+    padding: 2px 6px;
+    background: rgba(212, 241, 244, 0.1);
+    border-left: 5px solid #56cfe1;
     border-radius: 8px;
-    font-size: 18px;
-    color: #d4f1f4; /* azul-verde suave */
+    font-size: 12px;
+    color: #d4f1f4;
     font-style: italic;
 }
 
-.item-list {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 50px 25px;
-    border-radius: 14px;
+.close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #56cfe1;
 }
 
-.item-list h2 {
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-    margin-bottom: 40px;
-    color: #bbe1fa; /* azul profundo serio */
-}
-
-.item-card {
-    display: flex;
-    gap: 30px;
-    align-items: flex-start;
-    border: 2px solid #0f4c75; /* azul oscuro elegante */
-    border-radius: 14px;
-    background: #1b262c; /* azul-gris serio */
-    padding: 30px;
-    margin-bottom: 35px;
-}
-
-.item-image {
-    width: 200px;
-    height: 200px;
-    background-color: #1b262c;
-    border: 4px solid #bbe1fa; /* azul claro */
-    border-radius: 10px;
-}
-
-.item-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    color: #d4f1f4; /* azul-verde suave */
-}
-
-.item-info p {
-    font-size: 20px;
-    margin: 0;
+.modal-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #56cfe1;
+    display: block;
+    margin: 0 auto 10px;
 }
 
 .item-actions {
-    margin-top: 16px;
     display: flex;
-    gap: 20px;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
 }
 
 .item-actions button {
-    padding: 12px 20px;
-    font-size: 16px;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
     font-weight: bold;
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(to right, #3282b8, #0f4c75); /* azul serio elegante */
+    background: linear-gradient(to right, #3282b8, #0f4c75);
     color: #eaf6f6;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
 }
 
 .item-actions button:hover {
-    background: linear-gradient(to right, #56cfe1, #48bfe3); /* azul más vivo */
-    color: #1b262c; /* texto oscuro */
+    background: linear-gradient(to right, #56cfe1, #48bfe3);
+    color: #1b262c;
 }
 
-.item-actions button:active {
-    transform: scale(0.95);
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #bbe1fa;
+}
+
+.pagination-controls button {
+    padding: 6px 12px;
+    background: linear-gradient(to right, #3282b8, #0f4c75);
+    color: #eaf6f6;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background: linear-gradient(to right, #56cfe1, #48bfe3);
+    color: #1b262c;
+}
+
+.pagination-controls button:disabled {
+    background: #1b262c;
+    color: #555;
+    cursor: not-allowed;
+}
+
+.pagination-controls span {
+    min-width: 100px;
+    text-align: center;
 }

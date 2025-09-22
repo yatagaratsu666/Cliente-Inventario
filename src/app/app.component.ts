@@ -239,14 +239,31 @@ goToGestion(option: string) {
       break;
   }
 }
+
+
 // Estado del chatbot
 chatbotVisible = false;
 chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
 chatbotInput: string = '';
+isProcessing = false; // indicador de procesamiento
+
+// Sugerencias iniciales separadas
+chatbotSuggestions: string[] = [
+  "¿Qué héroes están disponibles?",
+  "Muéstrame mis ítems",
+  "¿Cómo subasto armas?",
+  "Dime mis misiones pendientes"
+];
 
 // --- Chatbot Hover ---
 toggleChatbot() {
   this.chatbotVisible = !this.chatbotVisible;
+}
+
+sendSuggestion(suggestion: string) {
+  // cuando el usuario hace click en una sugerencia
+  this.chatbotInput = suggestion;
+  this.sendChatMessage();
 }
 
 sendChatMessage() {
@@ -256,18 +273,27 @@ sendChatMessage() {
   // agregar mensaje del usuario
   this.chatbotMessages.push({ from: 'user', text: msg });
   this.chatbotInput = '';
+  this.isProcessing = true;
+
+  // limpiar sugerencias al enviar mensaje
+  this.chatbotSuggestions = [];
 
   // llamar al backend usando ChatbotService
   this.chatbotService.sendMessage(msg).subscribe({
     next: (res) => {
       this.chatbotMessages.push({ from: 'bot', text: res.reply });
+      this.isProcessing = false;
     },
     error: (err) => {
       console.error('Error en chatbot:', err);
       this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
+      this.isProcessing = false;
     }
   });
 }
+
+
+
 
 
 

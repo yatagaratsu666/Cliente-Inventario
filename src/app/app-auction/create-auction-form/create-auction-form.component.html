@@ -29,12 +29,16 @@
         <div *ngIf="loading">Cargando items...</div>
 
         <!-- 🔹 Grid de ítems en lugar de select -->
-        <div class="items-grid" *ngIf="!loading">
-          <div class="item-card" *ngFor="let item of allItems" (click)="itemId = '' + item.id"
-            [class.selected]="itemId === '' + item.id">
-            <h4>{{ item.name }}</h4>
-          </div>
+        <div class="item-card" *ngFor="let item of allItems" (click)="itemId = '' + item.id"
+          [class.selected]="itemId === '' + item.id">
+
+          <!-- 👀 Debug: muestra JSON de cada item -->
+          <pre>{{ item | json }}</pre>
+
+          <img [src]="item.imagen" [alt]="item.name" *ngIf="item.imagen" />
+          <span *ngIf="!item.imagen">Sin imagen: {{ item.name }}</span>
         </div>
+
 
         <label class="block">
           Precio inicial:

@@ -17,6 +17,8 @@ import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
 import User from './domain/user.model';
 
+import { ChatbotService } from './services/chatbot.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -55,6 +57,7 @@ export class AppComponent {
   constructor(
     public router: Router,
     private chatService: ChatService,
+    private chatbotService: ChatbotService,
     private itemService: ItemsService,
     private heroService: HeroesService,
     private armorService: ArmorsService,
@@ -236,5 +239,36 @@ goToGestion(option: string) {
       break;
   }
 }
+// Estado del chatbot
+chatbotVisible = false;
+chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
+chatbotInput: string = '';
+
+// --- Chatbot Hover ---
+toggleChatbot() {
+  this.chatbotVisible = !this.chatbotVisible;
+}
+
+sendChatMessage() {
+  const msg = this.chatbotInput.trim();
+  if (!msg) return;
+
+  // agregar mensaje del usuario
+  this.chatbotMessages.push({ from: 'user', text: msg });
+  this.chatbotInput = '';
+
+  // llamar al backend usando ChatbotService
+  this.chatbotService.sendMessage(msg).subscribe({
+    next: (res) => {
+      this.chatbotMessages.push({ from: 'bot', text: res.reply });
+    },
+    error: (err) => {
+      console.error('Error en chatbot:', err);
+      this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
+    }
+  });
+}
+
+
 
 }

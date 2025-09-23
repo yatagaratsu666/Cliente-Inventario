@@ -11,7 +11,7 @@ export interface ChatResponse {
 })
 export class ChatbotService {
 
-  private apiUrl = 'http://localhost:8000/api/chat/';  // ajusta si tu API cambia
+  private apiUrl = 'https://nexusbattlechatbot-552415503471.us-central1.run.app/api/chat/'; 
 
   constructor(private http: HttpClient) { }
 

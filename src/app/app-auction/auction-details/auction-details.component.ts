@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AuctionDTO } from '../../domain/auction.model';
 import { AuctionService } from '../../services/auction.service';
 import { AuctionSocketService } from '../../services/auctionSocket.service';
+import { CommentService, CommentDTO, CommentResponseDTO } from '../../services/comment.service';
 
 @Component({
   selector: 'app-auction-details',
@@ -21,18 +22,23 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
 
   freshAuction!: AuctionDTO;
   editingBid?: number;
+
+  comments: CommentDTO[] = [];
+  averageRating: number | null = null;
+
   private sub?: Subscription;
 
   constructor(
     private auctionService: AuctionService,
-    private auctionSocket: AuctionSocketService
+    private auctionSocket: AuctionSocketService,
+    private commentService: CommentService
   ) {}
 
   ngOnInit() {
     if (this.auction) {
-      // Merge inicial para asegurar que freshAuction tenga siempre item
       this.freshAuction = this.mergeAuctionLocal(this.auction, this.auction);
       console.log('Auction inicial:', this.freshAuction);
+      this.fetchComments();
     }
 
     if (this.auction) {
@@ -66,100 +72,95 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
   }
 
   private mergeAuctionLocal(local: AuctionDTO, updated: AuctionDTO): AuctionDTO {
-  const merged: AuctionDTO = {
-    ...local,
-    currentPrice: updated.currentPrice ?? local.currentPrice ?? 0,
-    highestBid: updated.highestBid
-      ? {
-          ...updated.highestBid,
-          userId: updated.highestBid.userId ?? local.highestBid?.userId ?? 'N/A'
-        }
-      : local.highestBid ?? null,
-    highestBidderId: updated.highestBidderId ?? local.highestBidderId ?? 'N/A',
-    bids: updated.bids ?? local.bids ?? [],
-    endsAt: updated.endsAt ?? local.endsAt ?? undefined,
-    isClosed: updated.isClosed ?? local.isClosed ?? false,
-    item: {
-      id: updated.item?.id ?? local.item?.id ?? 'N/A',
-      userId: updated.item?.userId ?? local.item?.userId ?? 'N/A',
-      name: updated.item?.name ?? local.item?.name ?? 'Sin nombre',
-      isAvailable: updated.item?.isAvailable ?? local.item?.isAvailable ?? false,
-      type: updated.item?.type ?? local.item?.type ?? 'Desconocido',
-      description: updated.item?.description ?? local.item?.description ?? '',
-      imagen: updated.item?.imagen ?? local.item?.imagen ?? ''
-    }
-  };
+    const merged: AuctionDTO = {
+      ...local,
+      currentPrice: updated.currentPrice ?? local.currentPrice ?? 0,
+      highestBid: updated.highestBid
+        ? {
+            ...updated.highestBid,
+            userId: updated.highestBid.userId ?? local.highestBid?.userId ?? 'N/A'
+          }
+        : local.highestBid ?? null,
+      highestBidderId: updated.highestBidderId ?? local.highestBidderId ?? 'N/A',
+      bids: updated.bids ?? local.bids ?? [],
+      endsAt: updated.endsAt ?? local.endsAt ?? undefined,
+      isClosed: updated.isClosed ?? local.isClosed ?? false,
+      item: {
+        id: updated.item?.id ?? local.item?.id ?? 'N/A',
+        userId: updated.item?.userId ?? local.item?.userId ?? 'N/A',
+        name: updated.item?.name ?? local.item?.name ?? 'Sin nombre',
+        isAvailable: updated.item?.isAvailable ?? local.item?.isAvailable ?? false,
+        type: updated.item?.type ?? local.item?.type ?? 'Desconocido',
+        description: updated.item?.description ?? local.item?.description ?? '',
+        imagen: updated.item?.imagen ?? local.item?.imagen ?? ''
+      }
+    };
 
-  console.log('Merge Auction:', merged);
-  return merged;
-}
-
-
-
+    console.log('Merge Auction:', merged);
+    return merged;
+  }
 
   async fetchAuction() {
-  if (!this.auction) return;
-  try {
-    const updated = await this.auctionService.getAuction(this.auction.id);
-    if (updated) this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
-    console.log('Auction fetch:', updated);
-  } catch (err) {
-    console.error('Error fetching auction details:', err);
+    if (!this.auction) return;
+    try {
+      const updated = await this.auctionService.getAuction(this.auction.id);
+      if (updated) this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+      console.log('Auction fetch:', updated);
+    } catch (err) {
+      console.error('Error fetching auction details:', err);
+    }
   }
-}
 
+  private fetchComments() {
+  const itemId = Number(this.freshAuction.item?.id);
+  if (!itemId) return;
+
+  this.commentService.getItemComments(itemId).subscribe({
+  next: res => {
+    console.log('DEBUG completo del backend:', res);
+    this.comments = Array.isArray(res) ? res : res.comments ?? [];
+    if (Array.isArray(res)) {
+      const ratings = res.map(c => c.valoracion).filter(v => v != null);
+      this.averageRating = ratings.length ? ratings.reduce((a,b) => a+b, 0)/ratings.length : null;
+    } else {
+      this.averageRating = res.stats?.average ?? null;
+    }
+  },
+  error: err => console.error(err)
+});
+}
   close() { this.onClose.emit(); }
 
   async placeBid() {
-  // Validar que haya subasta y un valor de puja definido
-  if (!this.freshAuction || this.editingBid === undefined || this.editingBid === null) return;
+    if (!this.freshAuction || this.editingBid === undefined || this.editingBid === null) return;
 
-  const bidAmount = Number(this.editingBid);
+    const bidAmount = Number(this.editingBid);
+    if (bidAmount <= (this.freshAuction.currentPrice ?? 0)) return;
 
-  // Validar que la puja sea mayor al precio actual
-  if (bidAmount <= this.freshAuction.currentPrice) {
-    console.error('La puja debe ser mayor que el precio actual');
-    return;
+    const username = localStorage.getItem('username');
+    if (!username) return;
+
+    try {
+      await this.auctionService.placeBid(this.freshAuction.id, bidAmount);
+      const updated = await this.auctionService.getAuction(this.freshAuction.id);
+      if (updated) this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+    } catch (err) {
+      console.error('Error placing bid:', err);
+    }
   }
-
-  // Validar que haya usuario logueado
-  const username = localStorage.getItem('username');
-  if (!username) {
-    console.error('No hay usuario logueado');
-    return;
-  }
-
-  try {
-    console.log('Pujando:', { auctionId: this.freshAuction.id, amount: bidAmount, username });
-    
-    // Llamar al servicio para hacer la puja
-    await this.auctionService.placeBid(this.freshAuction.id, bidAmount);
-
-    // Actualizar la subasta con los datos más recientes
-    const updated = await this.auctionService.getAuction(this.freshAuction.id);
-    if (updated) this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
-
-    console.log('Auction después de pujar:', this.freshAuction);
-  } catch (err) {
-    console.error('Error placing bid:', err);
-  }
-}
-
 
   async buyNow() {
-  if (!this.freshAuction) return;
-  try {
-    const updated = await this.auctionService.buyNow(this.freshAuction.id);
-    if (updated) {
-      this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
-      this.onBought.emit(this.freshAuction);
-      console.log('Auction comprada ahora:', this.freshAuction);
+    if (!this.freshAuction || !this.freshAuction.buyNowPrice) return;
+    try {
+      const updated = await this.auctionService.buyNow(this.freshAuction.id);
+      if (updated) {
+        this.freshAuction = this.mergeAuctionLocal(this.freshAuction, updated);
+        this.onBought.emit(this.freshAuction);
+      }
+    } catch (err) {
+      console.error('Error buying now:', err);
     }
-  } catch (err) {
-    console.error('Error buying now:', err);
   }
-}
-
 
   getRemaining(endIso?: string) {
     if (!endIso) return 'N/A';
@@ -170,6 +171,8 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
     return `${h}h ${m}m`;
   }
 }
+
+
 
 
 

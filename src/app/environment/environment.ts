@@ -3,14 +3,14 @@ export const environment = {
   production: false,
 
   /** URL base de la API utilizada en testeo. */
-  apiUrl: 'http://146.148.77.95:1882',
+  apiUrl: 'http://localhost:1882',
 
   /** URL base del servicio de batallas. */
   battleUrl: 'http://34.66.167.180:3000',
 
   battleSocket: 'http://34.66.167.180:3000',
 
-  inventarySocket: 'http://146.148.77.95:1882',
+  inventarySocket: 'http://localhost:1882',
 
   chatUrlSocket: 'http://localhost:4000',
 

@@ -1,4 +1,4 @@
-/* 🔹 Página principal */
+
 .auction-page {
   min-height: 100vh;
   background: linear-gradient(160deg, #0d1b2a, #1b2b43);
@@ -8,7 +8,7 @@
   font-family: "Segoe UI", Roboto, sans-serif;
 }
 
-/* 🔹 Barra de acciones */
+
 .auction-page .toolbar {
   display: flex;
   gap: 12px;
@@ -34,7 +34,7 @@
   box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
 }
 
-/* 🔹 Filtros */
+
 .filters {
   display: flex;
   gap: 15px;
@@ -60,14 +60,14 @@
   box-shadow: 0 0 10px rgba(86, 207, 225, 0.5);
 }
 
-/* 🔹 Listado */
+
 .list {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* 🔹 Placeholder para tarjetas */
+
 app-auction-card {
   display: block;
   border: 2px solid #56cfe1;
@@ -84,7 +84,7 @@ app-auction-card:hover {
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.3);
 }
 
-/* 🔹 Detalle de subasta */
+
 app-auction-details {
   display: block;
   margin-top: 20px;
@@ -94,3 +94,42 @@ app-auction-details {
   padding: 20px;
   box-shadow: 0 0 14px rgba(86, 207, 225, 0.2);
 }
+
+
+.content-layout {
+  display: flex;
+  gap: 20px;
+}
+
+
+.sidebar {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar button {
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid #56cfe1;
+  border-radius: 8px;
+  background: #0d1b2a;
+  color: #56cfe1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.sidebar button:hover {
+  background: linear-gradient(to right, #1f7a7a, #145252);
+  color: #eaf6f6;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
+}
+
+
+.main-content {
+  flex: 1;
+}
+

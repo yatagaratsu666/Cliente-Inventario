@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,8 +22,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   filtered: AuctionDTO[] = [];
   filter: string = '';
   selected?: AuctionDTO;
-  token?: string;
   userId?: string;
+  @Input() auction!: AuctionDTO;
 
   selectedType: string = '';
   selectedDuration: string = '';
@@ -41,25 +41,23 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.token = localStorage.getItem('token') || undefined;
     this.userId = localStorage.getItem('userId') || undefined;
     this.onlyMyBids = this.route.snapshot.data['onlyMyBids'] ?? false;
 
     await this.loadAuctions();
 
-    this.auctionSocket.connect(this.token);
+    // Conectar socket sin token
+    this.auctionSocket.connect();
 
     this.subs.push(
-  this.auctionSocket.onAuctionUpdated().subscribe(updated => {
-    this.auctions = this.auctions.map(a => 
-      a.id === updated.id 
-        ? { ...a, ...updated }  // 🔹 merge parcial para mantener pujas activas
-        : a
+      this.auctionSocket.onAuctionUpdated().subscribe(updated => {
+        this.auctions = this.auctions.map(a => 
+          a.id === updated.id ? { ...a, ...updated } : a
+        );
+        this.refreshTypes();
+        this.applyFilter();
+      })
     );
-    this.refreshTypes();
-    this.applyFilter();
-  })
-);
 
     this.subs.push(
       this.auctionSocket.onNewAuction().subscribe(created => {
@@ -70,13 +68,12 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     );
 
     this.subs.push(
-  this.auctionSocket.onAuctionClosed().subscribe(closed => {
-    this.auctions = this.auctions.filter(a => a.id !== closed.id);
-    if (this.selected?.id === closed.id) this.closeDetails();
-    this.applyFilter();
-  })
-);
-
+      this.auctionSocket.onAuctionClosed().subscribe(closed => {
+        this.auctions = this.auctions.filter(a => a.id !== closed.id);
+        if (this.selected?.id === closed.id) this.closeDetails();
+        this.applyFilter();
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -86,7 +83,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   private async loadAuctions() {
     try {
-      const all = await this.auctionService.listAuctions(this.token);
+      const all = await this.auctionService.listAuctions();
       this.auctions = this.onlyMyBids && this.userId
         ? all.filter(a => a.highestBidderId === this.userId && !a.isClosed)
         : all;
@@ -127,7 +124,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   openDetails(a: AuctionDTO) { this.selected = a; }
   closeDetails() { this.selected = undefined; }
 
-  // 🔹 Evento que recibe cuando se compra una subasta
   handleBought(updated: AuctionDTO) {
   // 🔹 eliminamos la subasta comprada inmediatamente
   this.auctions = this.auctions.filter(a => a.id !== updated.id);
@@ -135,9 +131,16 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   if (this.selected?.id === updated.id) this.closeDetails();
 }
 
-
+  //este mismo
   goToComprar() { this.router.navigate(['/auctions']); }
+  //create-auction-form
   goToVender() { this.router.navigate(['/auctions/vender']); }
+  //transaction-history
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }
+  //a este mismo
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
+
+  filterByCategory(category: string): void {this.router.navigate(['/auctions/vender']);
+}
+
 }

@@ -1,62 +1,117 @@
 <header>
   <div class="logo">Nexus Battles IV</div>
 
-  <div class="nav-container">
+  <div *ngIf="!router.url.startsWith('/battle/')" class="nav-container">
     <nav class="nav-links">
       <a (click)="onPlay()">Jugar Online</a>
       <a (click)="onMission()">Misiones</a>
       <a (click)="onAuction()">Subastas</a>
       <a (click)="onTournament()">Torneo</a>
       <a (click)="onInventory()">Mi Inventario</a>
-      <a (click)="onAccount()">Mi Cuenta</a>
+      <a (click)="openLogin()">Mi Cuenta</a>
+      <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
+
+      
+      <!-- Dropdown Panel Gestión -->
+      <div class="dropdown" *ngIf="isRole()">
+        <a class="dropdown-toggle">Panel Gestión</a>
+        <div class="dropdown-menu">
+          <a (click)="goToGestion('heroes')">Gestión de Héroes</a>
+          <a (click)="goToGestion('items')">Gestión de Ítems</a>
+          <a (click)="goToGestion('weapons')">Gestión de Armas</a>
+          <a (click)="goToGestion('armors')">Gestión de Armaduras</a>
+          <a (click)="goToGestion('epics')">Gestión de Épicos</a>
+        </div>
+      </div>
     </nav>
-    <input type="text" class="search-bar" placeholder="Buscar..." [(ngModel)]="searchQuery"
-      (input)="onSearchChange()" />
 
-    <!-- Dropdown de resultados -->
-    <div class="search-results" *ngIf="searchQuery">
-      <div *ngIf="items.length">
-        <strong>Items</strong>
-        <ul>
-          <li *ngFor="let item of items">{{ item.name }}</li>
-        </ul>
-      </div>
+    <!-- Contenedor relativo para buscador y resultados -->
+    <div class="search-container">
+      <input type="text" class="search-bar" placeholder="Buscar..." [(ngModel)]="searchQuery"
+        (input)="onSearchChange()" />
 
-      <div *ngIf="heroes.length">
-        <strong>Heroes</strong>
-        <ul>
-          <li *ngFor="let hero of heroes">{{ hero.name }}</li>
-        </ul>
-      </div>
+      <!-- Dropdown de resultados -->
+      <div class="search-results" *ngIf="searchQuery">
+        <div *ngIf="items.length">
+          <strong>Items</strong>
+          <ul>
+            <li *ngFor="let item of items">{{ item.name }}</li>
+          </ul>
+        </div>
 
-      <div *ngIf="armors.length">
-        <strong>Armaduras</strong>
-        <ul>
-          <li *ngFor="let armor of armors">{{ armor.name }}</li>
-        </ul>
-      </div>
+        <div *ngIf="heroes.length">
+          <strong>Heroes</strong>
+          <ul>
+            <li *ngFor="let hero of heroes">{{ hero.name }}</li>
+          </ul>
+        </div>
 
-      <div *ngIf="epics.length">
-        <strong>Épicos</strong>
-        <ul>
-          <li *ngFor="let epic of epics">{{ epic.name }}</li>
-        </ul>
-      </div>
+        <div *ngIf="armors.length">
+          <strong>Armaduras</strong>
+          <ul>
+            <li *ngFor="let armor of armors">{{ armor.name }}</li>
+          </ul>
+        </div>
 
-      <div *ngIf="weapons.length">
-        <strong>Armas</strong>
-        <ul>
-          <li *ngFor="let weapon of weapons">{{ weapon.name }}</li>
-        </ul>
+        <div *ngIf="epics.length">
+          <strong>Épicos</strong>
+          <ul>
+            <li *ngFor="let epic of epics">{{ epic.name }}</li>
+          </ul>
+        </div>
+
+        <div *ngIf="weapons.length">
+          <strong>Armas</strong>
+          <ul>
+            <li *ngFor="let weapon of weapons">{{ weapon.name }}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
-
-
   <button class="logout-button" *ngIf="loginService?.isLoggedIn()" (click)="logout()">
     Cerrar sesión
   </button>
+
+
+  
+
+<div class="chatbot-container" *ngIf="chatbotVisible">
+
+  <div class="chatbot-header" (click)="toggleChatbot()">
+    NexusBot
+    <span style="float: right; cursor: pointer;">×</span>
+  </div>
+
+  <div class="chatbot-suggestions" *ngIf="chatbotMessages.length === 0">
+    <button *ngFor="let suggestion of chatbotSuggestions" (click)="sendSuggestion(suggestion)">
+      {{ suggestion }}
+    </button>
+  </div>
+
+  <div class="chatbot-messages">
+    <div *ngFor="let msg of chatbotMessages" [ngClass]="msg.from">
+      {{ msg.text }}
+    </div>
+
+    <div *ngIf="isProcessing" class="bot">
+      Pensando...
+    </div>
+  </div>
+
+  <div class="chatbot-input">
+    <input [(ngModel)]="chatbotInput" (keyup.enter)="sendChatMessage()" placeholder="Escribe un mensaje..." />
+    <button (click)="sendChatMessage()">Enviar</button>
+  </div>
+</div>
+
+<div class="chatbot-toggle-button" (click)="toggleChatbot()" *ngIf="!chatbotVisible">
+  💬
+</div>
+
+
+
 </header>
 
 <!-- Barra de notificaciones -->
@@ -75,4 +130,24 @@
 </div>
 
 
+<!-- Barra de notificaciones -->
+<div class="notification-bar" *ngIf="mostrarNotificaciones">
+  <div class="notification-header">
+    <span class="notification-title">Notificaciones</span>
+    <button class="close-btn" (click)="cerrarNotificaciones()">✕</button>
+  </div>
+
+  <div class="notification-content">
+    <p *ngIf="!notificaciones.length">Sin notificaciones pendientes</p>
+    <ul *ngIf="notificaciones.length">
+      <li *ngFor="let notificacion of notificaciones">{{ notificacion }}</li>
+    </ul>
+  </div>
+</div>
+
+
 <router-outlet></router-outlet>
+<router-outlet></router-outlet>
+<app-toast></app-toast>
+
+

@@ -36,6 +36,7 @@ import { CreateAuctionFormComponent } from './app-auction/create-auction-form/cr
 import { AppTorneoComponent } from './app-torneo/app-torneo.component';
 import { AppTorneoInscripcionComponent } from './app-torneo/app-torneo-inscripcion/app-torneo-inscripcion.component';
 import { AppMisionesComponent } from './app-misiones/app-misioneses.component';
+import { RegisterComponent } from './register/register.component';
 
 /**
  * Definición de rutas principales de la app.
@@ -207,7 +208,10 @@ const routeConfig: Routes = [
   { path: 'auctions', 
     component: AuctionListComponent, 
     canActivate: [AuthGuard] },
-
+  {
+    path: 'register',
+    component: RegisterComponent
+  }
   //TorneoRutas
   {
     path: 'torneo',

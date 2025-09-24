@@ -1,24 +1,69 @@
 <div class="details" *ngIf="freshAuction">
-  <button (click)="close()">Cerrar</button>
-  <h2>{{ freshAuction.title || freshAuction.item?.name }}</h2>
-  <p>{{ freshAuction.description }}</p>
+  <button class="close-btn" (click)="close()">Cerrar</button>
 
-  <p>Precio actual: {{ freshAuction.currentPrice }}</p>
-  <p *ngIf="freshAuction.highestBid">Mejor puja: {{ freshAuction.highestBid.amount }} por {{ freshAuction.highestBid.userId }}</p>
-  <p>Creada: {{ freshAuction.createdAt | date:'short' }}</p>
-  <p>Finaliza: {{ freshAuction.endsAt | date:'short' }} ({{ getRemaining(freshAuction.endsAt) }})</p>
+  <h2 class="auction-title">{{ freshAuction.title || freshAuction.item?.name || 'Sin título' }}</h2>
+  <p class="auction-description">{{ freshAuction.description ?? 'Sin descripción' }}</p>
+
+  <div class="auction-info">
+    <p><strong>Precio actual:</strong> {{ freshAuction.currentPrice ?? 'N/A' }}</p>
+    <p *ngIf="freshAuction.highestBid">
+      <strong>Mejor puja:</strong> {{ freshAuction.highestBid.amount ?? 'N/A' }} por {{ freshAuction.highestBid.userId ?? 'N/A' }}
+    </p>
+    <p><strong>Creada:</strong> {{ freshAuction.createdAt ? (freshAuction.createdAt | date:'short') : 'N/A' }}</p>
+    <p>
+      <strong>Finaliza:</strong> {{ freshAuction.endsAt ? (freshAuction.endsAt | date:'short') : 'N/A' }}
+      ({{ getRemaining(freshAuction.endsAt) }})
+    </p>
+  </div>
 
   <div class="actions">
     <input type="number" [(ngModel)]="editingBid" placeholder="Monto" />
     <button (click)="placeBid()">Pujar</button>
-    <button *ngIf="freshAuction.buyNowPrice" (click)="buyNow()">Comprar ahora {{ freshAuction.buyNowPrice }}</button>
+    <button *ngIf="freshAuction.buyNowPrice" (click)="buyNow()">
+      Comprar ahora {{ freshAuction.buyNowPrice }}
+    </button>
   </div>
 
   <div *ngIf="freshAuction.bids?.length">
     <h4>Pujas</h4>
-    <ul>
-      <li *ngFor="let b of freshAuction.bids">{{ b.userId }} - {{ b.amount }} ({{ b.createdAt | date:'short' }})</li>
+    <ul class="bids-list">
+      <li *ngFor="let b of freshAuction.bids">
+        {{ b.userId ?? 'N/A' }} - {{ b.amount ?? 'N/A' }} 
+        <small>({{ b.createdAt ? (b.createdAt | date:'short') : 'N/A' }})</small>
+      </li>
     </ul>
   </div>
+
+  <div class="comments-section">
+  <h4>Comentarios</h4>
+  <p>⭐ Calificación promedio: {{ averageRating !== null ? averageRating : 'Sin calificación' }}/5</p>
+
+  <ul *ngIf="comments?.length; else noComments">
+    <li *ngFor="let c of comments" class="comment-item">
+      <div class="comment-main">
+        <strong>{{ c.usuario ?? 'Anon' }}</strong>: {{ c.comentario ?? '' }}
+        <span *ngIf="c.valoracion !== undefined && c.valoracion !== null" class="comment-rating">
+          ⭐ {{ c.valoracion }}/5
+        </span>
+      </div>
+      <small class="comment-date">{{ c.fecha ? (c.fecha | date:'short') : 'N/A' }}</small>
+
+      <ul *ngIf="c.respuestas?.length" class="replies-list">
+        <li *ngFor="let r of c.respuestas">
+          <div class="reply-main">
+            <em>{{ r.usuario ?? 'Anon' }}</em>: {{ r.comentario ?? '' }}
+          </div>
+          <small class="reply-date">{{ r.fecha ? (r.fecha | date:'short') : 'N/A' }}</small>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ng-template #noComments>
+    <p>No hay comentarios.</p>
+  </ng-template>
 </div>
+
+</div>
+
 

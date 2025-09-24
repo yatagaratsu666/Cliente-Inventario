@@ -1,33 +1,56 @@
 <div class="item-list">
-  <h2>Lista de Items</h2>
-  <button (click)="addItem()" class="btn-agregar">Agregar Item</button>
-  <div *ngFor="let item of items" class="item-card">
-    <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" class="item-image" />
-    <div class="item-info">
-      <p><span class="variable">Nombre:</span> {{ item.name }}</p>
-      <p><span class="variable">Tipo:</span> {{ item.heroType }}</p>
-      <p><span class="variable">Descripción:</span> {{ item.description }}</p>
-      <p><span class="variable">Estado:</span> {{ item.status ? "Activo" : "Inactivo" }}</p>
-      <p><span class="variable">Drop Rate:</span> {{ item.dropRate }}%</p>
-      <p><span class="variable">Stock:</span> {{ item.stock }}</p>
+  <div class="options-list">
+    <h2>Lista de Items</h2>
+    <button (click)="addItem()" class="btn-agregar">Agregar Item</button>
+  </div>
 
+  <!-- Grid de items paginados -->
+  <div class="items-grid">
+    <div
+      class="item-card"
+      *ngFor="let item of getPaginatedItems(selectedSlot)"
+      (click)="openModal(item)"
+    >
+      <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" class="item-image" />
+      <p class="item-name">{{ item.name }}</p>
+    </div>
+  </div>
+
+  <!-- Controles de paginación -->
+<div class="pagination-controls">
+  <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+  <span>Página {{ currentPage }} de {{ getTotalPages(selectedSlot) }}</span>
+  <button (click)="nextPage(selectedSlot)" [disabled]="currentPage === getTotalPages(selectedSlot)">Siguiente</button>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal" *ngIf="selectedItem">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>{{ selectedItem.name }}</h2>
+    <img *ngIf="selectedItem.image" [src]="selectedItem.image" class="modal-image" />
+    <p><strong>Tipo:</strong> {{ selectedItem.heroType }}</p>
+    <p><strong>Descripción:</strong> {{ selectedItem.description }}</p>
+    <p><strong>Estado:</strong> {{ selectedItem.status ? 'Activo' : 'Inactivo' }}</p>
+    <p><strong>Drop Rate:</strong> {{ selectedItem.dropRate }}%</p>
+    <p><strong>Stock:</strong> {{ selectedItem.stock }}</p>
+      <div *ngIf="selectedItem.effects?.length">
         <p><span class="variable">Efectos:</span></p>
-        <div class= "item-effects" *ngIf="item.effects?.length">
-        <div *ngFor="let effect of item.effects">
+        <div *ngFor="let effect of selectedItem.effects" class="item-effects">
           <p>
-            Tipo: {{ effect.effectType }}, Valor: {{ effect.value }}, Duración:
-            {{ effect.durationTurns }} turnos
+            Tipo: {{ effect.effectType }},
+            Valor: {{ effect.value }},
+            Duración: {{ effect.durationTurns }} turnos
           </p>
         </div>
       </div>
 
-      <div class="item-actions">
-        <button (click)="changeStatus(item.id)">
-          {{ item.status ? "Desactivar" : "Activar" }}
-        </button>
-        <button (click)="modifyItem(item.id)">Modificar</button>
-      </div>
-
+    <div class="item-actions">
+      <button (click)="changeStatus(selectedItem.id)">
+        {{ selectedItem.status ? 'Desactivar' : 'Activar' }}
+      </button>
+      <button (click)="modifyItem(selectedItem.id)">Modificar</button>
     </div>
   </div>
 </div>

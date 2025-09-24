@@ -1,8 +1,26 @@
-<div class="mi-cuenta">
-    <button (click)="toggleCuenta()" class="mi-cuenta-button">Mi cuenta</button>
-    <div *ngIf="mostrarCuenta" class="cuenta-contenedor">
-      <p><strong>Jugador:</strong> {{ jugadorNombre }}</p>
-      <p><strong>Tokens:</strong> {{ cantidadTokens }}</p>
-    </div>
+<div class="login-panel" [class.open]="isOpen">
+  <div class="login-header">
+    <h2>Mi Cuenta</h2>
+    <span class="close-btn" (click)="close()">×</span>
   </div>
-  
+
+  <div class="login-body">
+    <div *ngIf="user; else loginForm">
+      <div class="avatar-section">
+        <img src="https://i.pinimg.com/736x/e0/99/1b/e0991ba913ffdb56f631867cb5ac98ca.jpg" alt="Avatar" class="avatar-img" />
+        <button class="change-avatar-btn" (click)="changeAvatar()">Cambiar Avatar</button>
+      </div>
+
+      <p><strong>Usuario:</strong> {{ user.nombreUsuario }}</p>
+      <p><strong>Rol:</strong> {{ user.rol }}</p>
+      <p><strong>Créditos:</strong> {{ user.creditos }}</p>
+
+      <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+    </div>
+
+    <!-- Si no hay usuario, mostrar formulario -->
+    <ng-template #loginForm>
+      <app-app-login></app-app-login>
+    </ng-template>
+  </div>
+</div>

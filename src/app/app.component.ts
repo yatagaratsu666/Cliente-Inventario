@@ -15,20 +15,31 @@ import { HeroesService } from './services/heroes.service';
 import { ArmorsService } from './services/armors.service';
 import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
+import { ToastComponent } from "./toast/toast.component";
+import User from './domain/user.model';
+import { AppLoginComponent } from './app-login/app-login.component';
+import { ChatbotService } from './services/chatbot.service';
+import { CuentaComponent } from './app-cuenta/cuenta-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [
+    RouterModule,
+    CommonModule,
+    FormsModule,
+    ToastComponent,
+    CuentaComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   title = 'frontend-inv';
   searchQuery: string = '';
 
   mostrarCuenta = false;
-  jugadorNombre = 'Jugador1';
+  jugadorNombre: string = localStorage.getItem('username') || '';
   cantidadTokens = 150;
 
   // datos filtrados (lo que se muestra)
@@ -45,23 +56,44 @@ export class AppComponent {
   allEpics: Epic[] = [];
   allWeapons: Weapon[] = [];
 
+  user: User = new User();
+
+  role: string = localStorage.getItem('role') || '';
+
   isBattleRoute = false;
 
+  isAccountPanelVisible = false;
+
   constructor(
-    public loginService: LoginService,
     public router: Router,
     private chatService: ChatService,
+    private chatbotService: ChatbotService,
     private itemService: ItemsService,
     private heroService: HeroesService,
     private armorService: ArmorsService,
     private epicsService: EpicsService,
     private weaponService: WeaponsService,
-  ) { 
-    this.router.events.subscribe(event => {
+    public loginService: LoginService
+  ) {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isBattleRoute = event.urlAfterRedirects.startsWith('battle');
       }
     });
+  }
+
+  isLoginOpen = false;
+
+  openLogin() {
+    this.isLoginOpen = true;
+  }
+
+  isRole(): boolean {
+    return this.loginService.getRole() === 'administrator';
+  }
+
+  onControl() {
+    this.router.navigate(['/gestion']);
   }
 
   ngOnInit() {
@@ -71,7 +103,7 @@ export class AppComponent {
         this.allItems = data;
         this.items = data;
       },
-      error: (err) => console.error('Error cargando items:', err)
+      error: (err) => console.error('Error cargando items:', err),
     });
 
     this.heroService.showAllIHeros().subscribe({
@@ -79,7 +111,7 @@ export class AppComponent {
         this.allHeroes = data;
         this.heroes = data;
       },
-      error: (err) => console.error('Error cargando heroes:', err)
+      error: (err) => console.error('Error cargando heroes:', err),
     });
 
     this.armorService.showAllIArmors().subscribe({
@@ -87,7 +119,7 @@ export class AppComponent {
         this.allArmors = data;
         this.armors = data;
       },
-      error: (err: any) => console.error('Error cargando armaduras:', err)
+      error: (err: any) => console.error('Error cargando armaduras:', err),
     });
 
     this.epicsService.showAllIEpics().subscribe({
@@ -95,7 +127,7 @@ export class AppComponent {
         this.allEpics = data;
         this.epics = data;
       },
-      error: (err: any) => console.error('Error cargando épicos:', err)
+      error: (err: any) => console.error('Error cargando épicos:', err),
     });
 
     this.weaponService.showAllIWeapon().subscribe({
@@ -103,7 +135,7 @@ export class AppComponent {
         this.allWeapons = data;
         this.weapons = data;
       },
-      error: (err: any) => console.error('Error cargando armas:', err)
+      error: (err: any) => console.error('Error cargando armas:', err),
     });
   }
 
@@ -112,7 +144,7 @@ export class AppComponent {
     this.router.navigate(['/login']);
   }
 
-    /**
+  /**
    * Navega a la vista de batallas al presionar el botón "Play".
    */
   onPlay() {
@@ -122,22 +154,22 @@ export class AppComponent {
    * Navega a la vista del inventario al presionar el botón "Mi Inventario".
    */
   onInventory() {
-    this.router.navigate(['/inventory']); 
+    this.router.navigate(['/inventory']);
   }
 
-  onAuction(){
+  onAuction() {
     this.router.navigate(['/auctions']);
   }
 
-  onTournament(){
+  onTournament() {
     this.router.navigate(['/torneo']);
   }
 
-  onMission(){
+  onMission() {
     this.router.navigate(['/misiones']);
   }
 
-  onAccount(){
+  onAccount() {
     this.router.navigate(['/cuenta']);
   }
 
@@ -158,61 +190,125 @@ export class AppComponent {
       return;
     }
 
-    this.items = this.allItems.filter(i =>
+    this.items = this.allItems.filter((i) =>
       i.name?.toLowerCase().includes(query)
     );
 
-    this.heroes = this.allHeroes.filter(h =>
+    this.heroes = this.allHeroes.filter((h) =>
       h.name?.toLowerCase().includes(query)
     );
 
-    this.armors = this.allArmors.filter(a =>
+    this.armors = this.allArmors.filter((a) =>
       a.name?.toLowerCase().includes(query)
     );
 
-    this.epics = this.allEpics.filter(e =>
+    this.epics = this.allEpics.filter((e) =>
       e.name?.toLowerCase().includes(query)
     );
 
-    this.weapons = this.allWeapons.filter(w =>
+    this.weapons = this.allWeapons.filter((w) =>
       w.name?.toLowerCase().includes(query)
     );
   }
   goToComprar() {
-  this.router.navigate(['/auctions']);
-}
-
-goToVender() {
-  this.router.navigate(['/auctions/vender']);
-}
-
-goToRecoger() {
-  this.router.navigate(['/auctions/recoger']);
-}
-
-goToMisPujas() {
-  this.router.navigate(['/auctions/mis-pujas']);
-}
-
-  mostrarNotificaciones = true; // visible por defecto
-  notificaciones: string[] = []; // lista de notificaciones
-
-  cerrarNotificaciones() {
-    this.mostrarNotificaciones = false;
+    this.router.navigate(['/auctions']);
   }
 
-  abrirNotificaciones() {
-    this.mostrarNotificaciones = true;
+  goToVender() {
+    this.router.navigate(['/auctions/vender']);
   }
 
-  // método para agregar nuevas notificaciones en el futuro
-  agregarNotificacion(msg: string) {
-    this.notificaciones.push(msg);
+  goToRecoger() {
+    this.router.navigate(['/auctions/recoger']);
   }
+
+  goToMisPujas() {
+    this.router.navigate(['/auctions/mis-pujas']);
+  }
+
+  goToGestion(option: string) {
+    switch (option) {
+      case 'heroes':
+        this.router.navigate(['/heroes/control']);
+        break;
+
+      case 'items':
+        this.router.navigate(['/items/control']);
+        break;
+
+      case 'weapons':
+        this.router.navigate(['/weapons/control']);
+        break;
+
+      case 'armors':
+        this.router.navigate(['/armors/control']);
+        break;
+
+      case 'epics':
+        this.router.navigate(['/epics/control']);
+        break;
+
+      default:
+        console.warn('Opción de gestión no reconocida:', option);
+        break;
+    }
+  }
+
+
+  // Estado del chatbot
+  chatbotVisible = false;
+  chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
+  chatbotInput: string = '';
+  isProcessing = false; // indicador de procesamiento
+
+  // Sugerencias iniciales separadas
+  chatbotSuggestions: string[] = [
+    'colores de la barra de vida',
+    'cómo hago una subasta',
+    'cómo ganar créditos',
+    'escudo de dragón efectos'
+];
+
+  // --- Chatbot Hover ---
+  toggleChatbot() {
+    this.chatbotVisible = !this.chatbotVisible;
+  }
+
+  sendSuggestion(suggestion: string) {
+    // cuando el usuario hace click en una sugerencia
+    this.chatbotInput = suggestion;
+    this.sendChatMessage();
+  }
+
+  sendChatMessage() {
+    const msg = this.chatbotInput.trim();
+    if (!msg) return;
+
+    // agregar mensaje del usuario
+    this.chatbotMessages.push({ from: 'user', text: msg });
+    this.chatbotInput = '';
+    this.isProcessing = true;
+
+    // limpiar sugerencias al enviar mensaje
+    this.chatbotSuggestions = [];
+
+    // llamar al backend usando ChatbotService
+    this.chatbotService.sendMessage(msg).subscribe({
+      next: (res) => {
+        this.chatbotMessages.push({ from: 'bot', text: res.reply });
+        this.isProcessing = false;
+      },
+      error: (err) => {
+        console.error('Error en chatbot:', err);
+        this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
+        this.isProcessing = false;
+      }
+    });
+  }
+
+
+
+
+
+
 }
-
-
-
-
-
-

@@ -1,36 +1,50 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { UsuarioService } from '../services/usuario.service';
+import User from '../domain/user.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
-/**
- * CuentaComponent
- * 
- * Componente Angular que maneja la visualización de la información de la cuenta del jugador.
- * Se encarga de:
- * - Mostrar u ocultar el contenedor con la información del jugador y sus tokens.
- * 
- * Características:
- * - `mostrarCuenta`: Controla la visibilidad del contenedor de la cuenta.
- * - `jugadorNombre`: Almacena el nombre del jugador (valor estático por ahora).
- * - `cantidadTokens`: Almacena la cantidad de tokens del jugador (valor estático por ahora).
- * - `toggleCuenta()`: Alterna la visibilidad del contenedor de la cuenta.
- */
+import { LoginService } from '../services/login.service';
+import { Router } from '@angular/router';
+import { AppLoginComponent } from '../app-login/app-login.component';
 
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta-component.html',
   styleUrls: ['./cuenta-component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, AppLoginComponent],
 })
-export class CuentaComponent {
-  mostrarCuenta = false;
-  jugadorNombre = 'Jugador1'; // Nombre del jugador estático por ahora
-  cantidadTokens = 150; // Tokens estáticos
+export class CuentaComponent implements OnInit {
+  user: User | null = null;
+  username = localStorage.getItem('username') ?? '';
+  role = localStorage.getItem('role') ?? '';
+  @Input() isOpen = false;
 
-  /**
-   * Alterna la visibilidad del contenedor "Mi cuenta".
-   * Cambia el valor de 'mostrarCuenta' entre verdadero y falso.
-   */
-  toggleCuenta() {
-    this.mostrarCuenta = !this.mostrarCuenta;
+  constructor(private userService: UsuarioService, private loginService: LoginService, private router: Router) {}
+
+  ngOnInit(): void {
+    if (this.username) {
+      this.userService.getUsuarioById(this.username).subscribe({
+        next: (data) => {
+          this.user = data;
+        },
+        error: (error) => {
+          console.error('Error al cargar el usuario:', error);
+        }
+      });
+    }
   }
+
+  logout(): void {
+    this.close();
+    this.loginService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  close() {
+    this.isOpen = false;
+  }
+
+  changeAvatar() {
+    // vacio xq no se q hacer aqui :3
+  }
+
 }

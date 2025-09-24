@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { Weapon } from '../../domain/weapon.model';
-import { WeaponsService } from '../../services/weapons.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Epic } from '../../domain/epic.model';
@@ -20,10 +18,15 @@ import { EpicsService } from '../../services/epics.service';
   selector: 'app-app-gestion-epica',
   imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './app-gestion-epica.component.html',
-  styleUrl: './app-gestion-epica.component.css'
+  styleUrl: './app-gestion-epica.component.css',
 })
 export class AppGestionEpicaComponent {
   epic: Epic[] = [];
+  paginatedItems: Epic[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+  selectedSlot: string = 'all'; // o el filtro que uses
+  selectedArmor: Epic | null = null;
 
   constructor(private router: Router, private epicService: EpicsService) {}
 
@@ -56,6 +59,48 @@ export class AppGestionEpicaComponent {
     });
   }
 
+  getAvailableItems(slot: string): Epic[] {
+    if (!slot || slot === 'all') {
+      return this.epic;
+    }
+    return this.epic.filter((item) => item.heroType === slot);
+  }
+
+  openModal(item: Epic) {
+    this.selectedArmor = item;
+  }
+
+  closeModal() {
+    this.selectedArmor = null;
+  }
+
+  getPaginatedArmors(slot: string) {
+    const allItems = this.getAvailableItems(slot) || [];
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return allItems.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  getTotalPages(slot: string): number {
+    const allItems = this.getAvailableItems(slot) || [];
+    return Math.max(1, Math.ceil(allItems.length / this.itemsPerPage));
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.selectedArmor = null;
+      this.paginatedItems = this.getPaginatedArmors(this.selectedSlot);
+    }
+  }
+
+  nextPage(slot: string) {
+    if (this.currentPage < this.getTotalPages(slot)) {
+      this.currentPage++;
+      this.selectedArmor = null;
+      this.paginatedItems = this.getPaginatedArmors(slot);
+    }
+  }
+
   /**
    * Cambia el estado (activo/inactivo) de una épica específica.
    *
@@ -64,14 +109,14 @@ export class AppGestionEpicaComponent {
   changeStatus(id: number): void {
     this.epicService.changeStatus(id).subscribe({
       next: () => {
-        const epicItem = this.epic.find((i) => i.id === id);
-        if (epicItem) {
-          epicItem.status = !epicItem.status;
+        const armor = this.epic.find((i) => i.id === id);
+        if (armor) {
+          armor.status = !armor.status;
         }
       },
       error: (error) => {
-        console.error('Error al cambiar el estado de la epica:', error);
-        alert('No se pudo cambiar el estado de la epica.');
+        console.error('Error al cambiar el estado de la armadura:', error);
+        alert('No se pudo cambiar el estado de la armadura.');
       },
     });
   }

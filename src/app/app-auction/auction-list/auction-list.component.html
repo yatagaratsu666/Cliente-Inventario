@@ -1,49 +1,75 @@
 <div class="auction-page">
-  <!-- 🔹 Barra superior con acciones -->
-  <div class="toolbar">
-  <button (click)="goToComprar()">🛒 Comprar</button>
-  <button (click)="goToVender()">📦 Vender</button>
-  <button (click)="goToRecoger()">🎁 Recoger</button>
-  <button (click)="goToMisPujas()">💰 Mis pujas</button>
-  <div class="toolbar">
-</div>
 
-</div>
+  <div class="content-layout">
+    
+
+    <div class="sidebar">
+      <button (click)="filterByCategory('armas')">⚔️ Armas</button>
+      <button (click)="filterByCategory('items')">🎒 Ítems</button>
+      <button (click)="filterByCategory('armaduras')">🛡️ Armaduras</button>
+      <button (click)="filterByCategory('epicas')">🌟 Épicas</button>
+      <button (click)="filterByCategory('heroes')">🦸 Héroes</button>
+    </div>
 
 
-  <!-- 🔹 Filtros -->
-  <div class="filters">
-    <!-- Nombre -->
-    <input
-      type="text"
-      placeholder="Buscar por nombre (mín. 4 caracteres)..."
-      [(ngModel)]="filter"
-      (ngModelChange)="applyFilter()"
-    />
+    <div class="main-content">
 
-    <!-- Tipo -->
-    <select [(ngModel)]="selectedType" (ngModelChange)="applyFilter()">
-      <option value="">Todos los tipos</option>
-      <option *ngFor="let t of uniqueTypes" [value]="t">{{ t }}</option>
-    </select>
+      <div class="toolbar">
+        <button (click)="goToComprar()">🛒 Comprar</button>
+        <button (click)="goToVender()">📦 Vender</button>
+        <button (click)="goToRecoger()">🎁 Recoger</button>
+        <button (click)="goToMisPujas()">💰 Mis pujas</button>
+      </div>
 
-    <!-- Duración -->
-    <select [(ngModel)]="selectedDuration" (ngModelChange)="applyFilter()">
-      <option value="">Todas las duraciones</option>
-      <option value="24">24 horas</option>
-      <option value="48">48 horas</option>
-    </select>
 
-    <!-- Precio máximo -->
-    <input
-      type="number"
-      placeholder="Precio máximo"
-      [(ngModel)]="maxPrice"
-      (ngModelChange)="applyFilter()"
-    />
-  </div>
+      <div class="filters">
+        <input
+          type="text"
+          placeholder="Buscar por nombre (mín. 4 caracteres)..."
+          [(ngModel)]="filter"
+          (ngModelChange)="applyFilter()"
+        />
 
-  <!-- 🔹 Listado -->
+        <select [(ngModel)]="selectedType" (ngModelChange)="applyFilter()">
+          <option value="">Todos los tipos</option>
+          <option *ngFor="let t of uniqueTypes" [value]="t">{{ t }}</option>
+        </select>
+
+        <select [(ngModel)]="selectedDuration" (ngModelChange)="applyFilter()">
+          <option value="">Todas las duraciones</option>
+          <option value="24">24 horas</option>
+          <option value="48">48 horas</option>
+        </select>
+
+        <input
+          type="number"
+          placeholder="Precio máximo"
+          [(ngModel)]="maxPrice"
+          (ngModelChange)="applyFilter()"
+        />
+      </div>
+
+
+      <div class="list">
+        <app-auction-card
+          *ngFor="let a of filtered"
+          [auction]="a"
+          (click)="openDetails(a)"
+        ></app-auction-card>
+      </div>
+<!-- 
+
+      <app-auction-details
+        *ngIf="selected"
+        [auction]="selected"
+        [token]="token || ''"
+        (onClose)="closeDetails()"
+        (onBought)="handleBought($event)"
+      ></app-auction-details>
+    </div>
+  </div> -->
+
+
   <div class="list">
     <app-auction-card
       *ngFor="let a of filtered"
@@ -52,13 +78,11 @@
     ></app-auction-card>
   </div>
 
-  <!-- 🔹 Detalle -->
-  <app-auction-details
-    *ngIf="selected"
-    [auction]="selected"
-    [token]="token || ''"
-    (onClose)="closeDetails()"
-    (onBought)="handleBought($event)"
-  ></app-auction-details>
 
+  <app-auction-details
+  *ngIf="selected"
+  [auction]="selected"
+  (onClose)="closeDetails()"
+  (onBought)="handleBought($event)"
+></app-auction-details>
 </div>

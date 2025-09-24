@@ -1,0 +1,113 @@
+.register-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: #1b262c; /* Fondo oscuro elegante */
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.register-container h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #bbe1fa; /* Azul claro elegante */
+}
+
+.register-container form div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.register-container label {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #eeeeee;
+}
+
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"],
+.register-container input[type="file"] {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #56cfe1;
+  border-radius: 3px;
+  background: rgba(86, 207, 225, 0.05);
+  color: #eaf6f6;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.register-container input:focus {
+  border-color: #bbe1fa;
+}
+
+.register-container small {
+  font-size: 12px;
+  color: #cccccc;
+  margin-top: 4px;
+}
+
+/* Botón */
+.register-container button {
+  width: 100%;
+  padding: 14px;
+  background: #3282b8;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.register-container button:hover {
+  background: #0f4c75;
+}
+
+.register-container button:disabled {
+  background: #555555;
+  cursor: not-allowed;
+}
+
+/* Mensajes de error */
+.error-message {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 10px;
+  border: 1px solid #ff6b6b;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+/* Debug info */
+.debug-info {
+  background: rgba(255, 255, 255, 0.05);
+  color: #dddddd;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.debug-info h4 {
+  margin-bottom: 8px;
+  color: #bbe1fa;
+  font-size: 15px;
+}
+
+.debug-info ul {
+  margin: 0 0 8px 18px;
+  padding: 0;
+}
+
+.debug-info li {
+  list-style: disc;
+  margin-bottom: 4px;
+}

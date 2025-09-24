@@ -33,6 +33,7 @@ export class ChatService {
    */
   connect() {
     if (!this.socket) {
+      console.log(this.apiConfigService.getChatUrl());
       this.socket = io(this.apiConfigService.getChatUrl());
     }
     return this.socket;
@@ -77,6 +78,21 @@ export class ChatService {
         subscriber.next(data);
       });
     });
+    }
+
+    sendRoomsUpdate(){
+      console.log("Enviando actualización de salas...");
+      this.socket?.emit("update:rooms", {});
+    }
+
+
+    listenRoomsUpdate(): Observable<any> {
+      return new Observable<any>(subscriber => {
+        console.log("Escuchando actualizaciones de salas...");
+        this.socket?.on("update:rooms", () => {
+          subscriber.next(true);
+        });
+      });
     }
 
       /**

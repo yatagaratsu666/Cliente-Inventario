@@ -20,3 +20,10 @@ body {
   font-size: 120%;
   color: #d4f1f4; /* Texto base azul verdoso claro */
 }
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+

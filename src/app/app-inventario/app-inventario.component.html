@@ -1,143 +1,129 @@
-<div class="inventario-container">
-  <!-- Menú lateral -->
-  <aside class="inventario-menu">
-    <button (click)="setCategory('armas')" [class.active]="selectedCategory === 'armas'">Armas</button>
-    <button (click)="setCategory('armaduras')" [class.active]="selectedCategory === 'armaduras'">Armaduras</button>
-    <button (click)="setCategory('items')" [class.active]="selectedCategory === 'items'">Items</button>
-    <button (click)="setCategory('epicas')" [class.active]="selectedCategory === 'epicas'">Épicas</button>
-    <button (click)="setCategory('heroes')" [class.active]="selectedCategory === 'heroes'">Héroes</button>
-  </aside>
+<div *ngIf="alertMessage" [ngClass]="['alert-box', alertType]">
+  {{ alertMessage }}
+</div>
 
-  <!-- Panel de contenido -->
-  <section class="inventario-panel">
-    <!-- Armas -->
-    <ng-container *ngIf="selectedCategory === 'armas'">
-      <h3>Armas disponibles</h3>
-      <ul>
-        <li *ngFor="let arma of armasDisponiblesPaginados">
-          {{ arma.name }}
-          <button (click)="equipWeapon(arma.name)">Equipar</button>
-        </li>
-      </ul>
-
-      <div class="pagination">
-        <button (click)="cambiarPagina('armas', -1)">Anterior</button>
-        <span>Página {{ paginaArmas }}</span>
-        <button (click)="cambiarPagina('armas', 1)">Siguiente</button>
-      </div>
-
-      <h4>Armas equipadas</h4>
-      <ul>
-        <li *ngFor="let arma of user.equipados?.weapons">
-          {{ arma.name }}
-          <button (click)="unequipWeapon(arma.name)">Desequipar</button>
-        </li>
-      </ul>
-    </ng-container>
-
-    <!-- Armaduras -->
-    <ng-container *ngIf="selectedCategory === 'armaduras'">
-      <h3>Armaduras disponibles</h3>
-      <ul>
-        <li *ngFor="let armadura of armadurasDisponiblesPaginados">
-          {{ armadura.name }}
-          <button (click)="equipArmor(armadura.name)">Equipar</button>
-        </li>
-      </ul>
-
-      <div class="pagination">
-        <button (click)="cambiarPagina('armaduras', -1)">Anterior</button>
-        <span>Página {{ paginaArmaduras }}</span>
-        <button (click)="cambiarPagina('armaduras', 1)">Siguiente</button>
-      </div>
-
-      <h4>Armaduras equipadas</h4>
-      <ul>
-        <li *ngFor="let armadura of user.equipados?.armors">
-          {{ armadura.name }}
-          <button (click)="unequipArmor(armadura.name)">Desequipar</button>
-        </li>
-      </ul>
-    </ng-container>
-
-    <!-- Items -->
-    <ng-container *ngIf="selectedCategory === 'items'">
-      <h3>Items disponibles</h3>
-      <ul>
-        <li *ngFor="let item of itemsDisponiblesPaginados">
-          {{ item.name }}
-          <button (click)="equipItem(item.name)">Equipar</button>
-        </li>
-      </ul>
-
-      <div class="pagination">
-        <button (click)="cambiarPagina('items', -1)">Anterior</button>
-        <span>Página {{ paginaItems }}</span>
-        <button (click)="cambiarPagina('items', 1)">Siguiente</button>
-      </div>
-
-      <h4>Items equipados</h4>
-      <ul>
-        <li *ngFor="let item of user.equipados?.items">
-          {{ item.name }}
-          <button (click)="unequipItem(item.name)">Desequipar</button>
-        </li>
-      </ul>
-    </ng-container>
-
-    <!-- Épicas -->
-    <ng-container *ngIf="selectedCategory === 'epicas'">
-      <h3>Épicas disponibles</h3>
-      <ul>
-        <li *ngFor="let epica of epicasDisponiblesPaginados">
-          {{ epica.name }}
-          <button (click)="equipEpic(epica.name)">Equipar</button>
-        </li>
-      </ul>
-
-      <div class="pagination">
-        <button (click)="cambiarPagina('epicas', -1)">Anterior</button>
-        <span>Página {{ paginaEpicas }}</span>
-        <button (click)="cambiarPagina('epicas', 1)">Siguiente</button>
-      </div>
-
-      <h4>Épicas equipadas</h4>
-      <ul>
-        <li *ngFor="let epica of user.equipados?.epicAbility">
-          {{ epica.name }}
-          <button (click)="unequipEpic(epica.name)">Desequipar</button>
-        </li>
-      </ul>
-    </ng-container>
-
-    <!-- Héroes con Dress-Up -->
-    <ng-container *ngIf="selectedCategory === 'heroes'">
-      <h3>Héroes disponibles</h3>
-      <ul>
-        <li *ngFor="let heroe of heroesDisponiblesPaginados">
-          {{ heroe.name }}
-          <button (click)="equipHero(heroe.name)">Equipar</button>
-        </li>
-      </ul>
-
-      <div class="pagination">
-        <button (click)="cambiarPagina('heroes', -1)">Anterior</button>
-        <span>Página {{ paginaHeroes }}</span>
-        <button (click)="cambiarPagina('heroes', 1)">Siguiente</button>
-      </div>
-
-      <h4>Héroe equipado</h4>
-      <div class="heroe-equipado" *ngIf="user.equipados.hero.length > 0">
-        <div class="dress-up">
-          <div class="hero-visualizer">
-            <img [src]="user.equipados.hero[0].image" alt="Héroe equipado" class="hero-base">
+<div class="equipment-panel">
+      <!-- Fila superior: Casco -->
+      <div class="equipment-row top-row">
+        <div class="equipment-slot helmet" (click)="openEquipmentModal('helmet')">
+          <img *ngIf="equippedItems.helmet" [src]="equippedItems.helmet.image" [alt]="equippedItems.helmet.name">
+          <span *ngIf="!equippedItems.helmet" class="slot-label">Casco</span>
+        </div>
+        </div>
+        
+        <div class="equipment-row center">
+                    <div class="equipment-slot chest" (click)="openEquipmentModal('chest')">
+            <img *ngIf="equippedItems.chest" [src]="equippedItems.chest.image" [alt]="equippedItems.chest.name">
+            <span *ngIf="!equippedItems.chest" class="slot-label">Pecho</span>
           </div>
+        </div>
+        
+        <!-- Fila media: Armas y armadura central -->
+        <div class="equipment-row middle-row">
+        <div class="left-weapon">
+          <div class="equipment-slot weapon-left" (click)="openEquipmentModal('weapon1')">
+            <img *ngIf="equippedItems.weapon1" [src]="equippedItems.weapon1.image" [alt]="equippedItems.weapon1.name">
+            <span *ngIf="!equippedItems.weapon1" class="slot-label">Arma 1</span>
+          </div>
+        </div>
 
-          <button class="btn-desequipar" (click)="unequipHero(user.equipados.hero[0].name)">
-            Desequipar héroe
-          </button>
+        <div class="center-armor">
+                    <div class="equipment-slot hero" (click)="openEquipmentModal('hero')">
+            <img *ngIf="equippedItems.hero" [src]="equippedItems.hero.image" [alt]="equippedItems.hero.name">
+            <span *ngIf="!equippedItems.hero" class="slot-label">Heroe</span>
+          </div>
+        </div>
+
+        <div class="right-weapon">
+          <div class="equipment-slot weapon-right" (click)="openEquipmentModal('weapon2')">
+            <img *ngIf="equippedItems.weapon2" [src]="equippedItems.weapon2.image" [alt]="equippedItems.weapon2.name">
+            <span *ngIf="!equippedItems.weapon2" class="slot-label">Arma 2</span>
+          </div>
         </div>
       </div>
-    </ng-container>
-  </section>
+
+      <div class="equipment-row bottom-row">
+        <div class="equipment-slot gloves" (click)="openEquipmentModal('gloves')">
+          <img *ngIf="equippedItems.gloves" [src]="equippedItems.gloves.image" [alt]="equippedItems.gloves.name">
+          <span *ngIf="!equippedItems.gloves" class="slot-label">Guantes</span>
+        </div>
+        <div class="equipment-slot bracer-right" (click)="openEquipmentModal('bracerRight')">
+          <img *ngIf="equippedItems.bracerRight" [src]="equippedItems.bracerRight.image"
+            [alt]="equippedItems.bracerRight.name">
+          <span *ngIf="!equippedItems.bracerRight" class="slot-label">Brazal</span>
+        </div>
+        <div class="equipment-slot pants" (click)="openEquipmentModal('pants')">
+          <img *ngIf="equippedItems.pants" [src]="equippedItems.pants.image" [alt]="equippedItems.pants.name">
+          <span *ngIf="!equippedItems.pants" class="slot-label">Pantalón</span>
+        </div>
+      </div>
+
+      <div class="equipment-row shoes-row">
+        <div class="equipment-slot shoes" (click)="openEquipmentModal('shoes')">
+          <img *ngIf="equippedItems.shoes" [src]="equippedItems.shoes.image" [alt]="equippedItems.shoes.name">
+          <span *ngIf="!equippedItems.shoes" class="slot-label">Zapatos</span>
+        </div>
+      </div>
+
+      <!-- Items y habilidad épica -->
+      <div class="equipment-row extras-row">
+        <div class="equipment-slot item1" (click)="openEquipmentModal('item1')">
+          <img *ngIf="equippedItems.item1" [src]="equippedItems.item1.image" [alt]="equippedItems.item1.name">
+          <span *ngIf="!equippedItems.item1" class="slot-label">Item 1</span>
+        </div>
+        <div class="equipment-slot epic-skill" (click)="openEquipmentModal('epicSkill')">
+          <img *ngIf="equippedItems.epicSkill" [src]="equippedItems.epicSkill.image" [alt]="equippedItems.epicSkill.name">
+          <span *ngIf="!equippedItems.epicSkill" class="slot-label">Épica</span>
+        </div>
+        <div class="equipment-slot item2" (click)="openEquipmentModal('item2')">
+          <img *ngIf="equippedItems.item2" [src]="equippedItems.item2.image" [alt]="equippedItems.item2.name">
+          <span *ngIf="!equippedItems.item2" class="slot-label">Item 2</span>
+        </div>
+      </div>
+    </div>
+
+<!-- Modal de equipamiento -->
+<div class="modal-overlay" *ngIf="showEquipmentModal" (click)="closeEquipmentModal()">
+  <div class="modal-content equipment-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Seleccionar {{ getSlotName(selectedSlot) }}</h3>
+      <button class="close-btn" (click)="closeEquipmentModal()">✕</button>
+    </div>
+    
+    <div class="equipment-grid">
+      <div 
+        *ngFor="let item of getPaginatedItems(selectedSlot)" 
+        class="equipment-item"
+        [class.equipped-slot]="isEquipped(item) === 'slot'"
+        [class.equipped-other]="isEquipped(item) === 'other'"
+        [class.not-equipped]="isEquipped(item) === 'none'"
+        [class.item-selected]="selectedItem === item"
+        (click)="selectedItem = item">
+        
+        <img [src]="item.image" [alt]="item.name">
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span *ngIf="isEquipped(item) === 'slot'" class="item-status">Equipado aquí</span>
+          <span *ngIf="isEquipped(item) === 'other'" class="item-status">Equipado en otro slot</span>
+          <span *ngIf="isEquipped(item) === 'none'" class="item-status">No equipado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles de paginación -->
+    <div class="pagination-controls" *ngIf="getTotalPages(selectedSlot) > 1">
+      <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+      <span>Página {{ currentPage }} de {{ getTotalPages(selectedSlot) }}</span>
+      <button (click)="nextPage(selectedSlot)" [disabled]="currentPage === getTotalPages(selectedSlot)">Siguiente</button>
+    </div>
+
+    <div class="modal-actions">
+      <button *ngIf="selectedItem && isEquipped(selectedItem) === 'none'" (click)="equipSelectedItem()" class="equip-btn">Equipar</button>
+      <button *ngIf="selectedItem && isEquipped(selectedItem) === 'slot'" (click)="unequipSelectedItem()" class="unequip-btn">Desequipar</button>
+      <button *ngIf="selectedItem && isEquipped(selectedItem) === 'other'" (click)="equipSelectedItem()" class="move-btn">Mover aquí</button>
+      <button (click)="closeEquipmentModal()" class="cancel-btn">Cerrar</button>
+    </div>
+  </div>
 </div>
+
+

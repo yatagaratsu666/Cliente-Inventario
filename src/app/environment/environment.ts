@@ -12,7 +12,7 @@ export const environment = {
 
   inventarySocket: 'http://localhost:1882',
 
-  chatUrlSocket: 'http://localhost:4000',
+  chatUrlSocket: 'http://34.44.126.114:4000',
 
   api: { base: 'https://auction-deploy-272361825762.us-east1.run.app/api' },
   socket: { base: 'https://auction-deploy-272361825762.us-east1.run.app' },

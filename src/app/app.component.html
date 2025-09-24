@@ -74,42 +74,36 @@
 
 
   
-<!-- Botón flotante del chatbot -->
+
 <div class="chatbot-container" *ngIf="chatbotVisible">
 
-  <!-- Header del chatbot -->
   <div class="chatbot-header" (click)="toggleChatbot()">
     NexusBot
     <span style="float: right; cursor: pointer;">×</span>
   </div>
 
-  <!-- Sugerencias iniciales -->
   <div class="chatbot-suggestions" *ngIf="chatbotMessages.length === 0">
     <button *ngFor="let suggestion of chatbotSuggestions" (click)="sendSuggestion(suggestion)">
       {{ suggestion }}
     </button>
   </div>
 
-  <!-- Área de mensajes -->
   <div class="chatbot-messages">
     <div *ngFor="let msg of chatbotMessages" [ngClass]="msg.from">
       {{ msg.text }}
     </div>
 
-    <!-- Indicador de procesamiento -->
     <div *ngIf="isProcessing" class="bot">
       Pensando...
     </div>
   </div>
 
-  <!-- Input y botón -->
   <div class="chatbot-input">
     <input [(ngModel)]="chatbotInput" (keyup.enter)="sendChatMessage()" placeholder="Escribe un mensaje..." />
     <button (click)="sendChatMessage()">Enviar</button>
   </div>
 </div>
 
-<!-- Botón para abrir/cerrar -->
 <div class="chatbot-toggle-button" (click)="toggleChatbot()" *ngIf="!chatbotVisible">
   💬
 </div>

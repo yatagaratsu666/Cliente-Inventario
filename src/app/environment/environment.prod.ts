@@ -1,7 +1,6 @@
 // entorno producción
 
 export const environment = {
-  /** Indica si la aplicación se ejecuta en modo de testeo. */
   production: true,
 
   apiUrl: 'http://146.148.77.95:1882',

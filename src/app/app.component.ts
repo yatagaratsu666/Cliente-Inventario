@@ -17,15 +17,22 @@ import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
 import { ToastComponent } from "./toast/toast.component";
 import User from './domain/user.model';
-
+import { AppLoginComponent } from './app-login/app-login.component';
 import { ChatbotService } from './services/chatbot.service';
+import { CuentaComponent } from './app-cuenta/cuenta-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule, ToastComponent],
+  imports: [
+    RouterModule,
+    CommonModule,
+    FormsModule,
+    ToastComponent,
+    CuentaComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   title = 'frontend-inv';
@@ -55,6 +62,8 @@ export class AppComponent {
 
   isBattleRoute = false;
 
+  isAccountPanelVisible = false;
+
   constructor(
     public router: Router,
     private chatService: ChatService,
@@ -65,21 +74,25 @@ export class AppComponent {
     private epicsService: EpicsService,
     private weaponService: WeaponsService,
     public loginService: LoginService
-  ) { 
-    this.router.events.subscribe(event => {
+  ) {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isBattleRoute = event.urlAfterRedirects.startsWith('battle');
       }
     });
   }
 
-isRole(): boolean {
-  return this.loginService.getRole() === 'administrator';
-}
+  isLoginOpen = false;
 
+  openLogin() {
+    this.isLoginOpen = true;
+  }
 
+  isRole(): boolean {
+    return this.loginService.getRole() === 'administrator';
+  }
 
-  onControl(){
+  onControl() {
     this.router.navigate(['/gestion']);
   }
 
@@ -90,7 +103,7 @@ isRole(): boolean {
         this.allItems = data;
         this.items = data;
       },
-      error: (err) => console.error('Error cargando items:', err)
+      error: (err) => console.error('Error cargando items:', err),
     });
 
     this.heroService.showAllIHeros().subscribe({
@@ -98,7 +111,7 @@ isRole(): boolean {
         this.allHeroes = data;
         this.heroes = data;
       },
-      error: (err) => console.error('Error cargando heroes:', err)
+      error: (err) => console.error('Error cargando heroes:', err),
     });
 
     this.armorService.showAllIArmors().subscribe({
@@ -106,7 +119,7 @@ isRole(): boolean {
         this.allArmors = data;
         this.armors = data;
       },
-      error: (err: any) => console.error('Error cargando armaduras:', err)
+      error: (err: any) => console.error('Error cargando armaduras:', err),
     });
 
     this.epicsService.showAllIEpics().subscribe({
@@ -114,7 +127,7 @@ isRole(): boolean {
         this.allEpics = data;
         this.epics = data;
       },
-      error: (err: any) => console.error('Error cargando épicos:', err)
+      error: (err: any) => console.error('Error cargando épicos:', err),
     });
 
     this.weaponService.showAllIWeapon().subscribe({
@@ -122,7 +135,7 @@ isRole(): boolean {
         this.allWeapons = data;
         this.weapons = data;
       },
-      error: (err: any) => console.error('Error cargando armas:', err)
+      error: (err: any) => console.error('Error cargando armas:', err),
     });
   }
 
@@ -131,7 +144,7 @@ isRole(): boolean {
     this.router.navigate(['/login']);
   }
 
-    /**
+  /**
    * Navega a la vista de batallas al presionar el botón "Play".
    */
   onPlay() {
@@ -141,22 +154,22 @@ isRole(): boolean {
    * Navega a la vista del inventario al presionar el botón "Mi Inventario".
    */
   onInventory() {
-    this.router.navigate(['/inventory']); 
+    this.router.navigate(['/inventory']);
   }
 
-  onAuction(){
+  onAuction() {
     this.router.navigate(['/auctions']);
   }
 
-  onTournament(){
+  onTournament() {
     this.router.navigate(['/']);
   }
 
-  onMission(){
+  onMission() {
     this.router.navigate(['/']);
   }
 
-  onAccount(){
+  onAccount() {
     this.router.navigate(['/cuenta']);
   }
 
@@ -177,125 +190,121 @@ isRole(): boolean {
       return;
     }
 
-    this.items = this.allItems.filter(i =>
+    this.items = this.allItems.filter((i) =>
       i.name?.toLowerCase().includes(query)
     );
 
-    this.heroes = this.allHeroes.filter(h =>
+    this.heroes = this.allHeroes.filter((h) =>
       h.name?.toLowerCase().includes(query)
     );
 
-    this.armors = this.allArmors.filter(a =>
+    this.armors = this.allArmors.filter((a) =>
       a.name?.toLowerCase().includes(query)
     );
 
-    this.epics = this.allEpics.filter(e =>
+    this.epics = this.allEpics.filter((e) =>
       e.name?.toLowerCase().includes(query)
     );
 
-    this.weapons = this.allWeapons.filter(w =>
+    this.weapons = this.allWeapons.filter((w) =>
       w.name?.toLowerCase().includes(query)
     );
   }
   goToComprar() {
-  this.router.navigate(['/auctions']);
-}
-
-goToVender() {
-  this.router.navigate(['/auctions/vender']);
-}
-
-goToRecoger() {
-  this.router.navigate(['/auctions/recoger']);
-}
-
-goToMisPujas() {
-  this.router.navigate(['/auctions/mis-pujas']);
-}
-
-goToGestion(option: string) {
-  switch (option) {
-    case 'heroes':
-      this.router.navigate(['/heroes/control']);
-      break;
-
-    case 'items':
-      this.router.navigate(['/items/control']);
-      break;
-
-    case 'weapons':
-      this.router.navigate(['/weapons/control']);
-      break;
-
-    case 'armors':
-      this.router.navigate(['/armors/control']);
-      break;
-
-    case 'epics':
-      this.router.navigate(['/epics/control']);
-      break;
-
-    default:
-      console.warn('Opción de gestión no reconocida:', option);
-      break;
+    this.router.navigate(['/auctions']);
   }
-}
 
+  goToVender() {
+    this.router.navigate(['/auctions/vender']);
+  }
 
-// Estado del chatbot
-chatbotVisible = false;
-chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
-chatbotInput: string = '';
-isProcessing = false; // indicador de procesamiento
+  goToRecoger() {
+    this.router.navigate(['/auctions/recoger']);
+  }
 
-// Sugerencias iniciales separadas
-chatbotSuggestions: string[] = [
-  "¿Qué héroes están disponibles?",
-  "Muéstrame mis ítems",
-  "¿Cómo subasto armas?",
-  "Dime mis misiones pendientes"
-];
+  goToMisPujas() {
+    this.router.navigate(['/auctions/mis-pujas']);
+  }
 
-// --- Chatbot Hover ---
-toggleChatbot() {
-  this.chatbotVisible = !this.chatbotVisible;
-}
+  goToGestion(option: string) {
+    switch (option) {
+      case 'heroes':
+        this.router.navigate(['/heroes/control']);
+        break;
 
-sendSuggestion(suggestion: string) {
-  // cuando el usuario hace click en una sugerencia
-  this.chatbotInput = suggestion;
-  this.sendChatMessage();
-}
+      case 'items':
+        this.router.navigate(['/items/control']);
+        break;
 
-sendChatMessage() {
-  const msg = this.chatbotInput.trim();
-  if (!msg) return;
+      case 'weapons':
+        this.router.navigate(['/weapons/control']);
+        break;
 
-  // agregar mensaje del usuario
-  this.chatbotMessages.push({ from: 'user', text: msg });
-  this.chatbotInput = '';
-  this.isProcessing = true;
+      case 'armors':
+        this.router.navigate(['/armors/control']);
+        break;
 
-  // limpiar sugerencias al enviar mensaje
-  this.chatbotSuggestions = [];
+      case 'epics':
+        this.router.navigate(['/epics/control']);
+        break;
 
-  // llamar al backend usando ChatbotService
-  this.chatbotService.sendMessage(msg).subscribe({
-    next: (res) => {
-      this.chatbotMessages.push({ from: 'bot', text: res.reply });
-      this.isProcessing = false;
-    },
-    error: (err) => {
-      console.error('Error en chatbot:', err);
-      this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
-      this.isProcessing = false;
+      default:
+        console.warn('Opción de gestión no reconocida:', option);
+        break;
     }
-  });
-}
+  }
 
+  // Estado del chatbot
+  chatbotVisible = false;
+  chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
+  chatbotInput: string = '';
+  isProcessing = false; // indicador de procesamiento
 
+  // Sugerencias iniciales separadas
+  chatbotSuggestions: string[] = [
+    '¿Qué héroes están disponibles?',
+    'Muéstrame mis ítems',
+    '¿Cómo subasto armas?',
+    'Dime mis misiones pendientes',
+  ];
 
+  // --- Chatbot Hover ---
+  toggleChatbot() {
+    this.chatbotVisible = !this.chatbotVisible;
+  }
 
+  sendSuggestion(suggestion: string) {
+    // cuando el usuario hace click en una sugerencia
+    this.chatbotInput = suggestion;
+    this.sendChatMessage();
+  }
 
+  sendChatMessage() {
+    const msg = this.chatbotInput.trim();
+    if (!msg) return;
 
+    // agregar mensaje del usuario
+    this.chatbotMessages.push({ from: 'user', text: msg });
+    this.chatbotInput = '';
+    this.isProcessing = true;
+
+    // limpiar sugerencias al enviar mensaje
+    this.chatbotSuggestions = [];
+
+    // llamar al backend usando ChatbotService
+    this.chatbotService.sendMessage(msg).subscribe({
+      next: (res) => {
+        this.chatbotMessages.push({ from: 'bot', text: res.reply });
+        this.isProcessing = false;
+      },
+      error: (err) => {
+        console.error('Error en chatbot:', err);
+        this.chatbotMessages.push({
+          from: 'bot',
+          text: '⚠️ Error al conectar con el servidor.',
+        });
+        this.isProcessing = false;
+      },
+    });
+  }
 }

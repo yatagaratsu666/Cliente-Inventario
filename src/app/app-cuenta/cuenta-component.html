@@ -1,37 +1,26 @@
-<div class="cuenta-card" *ngIf="user">
-  <h2>👤 Mi Cuenta</h2>
-
-  <div class="info-section">
-    <div class="info-row">
-      <span>🧝‍♂️ <strong>Nombre de usuario:</strong></span>
-      <span>{{ user.nombreUsuario }}</span>
-    </div>
-
-    <div class="info-row">
-      <span>🎖️ <strong>Rol:</strong></span>
-      <span>{{ role | titlecase }}</span>
-    </div>
-
-    <div class="info-row">
-      <span>💰 <strong>Créditos:</strong></span>
-      <span>{{ user.creditos }} 🪙</span>
-    </div>
-
-    <div class="info-row">
-      <span>📊 <strong>Nivel:</strong></span>
-      <span>{{ getNivel() }}</span>
-    </div>
-
-    <div class="info-row">
-      <span>📈 <strong>Experiencia:</strong></span>
-      <span>{{ getExpActual() }}/100 XP</span>
-    </div>
-
-    <!-- Barra de experiencia -->
-    <div class="stat-bar-container">
-      <div class="stat-bar" [style.width.%]="getExpProgreso()"></div>
-    </div>
+<div class="login-panel" [class.open]="isOpen">
+  <div class="login-header">
+    <h2>Mi Cuenta</h2>
+    <span class="close-btn" (click)="close()">×</span>
   </div>
 
-  <hr />
+  <div class="login-body">
+    <div *ngIf="user; else loginForm">
+      <div class="avatar-section">
+        <img src="https://i.pinimg.com/736x/e0/99/1b/e0991ba913ffdb56f631867cb5ac98ca.jpg" alt="Avatar" class="avatar-img" />
+        <button class="change-avatar-btn" (click)="changeAvatar()">Cambiar Avatar</button>
+      </div>
+
+      <p><strong>Usuario:</strong> {{ user.nombreUsuario }}</p>
+      <p><strong>Rol:</strong> {{ user.rol }}</p>
+      <p><strong>Créditos:</strong> {{ user.creditos }}</p>
+
+      <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+    </div>
+
+    <!-- Si no hay usuario, mostrar formulario -->
+    <ng-template #loginForm>
+      <app-app-login></app-app-login>
+    </ng-template>
+  </div>
 </div>

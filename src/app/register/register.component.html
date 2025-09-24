@@ -32,7 +32,8 @@
 
     <div>
       <label for="avatar">Avatar:</label>
-      <input type="file" id="avatar" name="avatar" (change)="onFileSelected($event)" accept=".png,.jpg,.jpeg" [disabled]="isLoading" />
+      <input type="file" id="avatar" name="avatar" (change)="onFileSelected($event)" accept=".png,.jpg,.jpeg"
+        [disabled]="isLoading" />
       <small>Selecciona una imagen PNG, JPG o JPEG (máximo 5MB)</small>
     </div>
 
@@ -44,16 +45,14 @@
     <div class="debug-info" *ngIf="!form.valid">
       <h4>Estado del formulario:</h4>
       <ul>
-        <li *ngIf="form.controls['firstName'].invalid">Nombres: {{ form.controls['firstName'].errors | json }}</li>
-        <li *ngIf="form.controls['lastName'].invalid">Apellidos: {{ form.controls['lastName'].errors | json }}</li>
-        <li *ngIf="form.controls['username'].invalid">Usuario: {{ form.controls['username'].errors | json }}</li>
-        <li *ngIf="form.controls['email'].invalid">Email: {{ form.controls['email'].errors | json }}</li>
-        <li *ngIf="form.controls['password'].invalid">Contraseña: {{ form.controls['password'].errors | json }}</li>
-        <li *ngIf="form.controls['avatar'] && form.controls['avatar'].invalid">Avatar: {{ form.controls['avatar'].errors | json }}</li>
+        <li *ngIf="form.controls['firstName']?.errors?.['required']">⚠️ Falta Nombres</li>
+        <li *ngIf="form.controls['lastName']?.errors?.['required']">⚠️ Falta Apellidos</li>
+        <li *ngIf="form.controls['username']?.errors?.['required']">⚠️ Falta Usuario</li>
+        <li *ngIf="form.controls['email']?.errors?.['required']">⚠️ Falta Email</li>
+        <li *ngIf="form.controls['password']?.errors?.['required']">⚠️ Falta Contraseña</li>
+        <li *ngIf="form.controls['avatar']?.errors?.['required']">⚠️ Falta Avatar</li>
         <li *ngIf="!avatarFile">⚠️ No se ha seleccionado archivo de avatar</li>
       </ul>
-      <p>Formulario válido: {{ form.valid }}</p>
-      <p>Archivo seleccionado: {{ avatarFile?.name || 'Ninguno' }}</p>
     </div>
 
     <button type="submit" [disabled]="!form.valid || isLoading || !avatarFile">
@@ -62,4 +61,3 @@
     </button>
   </form>
 </div>
-

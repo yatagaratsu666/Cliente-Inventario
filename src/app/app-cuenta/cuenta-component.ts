@@ -33,10 +33,6 @@ export class CuentaComponent implements OnInit {
     }
   }
 
-  getNivel(): number {
-  return Math.floor(this.user?.exp || 0 / 100);
-}
-
   logout(): void {
     this.close();
     this.loginService.logout();

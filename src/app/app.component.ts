@@ -254,6 +254,7 @@ export class AppComponent {
     }
   }
 
+
   // Estado del chatbot
   chatbotVisible = false;
   chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
@@ -262,11 +263,11 @@ export class AppComponent {
 
   // Sugerencias iniciales separadas
   chatbotSuggestions: string[] = [
-    '¿Qué héroes están disponibles?',
-    'Muéstrame mis ítems',
-    '¿Cómo subasto armas?',
-    'Dime mis misiones pendientes',
-  ];
+    'colores de la barra de vida',
+    'cómo hago una subasta',
+    'cómo ganar créditos',
+    'escudo de dragón efectos'
+];
 
   // --- Chatbot Hover ---
   toggleChatbot() {
@@ -299,12 +300,15 @@ export class AppComponent {
       },
       error: (err) => {
         console.error('Error en chatbot:', err);
-        this.chatbotMessages.push({
-          from: 'bot',
-          text: '⚠️ Error al conectar con el servidor.',
-        });
+        this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
         this.isProcessing = false;
-      },
+      }
     });
   }
+
+
+
+
+
+
 }

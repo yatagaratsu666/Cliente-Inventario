@@ -1,108 +1,113 @@
 .register-container {
-  background: #0f4c75;
-  border-radius: 12px;
-  padding: 30px 40px;
+  max-width: 600px;
   margin: 40px auto;
-  max-width: 500px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  background: #1b262c; /* Fondo oscuro elegante */
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .register-container h2 {
   text-align: center;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  margin-bottom: 20px;
-  color: #56cfe1;
+  margin-bottom: 30px;
+  color: #bbe1fa; /* Azul claro elegante */
 }
 
-.register-container form {
+.register-container form div {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  margin-bottom: 20px;
 }
 
 .register-container label {
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 6px;
-  color: #d4f1f4;
+  color: #eeeeee;
 }
 
-.register-container input {
-  padding: 14px;
-  font-size: 16px;
-  border: #3282b8 2px solid;
-  border-radius: 6px;
-  background: #1b262c;
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"],
+.register-container input[type="file"] {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #56cfe1;
+  border-radius: 3px;
+  background: rgba(86, 207, 225, 0.05);
   color: #eaf6f6;
-  font-weight: bold;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+.register-container input:focus {
+  border-color: #bbe1fa;
+}
+
+.register-container small {
+  font-size: 12px;
+  color: #cccccc;
+  margin-top: 4px;
+}
+
+/* Botón */
 .register-container button {
-  background: linear-gradient(to right, #3282b8, #0f4c75);
-  color: #eaf6f6;
-  font-size: 18px;
-  font-weight: bold;
+  width: 100%;
   padding: 14px;
+  background: #3282b8;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease;
+  margin-top: 10px;
 }
 
-.register-container button:hover:not(:disabled) {
-  background: linear-gradient(to right, #56cfe1, #48bfe3);
-  color: #1b262c;
-  transform: scale(1.05);
+.register-container button:hover {
+  background: #0f4c75;
 }
 
 .register-container button:disabled {
-  background: #555;
+  background: #555555;
   cursor: not-allowed;
-  transform: none;
 }
 
+/* Mensajes de error */
 .error-message {
-  background: rgba(255, 82, 82, 0.2);
-  border: 1px solid #ff5252;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 10px;
+  border: 1px solid #ff6b6b;
   border-radius: 6px;
-  padding: 12px;
-  color: #ff5252;
-  font-weight: bold;
-  text-align: center;
-  margin: 10px 0;
+  margin-bottom: 15px;
 }
 
-.register-container input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
+/* Debug info */
 .debug-info {
-  background: rgba(255, 193, 7, 0.2);
-  border: 1px solid #ffc107;
-  border-radius: 6px;
-  padding: 12px;
-  color: #ffc107;
-  font-size: 14px;
-  margin: 10px 0;
+  background: rgba(255, 255, 255, 0.05);
+  color: #dddddd;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 20px;
 }
 
 .debug-info h4 {
-  margin: 0 0 8px 0;
-  color: #ffc107;
+  margin-bottom: 8px;
+  color: #bbe1fa;
+  font-size: 15px;
 }
 
 .debug-info ul {
-  margin: 0;
-  padding-left: 20px;
+  margin: 0 0 8px 18px;
+  padding: 0;
 }
 
 .debug-info li {
-  margin: 4px 0;
-}
-
-.debug-info p {
-  margin: 8px 0 4px 0;
-  font-weight: bold;
+  list-style: disc;
+  margin-bottom: 4px;
 }

@@ -32,6 +32,10 @@ import { AuctionListComponent } from './app-auction/auction-list/auction-list.co
 import { AuctionDetailsComponent } from './app-auction/auction-details/auction-details.component';
 import { TransactionHistoryComponent } from './app-auction/transaction-history/transaction-history.component';
 import { CreateAuctionFormComponent } from './app-auction/create-auction-form/create-auction-form.component';
+//rutas torneo no jodi nada si algo fue luis, pedro no toco nada mas si algo fue luis.
+import { AppTorneoComponent } from './app-torneo/app-torneo.component';
+import { AppTorneoInscripcionComponent } from './app-torneo/app-torneo-inscripcion/app-torneo-inscripcion.component';
+import { AppMisionesComponent } from './app-misiones/app-misioneses.component';
 
 /**
  * Definición de rutas principales de la app.
@@ -203,6 +207,22 @@ const routeConfig: Routes = [
   { path: 'auctions', 
     component: AuctionListComponent, 
     canActivate: [AuthGuard] },
+
+  //TorneoRutas
+  {
+    path: 'torneo',
+    component: AppTorneoComponent,
+  },
+
+  {
+    path: 'torneo/Inscripcion',
+    component: AppTorneoInscripcionComponent,
+  },
+  //Misiones
+  {
+    path: 'misiones',
+    component: AppMisionesComponent,
+  },
 
 ];
 

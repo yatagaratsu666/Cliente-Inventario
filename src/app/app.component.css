@@ -128,3 +128,71 @@ button.logout-button:hover {
   color: #eaf6f6;
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
 }
+
+/* Barra de notificaciones */
+.notification-bar {
+  position: relative;
+  width: 100%;
+  background: #16263d;
+  color: #eaf6f6;
+  border: 2px solid #56cfe1;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.6);
+  animation: slideDown 0.4s ease;
+  font-size: 14px;
+  border: 2px;
+
+
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: #1b2b43;
+  border-bottom: 1px solid #56cfe1;
+}
+
+.notification-title {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.notification-content {
+  padding: 12px 15px;
+}
+
+.notification-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-content li {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(86, 207, 225, 0.2);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #eaf6f6;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #56cfe1;
+}

@@ -130,11 +130,11 @@ export class AppComponent {
   }
 
   onTournament(){
-    this.router.navigate(['/']);
+    this.router.navigate(['/torneo']);
   }
 
   onMission(){
-    this.router.navigate(['/']);
+    this.router.navigate(['/misiones']);
   }
 
   onAccount(){
@@ -193,4 +193,26 @@ goToRecoger() {
 goToMisPujas() {
   this.router.navigate(['/auctions/mis-pujas']);
 }
+
+  mostrarNotificaciones = true; // visible por defecto
+  notificaciones: string[] = []; // lista de notificaciones
+
+  cerrarNotificaciones() {
+    this.mostrarNotificaciones = false;
+  }
+
+  abrirNotificaciones() {
+    this.mostrarNotificaciones = true;
+  }
+
+  // método para agregar nuevas notificaciones en el futuro
+  agregarNotificacion(msg: string) {
+    this.notificaciones.push(msg);
+  }
 }
+
+
+
+
+
+

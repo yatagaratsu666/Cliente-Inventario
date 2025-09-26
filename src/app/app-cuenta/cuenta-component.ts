@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import User from '../domain/user.model';
 import { CommonModule } from '@angular/common';
+import { LoginService } from '../services/login.service';
+import { Router } from '@angular/router';
+import { AppLoginComponent } from '../app-login/app-login.component';
 
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta-component.html',
   styleUrls: ['./cuenta-component.css'],
-  standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AppLoginComponent],
 })
 export class CuentaComponent implements OnInit {
   user: User | null = null;
   username = localStorage.getItem('username') ?? '';
   role = localStorage.getItem('role') ?? '';
+  @Input() isOpen = false;
 
-  constructor(private userService: UsuarioService) {}
+  constructor(private userService: UsuarioService, private loginService: LoginService, private router: Router) {}
 
   ngOnInit(): void {
     if (this.username) {
@@ -30,16 +33,18 @@ export class CuentaComponent implements OnInit {
     }
   }
 
-  getNivel(): number {
-  return Math.floor(this.user?.exp || 0 / 100);
-}
+  logout(): void {
+    this.close();
+    this.loginService.logout();
+    this.router.navigate(['/login']);
+  }
 
-getExpActual(): number {
-  return (this.user?.exp || 0) % 100;
-}
+  close() {
+    this.isOpen = false;
+  }
 
-getExpProgreso(): number {
-  return (this.getExpActual() / 100) * 100;
-}
+  changeAvatar() {
+    // vacio xq no se q hacer aqui :3
+  }
 
 }

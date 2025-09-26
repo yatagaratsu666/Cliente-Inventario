@@ -17,15 +17,22 @@ import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
 import { ToastComponent } from "./toast/toast.component";
 import User from './domain/user.model';
-
+import { AppLoginComponent } from './app-login/app-login.component';
 import { ChatbotService } from './services/chatbot.service';
+import { CuentaComponent } from './app-cuenta/cuenta-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule, ToastComponent],
+  imports: [
+    RouterModule,
+    CommonModule,
+    FormsModule,
+    ToastComponent,
+    CuentaComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   title = 'frontend-inv';
@@ -55,6 +62,8 @@ export class AppComponent {
 
   isBattleRoute = false;
 
+  isAccountPanelVisible = false;
+
   constructor(
     public router: Router,
     private chatService: ChatService,
@@ -66,18 +75,22 @@ export class AppComponent {
     private weaponService: WeaponsService,
     public loginService: LoginService
   ) {
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isBattleRoute = event.urlAfterRedirects.startsWith('battle');
       }
     });
   }
 
+  isLoginOpen = false;
+
+  openLogin() {
+    this.isLoginOpen = true;
+  }
+
   isRole(): boolean {
     return this.loginService.getRole() === 'administrator';
   }
-
-
 
   onControl() {
     this.router.navigate(['/gestion']);
@@ -90,7 +103,7 @@ export class AppComponent {
         this.allItems = data;
         this.items = data;
       },
-      error: (err) => console.error('Error cargando items:', err)
+      error: (err) => console.error('Error cargando items:', err),
     });
 
     this.heroService.showAllIHeros().subscribe({
@@ -98,7 +111,7 @@ export class AppComponent {
         this.allHeroes = data;
         this.heroes = data;
       },
-      error: (err) => console.error('Error cargando heroes:', err)
+      error: (err) => console.error('Error cargando heroes:', err),
     });
 
     this.armorService.showAllIArmors().subscribe({
@@ -106,7 +119,7 @@ export class AppComponent {
         this.allArmors = data;
         this.armors = data;
       },
-      error: (err: any) => console.error('Error cargando armaduras:', err)
+      error: (err: any) => console.error('Error cargando armaduras:', err),
     });
 
     this.epicsService.showAllIEpics().subscribe({
@@ -114,7 +127,7 @@ export class AppComponent {
         this.allEpics = data;
         this.epics = data;
       },
-      error: (err: any) => console.error('Error cargando épicos:', err)
+      error: (err: any) => console.error('Error cargando épicos:', err),
     });
 
     this.weaponService.showAllIWeapon().subscribe({
@@ -122,7 +135,7 @@ export class AppComponent {
         this.allWeapons = data;
         this.weapons = data;
       },
-      error: (err: any) => console.error('Error cargando armas:', err)
+      error: (err: any) => console.error('Error cargando armas:', err),
     });
   }
 
@@ -132,8 +145,8 @@ export class AppComponent {
   }
 
   /**
- * Navega a la vista de batallas al presionar el botón "Play".
- */
+   * Navega a la vista de batallas al presionar el botón "Play".
+   */
   onPlay() {
     this.router.navigate(['/battles']);
   }
@@ -177,23 +190,23 @@ export class AppComponent {
       return;
     }
 
-    this.items = this.allItems.filter(i =>
+    this.items = this.allItems.filter((i) =>
       i.name?.toLowerCase().includes(query)
     );
 
-    this.heroes = this.allHeroes.filter(h =>
+    this.heroes = this.allHeroes.filter((h) =>
       h.name?.toLowerCase().includes(query)
     );
 
-    this.armors = this.allArmors.filter(a =>
+    this.armors = this.allArmors.filter((a) =>
       a.name?.toLowerCase().includes(query)
     );
 
-    this.epics = this.allEpics.filter(e =>
+    this.epics = this.allEpics.filter((e) =>
       e.name?.toLowerCase().includes(query)
     );
 
-    this.weapons = this.allWeapons.filter(w =>
+    this.weapons = this.allWeapons.filter((w) =>
       w.name?.toLowerCase().includes(query)
     );
   }

@@ -8,7 +8,9 @@
       <a (click)="onAuction()">Subastas</a>
       <a (click)="onTournament()">Torneo</a>
       <a (click)="onInventory()">Mi Inventario</a>
-      <a (click)="onAccount()">Mi Cuenta</a>
+      <a (click)="openLogin()">Mi Cuenta</a>
+      <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
+
       
       <!-- Dropdown Panel Gestión -->
       <div class="dropdown" *ngIf="isRole()">
@@ -114,4 +116,5 @@
 
 <router-outlet></router-outlet>
 <app-toast></app-toast>
+
 

@@ -8,6 +8,7 @@ export enum Roles {
 
 export default class User {
   nombreUsuario: string;
+  avatar: string;
   rol: Roles;
   creditos: number;
   inventario: Inventario;
@@ -16,6 +17,7 @@ export default class User {
 
   constructor(
     nombreUsuario: string = '',
+    avatar: string = '',
     rol: Roles = Roles.JUGADOR,
     creditos: number = 0,
     inventario: Inventario = new Inventario(),
@@ -23,6 +25,7 @@ export default class User {
     exp: number = 0
   ) {
     this.nombreUsuario = nombreUsuario;
+    this.avatar = avatar;
     this.rol = rol;
     this.creditos= creditos;
     this.inventario = inventario;

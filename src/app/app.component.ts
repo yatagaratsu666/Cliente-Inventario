@@ -177,39 +177,31 @@ export class AppComponent {
     this.mostrarCuenta = !this.mostrarCuenta;
   }
 
-  onSearchChange(): void {
-    const query = this.searchQuery.trim().toLowerCase();
+onSearchChange(): void {
+  const query = this.searchQuery.trim().toLowerCase();
 
-    if (!query) {
-      // restaurar todo si no hay texto
-      this.items = this.allItems;
-      this.heroes = this.allHeroes;
-      this.armors = this.allArmors;
-      this.epics = this.allEpics;
-      this.weapons = this.allWeapons;
-      return;
-    }
-
-    this.items = this.allItems.filter((i) =>
-      i.name?.toLowerCase().includes(query)
-    );
-
-    this.heroes = this.allHeroes.filter((h) =>
-      h.name?.toLowerCase().includes(query)
-    );
-
-    this.armors = this.allArmors.filter((a) =>
-      a.name?.toLowerCase().includes(query)
-    );
-
-    this.epics = this.allEpics.filter((e) =>
-      e.name?.toLowerCase().includes(query)
-    );
-
-    this.weapons = this.allWeapons.filter((w) =>
-      w.name?.toLowerCase().includes(query)
-    );
+  // si no hay texto o menos de 4 caracteres → no mostrar nada
+  if (!query || query.length < 4) {
+    this.items = [];
+    this.heroes = [];
+    this.armors = [];
+    this.epics = [];
+    this.weapons = [];
+    return;
   }
+
+  // función para buscar en todo el objeto
+  const matchesQuery = (obj: any): boolean => {
+    return JSON.stringify(obj).toLowerCase().includes(query);
+  };
+
+  this.items = this.allItems.filter((i) => matchesQuery(i));
+  this.heroes = this.allHeroes.filter((h) => matchesQuery(h));
+  this.armors = this.allArmors.filter((a) => matchesQuery(a));
+  this.epics = this.allEpics.filter((e) => matchesQuery(e));
+  this.weapons = this.allWeapons.filter((w) => matchesQuery(w));
+}
+
   goToComprar() {
     this.router.navigate(['/auctions']);
   }
@@ -267,7 +259,7 @@ export class AppComponent {
     'cómo hago una subasta',
     'cómo ganar créditos',
     'escudo de dragón efectos'
-];
+  ];
 
   // --- Chatbot Hover ---
   toggleChatbot() {

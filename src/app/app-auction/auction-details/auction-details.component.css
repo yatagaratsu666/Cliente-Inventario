@@ -1,0 +1,190 @@
+.details {
+  background: #1b262c;
+  border: 2px solid #56cfe1;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 800px;
+  color: #eaf6f6;
+  box-shadow: 0 0 14px rgba(86, 207, 225, 0.25);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  position: relative;
+}
+
+/* Botón cerrar */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #56cfe1;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #48bfe3;
+  transform: scale(1.1);
+}
+
+/* Título */
+.auction-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #56cfe1;
+  margin-bottom: 10px;
+}
+
+/* Descripción */
+.auction-description {
+  text-align: center;
+  font-size: 15px;
+  color: #d4f1f4;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* Info */
+.auction-info {
+  background: rgba(86, 207, 225, 0.05);
+  border-left: 4px solid #56cfe1;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.auction-info strong {
+  color: #bbe1fa;
+}
+
+/* Acciones */
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.actions input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 2px solid #3282b8;
+  border-radius: 6px;
+  background: #0d1b2a;
+  color: #eaf6f6;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.actions input:focus {
+  border-color: #56cfe1;
+  box-shadow: 0 0 8px rgba(86, 207, 225, 0.4);
+  outline: none;
+}
+
+.actions button {
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, #3282b8, #0f4c75);
+  color: #eaf6f6;
+  transition: all 0.3s ease;
+}
+
+.actions button:hover {
+  background: linear-gradient(to right, #56cfe1, #48bfe3);
+  color: #1b262c;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
+}
+
+/* Pujas */
+.bids-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 20px;
+}
+
+.bids-list li {
+  background: rgba(86, 207, 225, 0.05);
+  border: 1px solid #3282b8;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #d4f1f4;
+}
+
+/* Comentarios */
+.comments-section {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 2px solid #3282b8;
+}
+
+.comments-section h4 {
+  font-size: 18px;
+  color: #56cfe1;
+  margin-bottom: 8px;
+}
+
+.comment-item {
+  background: rgba(212, 241, 244, 0.05);
+  border: 1px solid #0f4c75;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #d4f1f4;
+}
+
+.comment-main strong {
+  color: #bbe1fa;
+}
+
+.comment-rating {
+  margin-left: 8px;
+  color: #56cfe1;
+  font-weight: bold;
+}
+
+.comment-date {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+/* Respuestas */
+.replies-list {
+  list-style: none;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.replies-list li {
+  background: rgba(86, 207, 225, 0.03);
+  border-left: 3px solid #56cfe1;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+}
+
+.reply-main {
+  font-size: 13px;
+  color: #d4f1f4;
+}
+
+.reply-date {
+  display: block;
+  font-size: 11px;
+  color: #888;
+}

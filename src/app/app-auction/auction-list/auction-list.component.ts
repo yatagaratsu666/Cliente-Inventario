@@ -46,12 +46,12 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     await this.loadAuctions();
 
-    // Conectar socket sin token
     this.auctionSocket.connect();
 
+    // 🔹 actualizar subasta existente
     this.subs.push(
       this.auctionSocket.onAuctionUpdated().subscribe(updated => {
-        this.auctions = this.auctions.map(a => 
+        this.auctions = this.auctions.map(a =>
           a.id === updated.id ? { ...a, ...updated } : a
         );
         this.refreshTypes();
@@ -59,14 +59,19 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       })
     );
 
+    // 🔹 nueva subasta, evitando duplicados
     this.subs.push(
       this.auctionSocket.onNewAuction().subscribe(created => {
-        this.auctions.push(created);
-        this.refreshTypes();
-        this.applyFilter();
+        const exists = this.auctions.some(a => a.id === created.id);
+        if (!exists) {
+          this.auctions.push(created);
+          this.refreshTypes();
+          this.applyFilter();
+        }
       })
     );
 
+    // 🔹 subasta cerrada
     this.subs.push(
       this.auctionSocket.onAuctionClosed().subscribe(closed => {
         this.auctions = this.auctions.filter(a => a.id !== closed.id);
@@ -87,6 +92,10 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.auctions = this.onlyMyBids && this.userId
         ? all.filter(a => a.highestBidderId === this.userId && !a.isClosed)
         : all;
+
+      // 🔹 eliminar duplicados por ID
+      this.auctions = Array.from(new Map(this.auctions.map(a => [a.id, a])).values());
+
       this.refreshTypes();
       this.applyFilter();
     } catch (err) {
@@ -125,22 +134,17 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   closeDetails() { this.selected = undefined; }
 
   handleBought(updated: AuctionDTO) {
-  // 🔹 eliminamos la subasta comprada inmediatamente
-  this.auctions = this.auctions.filter(a => a.id !== updated.id);
-  this.applyFilter();
-  if (this.selected?.id === updated.id) this.closeDetails();
-}
+    this.auctions = this.auctions.filter(a => a.id !== updated.id);
+    this.applyFilter();
+    if (this.selected?.id === updated.id) this.closeDetails();
+  }
 
-  //este mismo
   goToComprar() { this.router.navigate(['/auctions']); }
-  //create-auction-form
   goToVender() { this.router.navigate(['/auctions/vender']); }
-  //transaction-history
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }
-  //a este mismo
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
 
-  filterByCategory(category: string): void {this.router.navigate(['/auctions/vender']);
-}
-
+  filterByCategory(category: string): void {
+    this.router.navigate(['/auctions/vender']);
+  }
 }

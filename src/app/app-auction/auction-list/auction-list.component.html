@@ -1,8 +1,8 @@
 <div class="auction-page">
 
   <div class="content-layout">
-    
 
+    <!-- Sidebar de categorías -->
     <div class="sidebar">
       <button (click)="filterByCategory('armas')">⚔️ Armas</button>
       <button (click)="filterByCategory('items')">🎒 Ítems</button>
@@ -11,9 +11,10 @@
       <button (click)="filterByCategory('heroes')">🦸 Héroes</button>
     </div>
 
-
+    <!-- Contenido principal -->
     <div class="main-content">
 
+      <!-- Toolbar -->
       <div class="toolbar">
         <button (click)="goToComprar()">🛒 Comprar</button>
         <button (click)="goToVender()">📦 Vender</button>
@@ -21,7 +22,7 @@
         <button (click)="goToMisPujas()">💰 Mis pujas</button>
       </div>
 
-
+      <!-- Filtros -->
       <div class="filters">
         <input
           type="text"
@@ -49,7 +50,7 @@
         />
       </div>
 
-
+      <!-- Lista de subastas -->
       <div class="list">
         <app-auction-card
           *ngFor="let a of filtered"
@@ -57,32 +58,15 @@
           (click)="openDetails(a)"
         ></app-auction-card>
       </div>
-<!-- 
 
+      <!-- Detalle de subasta seleccionada -->
       <app-auction-details
         *ngIf="selected"
         [auction]="selected"
-        [token]="token || ''"
         (onClose)="closeDetails()"
         (onBought)="handleBought($event)"
       ></app-auction-details>
+
     </div>
-  </div> -->
-
-
-  <div class="list">
-    <app-auction-card
-      *ngFor="let a of filtered"
-      [auction]="a"
-      (click)="openDetails(a)"
-    ></app-auction-card>
   </div>
-
-
-  <app-auction-details
-  *ngIf="selected"
-  [auction]="selected"
-  (onClose)="closeDetails()"
-  (onBought)="handleBought($event)"
-></app-auction-details>
 </div>

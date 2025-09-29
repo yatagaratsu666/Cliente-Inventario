@@ -71,11 +71,13 @@ export class CreateAuctionFormComponent {
   if (!selected) return alert('Item no válido');
 
   const payload = { 
-    ...this.form, 
-    itemId: this.itemId, 
-    itemType: selected.type, // 👈 ahora sí viaja al back
-    buyNowPrice: this.form.buyNowPrice ?? undefined // 👈
-  };
+  startingPrice: Number(this.form.startingPrice),
+  buyNowPrice: this.form.buyNowPrice ? Number(this.form.buyNowPrice) : undefined,
+  durationHours: Number(this.form.durationHours), // 🔹 importante
+  itemId: this.itemId,
+  itemType: selected.type
+};
+
 
   try {
     const auction = await this.auctionService.createAuction(payload);

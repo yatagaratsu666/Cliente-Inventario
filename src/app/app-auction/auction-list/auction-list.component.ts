@@ -90,8 +90,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     try {
       const all = await this.auctionService.listAuctions();
       this.auctions = this.onlyMyBids && this.userId
-        ? all.filter(a => a.highestBidderId === this.userId && !a.isClosed)
-        : all;
+  ? all.filter(a => a.bids?.some(b => b.userId === this.userId) && !a.isClosed)
+  : all;
+
 
       // 🔹 eliminar duplicados por ID
       this.auctions = Array.from(new Map(this.auctions.map(a => [a.id, a])).values());
@@ -110,25 +111,37 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   applyFilter() {
-    const q = this.filter.trim().toLowerCase();
-    this.filtered = this.auctions.filter(a => {
-      if (q && q.length >= 4) {
-        const matchTitle = a.title?.toLowerCase().includes(q);
-        const matchDesc = a.description?.toLowerCase().includes(q);
-        if (!matchTitle && !matchDesc) return false;
-      }
-      if (this.selectedType && a.item?.type !== this.selectedType) return false;
-      if (this.selectedDuration) {
-        const created = new Date(a.createdAt).getTime();
-        const ends = new Date(a.endsAt).getTime();
-        const durationHours = (ends - created) / (1000 * 60 * 60);
-        if (this.selectedDuration === '24' && durationHours > 24) return false;
-        if (this.selectedDuration === '48' && durationHours > 48) return false;
-      }
-      if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
-      return true;
-    });
-  }
+  const q = this.filter.trim().toLowerCase();
+
+  this.filtered = this.auctions.filter(a => {
+    // Filtro por nombre/descripción solo si hay mínimo 4 caracteres
+    if (q.length >= 4) {
+      const title = (a.title ?? '').toLowerCase().trim();
+      const desc = (a.description ?? '').toLowerCase().trim();
+      if (!title.includes(q) && !desc.includes(q)) return false;
+    }
+
+    // Filtro por tipo
+    if (this.selectedType && a.item?.type !== this.selectedType) return false;
+
+    // Filtro por duración restante
+    if (this.selectedDuration) {
+      const ends = new Date(a.endsAt).getTime();
+      const now = Date.now();
+      const remainingHours = (ends - now) / (1000 * 60 * 60);
+
+      if (this.selectedDuration === '24' && remainingHours > 24) return false;
+      if (this.selectedDuration === '48' && remainingHours > 48) return false;
+    }
+
+    // Filtro por precio máximo
+    if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
+
+    return true;
+  });
+}
+
+
 
   openDetails(a: AuctionDTO) { this.selected = a; }
   closeDetails() { this.selected = undefined; }

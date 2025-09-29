@@ -13,8 +13,14 @@ export class AuctionCardComponent {
   @Input() auction!: AuctionDTO;
 
   get imageSrc() {
-    const img = this.auction?.item?.imagen;
-    if (!img) return '';
-    return img.startsWith('data:') ? img : `data:image/png;base64,${img}`;
-  }
+  const img = this.auction?.item?.imagen;
+  if (!img) return 'https://via.placeholder.com/150';
+  
+  // Si es Base64, mantenemos el prefijo
+  if (img.startsWith('data:image')) return img;
+  
+  // Si es URL normal, la devolvemos tal cual
+  return img;
+}
+
 }

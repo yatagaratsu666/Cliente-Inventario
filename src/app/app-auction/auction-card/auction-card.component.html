@@ -1,10 +1,17 @@
 <div class="card">
-  <img *ngIf="imageSrc" [src]="imageSrc" [alt]="auction.item?.name" />
+  <!-- Imagen: muestra la URL o Base64 si existe, sino placeholder -->
+  <img 
+    [src]="imageSrc" 
+    [alt]="auction.item?.name || 'Imagen de item'" 
+  />
+
   <div class="info">
     <h3>{{ auction.title || auction.item?.name }}</h3>
     <p>{{ auction.description }}</p>
     <p>Precio actual: {{ auction.currentPrice }}</p>
-    <p *ngIf="auction.highestBid">Mejor puja: {{ auction.highestBid.amount }} por {{ auction.highestBid.userId }}</p>
+    <p *ngIf="auction.highestBid">
+      Mejor puja: {{ auction.highestBid.amount }} por {{ auction.highestBid.userId }}
+    </p>
     <p>Finaliza: {{ auction.endsAt | date:'short' }}</p>
   </div>
 </div>

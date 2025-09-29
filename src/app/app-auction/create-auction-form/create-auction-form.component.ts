@@ -73,7 +73,8 @@ export class CreateAuctionFormComponent {
   const payload = { 
     ...this.form, 
     itemId: this.itemId, 
-    itemType: selected.type // 👈 ahora sí viaja al back
+    itemType: selected.type, // 👈 ahora sí viaja al back
+    buyNowPrice: this.form.buyNowPrice ?? undefined // 👈
   };
 
   try {

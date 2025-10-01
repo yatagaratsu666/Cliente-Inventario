@@ -42,9 +42,6 @@
     <li *ngFor="let c of comments" class="comment-item">
       <div class="comment-main">
         <strong>{{ c.usuario ?? 'Anon' }}</strong>: {{ c.comentario ?? '' }}
-        <span *ngIf="c.valoracion !== undefined && c.valoracion !== null" class="comment-rating">
-          ⭐ {{ c.valoracion }}/5
-        </span>
       </div>
       <small class="comment-date">{{ c.fecha ? (c.fecha | date:'short') : 'N/A' }}</small>
 

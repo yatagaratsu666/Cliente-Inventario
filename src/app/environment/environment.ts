@@ -14,8 +14,8 @@ export const environment = {
 
   chatUrlSocket: 'http://localhost:4000',
 
-  api: { base: 'https://auction-deploy-272361825762.us-east1.run.app/api' },
-  socket: { base: 'https://auction-deploy-272361825762.us-east1.run.app' },
+  api: { base: 'http://localhost:3000/api' },
+  socket: { base: 'http://localhost:3000' },
 
   usersUrl: 'https://thenexusbattles-771648021041.southamerica-east1.run.app'
 

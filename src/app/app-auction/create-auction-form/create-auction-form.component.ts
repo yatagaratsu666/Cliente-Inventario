@@ -65,17 +65,30 @@ export class CreateAuctionFormComponent {
   }
 
   async submit() {
-    if (!this.itemId) return alert('Selecciona un item primero');
-    const payload = { ...this.form, itemId: this.itemId };
-    try {
-      const auction = await this.auctionService.createAuction(payload);
-      console.log('Subasta creada:', auction);
-      alert('Subasta creada correctamente');
-    } catch (err) {
-      console.error('Error creando la subasta:', err);
-      alert('No se pudo crear la subasta');
-    }
+  if (!this.itemId) return alert('Selecciona un item primero');
+
+  const selected = this.allItems.find(i => i.id === this.itemId);
+  if (!selected) return alert('Item no válido');
+
+  const payload = { 
+  startingPrice: Number(this.form.startingPrice),
+  buyNowPrice: this.form.buyNowPrice ? Number(this.form.buyNowPrice) : undefined,
+  durationHours: Number(this.form.durationHours), // 🔹 importante
+  itemId: this.itemId,
+  itemType: selected.type
+};
+
+
+  try {
+    const auction = await this.auctionService.createAuction(payload);
+    console.log('Subasta creada:', auction);
+    alert('Subasta creada correctamente');
+  } catch (err) {
+    console.error('Error creando la subasta:', err);
+    alert('No se pudo crear la subasta');
   }
+}
+
 
   // 🔹 Métodos de navegación
   goToComprar() { this.router.navigate(['/auctions']); }
@@ -104,48 +117,45 @@ filterByCategory(category: string): void {
       console.log("✅ Usuario recibido del backend:", usuario);
 
       let items: any[] = [];
+const inv = usuario.inventario || {}; // 👈 asegura que no sea undefined/null
 
-      // Filtramos según la categoría
-      switch (category) {
-        case 'armas':
-          items = usuario.inventario?.weapons || [];
-          console.log("⚔️ Armas encontradas:", items);
-          break;
-        case 'armaduras':
-          items = usuario.inventario?.armors || [];
-          console.log("🛡️ Armaduras encontradas:", items);
-          break;
-        case 'items':
-          items = usuario.inventario?.items || [];
-          console.log("🎒 Items encontrados:", items);
-          break;
-        case 'epicas':
-          items = usuario.inventario?.epicAbility || [];
-          console.log("🌟 Épicas encontradas:", items);
-          break;
-        case 'heroes':
-          items = usuario.inventario?.hero || [];
-          console.log("🦸 Héroes encontrados:", items);
-          break;
-        case 'all':
-        default:
-          items = [
-            ...(usuario.inventario?.weapons || []),
-            ...(usuario.inventario?.armors || []),
-            ...(usuario.inventario?.items || []),
-            ...(usuario.inventario?.epicAbility || []),
-            ...(usuario.inventario?.hero || [])
-          ];
-          console.log("📦 Todos los items del inventario:", items);
-          break;
-      }
+switch (category) {
+  case 'armas':
+    items = inv.weapons || [];
+    break;
+  case 'armaduras':
+    items = inv.armors || [];
+    break;
+  case 'items':
+    items = inv.items || [];
+    break;
+  case 'epicas':
+    items = inv.epicAbility || [];
+    break;
+  case 'heroes':
+    items = inv.hero || [];
+    break;
+  case 'all':
+  default:
+    items = [
+      ...(inv.weapons || []),
+      ...(inv.armors || []),
+      ...(inv.items || []),
+      ...(inv.epicAbility || []),
+      ...(inv.hero || [])
+    ];
+    break;
+}
+
 
       // Normalizamos IDs a string
       this.allItems = items.map(i => ({
-        ...i,
-        id: String(i.id),
-        imagen: i.image || 'https://via.placeholder.com/150' // Placeholder si no hay imagen
-      })) as ItemRef[];
+  ...i,
+  id: String(i.id),
+  type: category, // 👈 injectamos la categoría
+  imagen: i.image || 'https://via.placeholder.com/150'
+})) as ItemRef[];
+
 
       console.log("🎯 Items normalizados listos para renderizar:", this.allItems);
 

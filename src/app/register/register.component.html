@@ -31,6 +31,12 @@
     </div>
 
     <div>
+      <label for="confirmPassword">Confirmar Contraseña:</label>
+      <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required
+        [disabled]="isLoading" />
+    </div>
+
+    <div>
       <label for="avatar">Avatar:</label>
       <input type="file" id="avatar" name="avatar" (change)="onFileSelected($event)" accept=".png,.jpg,.jpeg"
         [disabled]="isLoading" />
@@ -50,6 +56,7 @@
         <li *ngIf="form.controls['username']?.errors?.['required']">⚠️ Falta Usuario</li>
         <li *ngIf="form.controls['email']?.errors?.['required']">⚠️ Falta Email</li>
         <li *ngIf="form.controls['password']?.errors?.['required']">⚠️ Falta Contraseña</li>
+        <li *ngIf="password && confirmPassword && password !== confirmPassword">⚠️ Las contraseñas no coinciden</li>
         <li *ngIf="form.controls['avatar']?.errors?.['required']">⚠️ Falta Avatar</li>
         <li *ngIf="!avatarFile">⚠️ No se ha seleccionado archivo de avatar</li>
       </ul>

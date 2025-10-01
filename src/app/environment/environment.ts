@@ -6,9 +6,9 @@ export const environment = {
   apiUrl: 'http://146.148.77.95:1882',
 
   /** URL base del servicio de batallas. */
-  battleUrl: 'http://34.57.149.206:3000',
+  battleUrl: 'http://localhost:3000', //'http://34.57.149.206:3000',
 
-  battleSocket: 'http://34.57.149.206:3000',
+  battleSocket: 'http://localhost:3000',
 
   inventarySocket: 'http://146.148.77.95:1882',
 
@@ -17,6 +17,6 @@ export const environment = {
   api: { base: 'https://auction-deploy-272361825762.us-east1.run.app/api' },
   socket: { base: 'https://auction-deploy-272361825762.us-east1.run.app' },
 
-  usersUrl: 'https://nexus-battle-iv-users-295839446356.europe-west1.run.app/api'
+  usersUrl: 'https://thenexusbattles-771648021041.southamerica-east1.run.app'
 
 };

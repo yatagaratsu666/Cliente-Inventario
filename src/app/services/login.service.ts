@@ -139,48 +139,58 @@ export class LoginService {
    * @param userData Datos del usuario a registrar
    * @returns Observable<any> Respuesta del servidor con el usuario creado
    */
-  registerUser(userData: {
-    username: string;
-    mail: string;
-    password: string;
-    names: string;
-    surnames: string;
-    urlAvatar: string;
-    rolesIds: string[];
-  }): Observable<any> {
-    return new Observable<any>(subscriber => {
-      fetch(`${this.apiUrl}/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      })
-      .then(async response => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        // Verificar el tipo de contenido de la respuesta
-        const contentType = response.headers.get('content-type');
-        let data;
-        
-        if (contentType && contentType.includes('application/json')) {
-          data = await response.json();
-        } else {
-          data = await response.text();
-        }
-        
-        console.log('User registration successful:', data);
-        subscriber.next(data);
-        subscriber.complete();
-      })
-      .catch(error => {
-        console.error('Error during user registration:', error);
-        subscriber.error(error);
-      });
+registerUser(userData: {
+  nombres: string;
+  apellidos: string;
+  apodo: string;
+  email: string;
+  password: string;
+}): Observable<any> {
+  // construimos el body que la API espera
+  const body = {
+    nombres: userData.nombres,
+    apellidos: userData.apellidos,
+    apodo: userData.apodo,
+    email: userData.email,
+    password: userData.password,
+    confirmPassword: userData.password, // mismo valor
+    acceptTerms: true                   // siempre true
+  };
+
+  return new Observable<any>(subscriber => {
+    fetch(`${this.apiUrl}/api/usuarios/register
+`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(async response => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const contentType = response.headers.get('content-type');
+      let data;
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+      
+      console.log('User registration successful:', data);
+      subscriber.next(data);
+      subscriber.complete();
+    })
+    .catch(error => {
+      console.error('Error during user registration:', error);
+      subscriber.error(error);
     });
-  }
+  });
+}
+
   /*login(username: string, password: string): Observable<boolean> {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {
       localStorage.setItem('loggedIn', 'true');

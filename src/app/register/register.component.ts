@@ -18,6 +18,7 @@ export class RegisterComponent {
   username = '';
   email = '';
   password = '';
+  confirmPassword = '';
   avatarFile?: File;
   isLoading = false;
   errorMessage = '';
@@ -25,7 +26,7 @@ export class RegisterComponent {
   private apiUrl: string;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private loginService: LoginService,
     private apiConfig: ApiConfigService
   ) {
@@ -36,7 +37,7 @@ export class RegisterComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.avatarFile = input.files[0];
-      
+
       // Validar tipo de archivo
       const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (!allowedTypes.includes(this.avatarFile.type)) {
@@ -45,7 +46,7 @@ export class RegisterComponent {
         input.value = '';
         return;
       }
-      
+
       // Validar tamaño (ej: máximo 5MB)
       if (this.avatarFile.size > 5 * 1024 * 1024) {
         this.errorMessage = 'El archivo es demasiado grande. Máximo 5MB';
@@ -53,7 +54,7 @@ export class RegisterComponent {
         input.value = '';
         return;
       }
-      
+
       this.errorMessage = ''; // Limpiar errores si el archivo es válido
     } else {
       this.avatarFile = undefined;
@@ -71,23 +72,24 @@ export class RegisterComponent {
 
     try {
       // 1. Obtener URL de subida para el avatar
-      const fileExtension = this.getFileExtension(this.avatarFile.name);
-      const uploadUrlResponse = await this.getUploadUrl(this.username, fileExtension);
-      
+      //const fileExtension = this.getFileExtension(this.avatarFile.name);
+      //const uploadUrlResponse = await this.getUploadUrl(this.username, fileExtension);
+
       // 2. Subir el archivo a Google Cloud Storage
-      await this.uploadAvatarToGCS(uploadUrlResponse.uploadUrl, this.avatarFile);
-      
+      //await this.uploadAvatarToGCS(uploadUrlResponse.uploadUrl, this.avatarFile);
+
       // 3. Registrar el usuario con la URL pública del avatar
       const userData = {
-        username: this.username,
-        mail: this.email,
+        nombres: this.firstName,
+        apellidos: this.lastName,
+        apodo: this.username,
+        email: this.email,
         password: this.password,
-        names: this.firstName,
-        surnames: this.lastName,
-        urlAvatar: uploadUrlResponse.publicUrl,
-        rolesIds: [] // Por defecto sin roles específicos
-      };
+        confirmPassword: this.confirmPassword, // viene del formulario
+        acceptTerms: true, // marcado en el form
+        //urlAvatar: uploadUrlResponse.publicUrl // solo si backend lo permite
 
+      };
       this.loginService.registerUser(userData).subscribe({
         next: (response) => {
           console.log('Usuario registrado exitosamente:', response);
@@ -110,8 +112,8 @@ export class RegisterComponent {
   private getFileExtension(filename: string): string {
     return filename.split('.').pop()?.toLowerCase() || '';
   }
-
-  private async getUploadUrl(username: string, extension: string): Promise<{uploadUrl: string, publicUrl: string}> {
+/*
+  private async getUploadUrl(username: string, extension: string): Promise<{ uploadUrl: string, publicUrl: string }> {
     const response = await fetch(`${this.apiUrl}/users/avatar/upload-url?username=${encodeURIComponent(username)}&extension=${extension}`, {
       method: 'POST',
       headers: {
@@ -125,7 +127,7 @@ export class RegisterComponent {
 
     return await response.json();
   }
-
+*/
   private async uploadAvatarToGCS(uploadUrl: string, file: File): Promise<void> {
     const response = await fetch(uploadUrl, {
       method: 'PUT',

@@ -207,6 +207,11 @@ const routeConfig: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+   {
+    path: 'comentarios',
+    loadComponent: () => import('./app-comentarios/comentarios.component').then(m => m.ComentariosComponent),
+    canActivate: [AuthGuard]
   }
 ];
 

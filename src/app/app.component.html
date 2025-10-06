@@ -9,12 +9,8 @@
       <a (click)="onTournament()">Torneo</a>
       <a (click)="onInventory()">Mi Inventario</a>
       <a (click)="openLogin()">Mi Cuenta</a>
-      <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
-
-      
-      <!-- Dropdown Panel Gestión -->
       <div class="dropdown" *ngIf="isRole()">
-        <a class="dropdown-toggle">Panel Gestión</a>
+        <a>Panel Gestión</a>
         <div class="dropdown-menu">
           <a (click)="goToGestion('heroes')">Gestión de Héroes</a>
           <a (click)="goToGestion('items')">Gestión de Ítems</a>
@@ -69,10 +65,13 @@
       </div>
     </div>
   </div>
-
+  
+<div class="logout-wrapper">
   <button class="logout-button" *ngIf="loginService?.isLoggedIn()" (click)="logout()">
     Cerrar sesión
   </button>
+</div>
+
 
 
   
@@ -116,5 +115,7 @@
 
 <router-outlet></router-outlet>
 <app-toast></app-toast>
+<app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
+
 
 

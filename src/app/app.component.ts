@@ -17,7 +17,6 @@ import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
 import { ToastComponent } from "./toast/toast.component";
 import User from './domain/user.model';
-import { AppLoginComponent } from './app-login/app-login.component';
 import { ChatbotService } from './services/chatbot.service';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
 

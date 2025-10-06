@@ -17,12 +17,11 @@ interface Comment {
   fecha: string;
   texto: string;
   valoracion?: number;
-  imagen?: string; // base64 o URL
   replies?: Reply[];
 }
 
 interface ApiItem {
-  id: number | string;
+  id: number;
   name?: string;
   nombre?: string;
   description?: string;
@@ -91,7 +90,7 @@ class ApiService {
     return response.json();
   }
 
-  async getItemById(id: number|string): Promise<ApiItem> {
+  async getItemById(id: number): Promise<ApiItem> {
     const response = await fetch(`${this.baseUrl}/items/${id}`);
     
     if (!response.ok) {
@@ -112,7 +111,7 @@ class ApiService {
     return response.json();
   }
 
-  async getArmorById(id: number|string): Promise<ApiItem> {
+  async getArmorById(id: number): Promise<ApiItem> {
     const response = await fetch(`${this.baseUrl}/armors/${id}`);
     
     if (!response.ok) {
@@ -133,7 +132,7 @@ class ApiService {
     return response.json();
   }
 
-  async getWeaponById(id: number|string): Promise<ApiItem> {
+  async getWeaponById(id: number): Promise<ApiItem> {
     const response = await fetch(`${this.baseUrl}/weapons/${id}`);
     
     if (!response.ok) {
@@ -144,16 +143,14 @@ class ApiService {
   }
 
   // Comments methods
-  async getComments(tipo: Tipo, id: number|string, opts?: { orderBy?: 'fecha'|'valoracion'; order?: 'asc'|'desc'; limit?: number; skip?: number }): Promise<Comment[]> {
+  async getComments(tipo: Tipo, id: number, opts?: { orderBy?: 'fecha'|'valoracion'; order?: 'asc'|'desc'; limit?: number; skip?: number }): Promise<Comment[]> {
     const params = new URLSearchParams();
     if (opts?.orderBy) params.set('orderBy', opts.orderBy);
     if (opts?.order) params.set('order', opts.order);
     if (typeof opts?.limit === 'number') params.set('limit', String(opts.limit));
     if (typeof opts?.skip === 'number') params.set('skip', String(opts.skip));
     const qs = params.toString();
-    const url = `${this.baseUrl}/${tipo}/${id}/comments${qs ? `?${qs}` : ''}`;
-    console.debug('[ApiService] getComments URL', { tipo, id, url });
-    const response = await fetch(url);
+    const response = await fetch(`${this.baseUrl}/${tipo}/${id}/comments${qs ? `?${qs}` : ''}`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.status}`);
@@ -162,18 +159,19 @@ class ApiService {
     return response.json();
   }
 
-  async createComment(tipo: Tipo, id: number|string, commentData: {
+  async createComment(tipo: Tipo, id: number, commentData: {
     texto: string;
     valoracion?: number;
-    imagen?: string;
   }): Promise<Comment> {
-    // Usamos URLSearchParams para mantener compatibilidad; añadimos 'imagen' si existe
+    
     const body = new URLSearchParams();
     body.set('comentario', commentData.texto);
     if (typeof commentData.valoracion !== 'undefined') body.set('valoracion', String(commentData.valoracion));
     body.set('usuario', this.currentUser());
-    if (commentData.imagen) body.set('imagen', commentData.imagen);
-    const response = await fetch(`${this.baseUrl}/${tipo}/${id}/comments`, { method: 'POST', body });
+    const response = await fetch(`${this.baseUrl}/${tipo}/${id}/comments`, {
+      method: 'POST',
+      body
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to create comment: ${response.status}`);
@@ -182,7 +180,7 @@ class ApiService {
     return response.json();
   }
 
-  async updateComment(tipo: Tipo, itemId: number|string, commentId: string, commentData: {
+  async updateComment(tipo: Tipo, itemId: number, commentId: string, commentData: {
     texto: string;
     valoracion?: number;
   }): Promise<Comment> {
@@ -213,7 +211,7 @@ class ApiService {
     return response.json();
   }
 
-  async deleteComment(tipo: Tipo, itemId: number|string, commentId: string): Promise<void> {
+  async deleteComment(tipo: Tipo, itemId: number, commentId: string): Promise<void> {
     const usuario = encodeURIComponent(this.currentUser());
     const role = encodeURIComponent(this.currentRole());
     const url = `${this.baseUrl}/${tipo}/${itemId}/comments/${commentId}?usuario=${usuario}&role=${role}`;
@@ -224,7 +222,7 @@ class ApiService {
     }
   }
 
-  async createReply(tipo: Tipo, itemId: number|string, commentId: string, replyData: {
+  async createReply(tipo: Tipo, itemId: number, commentId: string, replyData: {
     texto: string;
   }): Promise<Reply> {
     const body = new URLSearchParams();
@@ -242,7 +240,7 @@ class ApiService {
     return response.json();
   }
 
-  async getSummary(tipo: Tipo, id: number|string): Promise<{
+  async getSummary(tipo: Tipo, id: number): Promise<{
     totalComments: number;
     averageRating: number;
   }> {
@@ -299,26 +297,20 @@ const tplRaw = `<div id="loading-mask" hidden>
         </div>
       </div>
       <div class="cc-modal-body">
-        <div class="cc-controls" id="cc-controls">
-          <div class="cc-filters">
-            <label>Ordenar por
-              <select id="cc-orderBy">
-                <option value="fecha">Fecha</option>
-                <option value="valoracion">Valoración</option>
-              </select>
-            </label>
-            <label>Orden
-              <select id="cc-order">
-                <option value="desc">Descendente</option>
-                <option value="asc">Ascendente</option>
-              </select>
-            </label>
-          </div>
+        <div class="cc-controls row">
+          <label>Ordenar por
+            <select id="cc-orderBy">
+              <option value="fecha">Fecha</option>
+              <option value="valoracion">Valoración</option>
+            </select>
+          </label>
+          <label>Orden
+            <select id="cc-order">
+              <option value="desc">Descendente</option>
+              <option value="asc">Ascendente</option>
+            </select>
+          </label>
           <button id="cc-apply">Aplicar</button>
-          <div class="cc-summary" id="cc-summary" style="display:none">
-            <span class="cc-stars" id="cc-stars" aria-label="Calificación promedio"></span>
-            <span class="cc-score" id="cc-score"></span>
-          </div>
         </div>
         <div id="cc-msg" class="msg" style="display:none"></div>
         <div id="cc-loading" class="loading">Cargando comentarios…</div>
@@ -338,17 +330,6 @@ const tplRaw = `<div id="loading-mask" hidden>
     <div class="row">
       <label for="cc-ed-val">Valoración (1-5, opcional)</label>
       <input id="cc-ed-val" type="number" min="1" max="5" value="5">
-    </div>
-    <div class="row img-row">
-      <div class="cc-file-wrap">
-        <button type="button" id="cc-file-trigger" class="cc-file-btn">Imagen</button>
-        <span class="cc-file-name" id="cc-file-name">Ninguna</span>
-        <input id="cc-ed-img" type="file" accept="image/*" hidden />
-      </div>
-    </div>
-    <div class="img-preview-wrapper" id="cc-img-preview" style="display:none">
-      <img id="cc-img-preview-img" alt="preview" />
-      <button id="cc-img-clear" type="button" class="secondary small">Quitar imagen</button>
     </div>
     <div class="buttons">
       <button id="cc-ed-cancel" class="secondary">Cancelar</button>
@@ -412,16 +393,6 @@ button:disabled { opacity:.7; cursor:default }
 .msg.success { border-color:#2e8b57 }
 .msg.error { border-color:#c43c3c }
 .loading { opacity:0.8; font-style:italic }
-/* Controls layout (grid: filtros | aplicar | resumen) */
-.cc-controls { display:grid; grid-template-columns: 1fr auto auto; align-items:center; column-gap:16px; row-gap:8px; margin:4px 0 12px 0; padding:8px 10px; border:1px solid #56cfe1; border-radius:8px; background:#0d2539; }
-.cc-filters { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
-.cc-filters label { display:flex; flex-direction:column; font-size:.7rem; gap:4px; color:#cde9f2; text-transform:uppercase; letter-spacing:.5px }
-.cc-filters select { height:32px; background:#0d1b2a; color:#eaf6f6; border:2px solid #56cfe1; border-radius:6px; padding:0 8px; }
-#cc-apply { height:34px; background:#56cfe1; color:#0d1b2a; border:2px solid #56cfe1; border-radius:8px; padding:0 18px; font-weight:600; box-shadow:0 0 6px rgba(86,207,225,.4); }
-#cc-apply:hover { background:#48bfe3; border-color:#48bfe3 }
-.cc-summary { display:flex; align-items:center; gap:8px; justify-self:end; font-size:.85rem; background:#0d1b2a; padding:4px 10px; border:1px solid #56cfe1; border-radius:6px; }
-.cc-stars .stars-text { color:#f5c518; font-size:.9rem; letter-spacing:2px; text-shadow:0 0 4px rgba(245,197,24,0.5) }
-.cc-score { color:#eaf6f6; font-weight:600 }
 /* Confirm */
 .cc-confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:2147483647; }
 .cc-confirm { width:min(420px, 92vw); background:#0d1b2a; border:1px solid #56cfe1; border-radius:10px; padding:14px; box-shadow:0 0 16px rgba(86,207,225,0.3); }
@@ -435,17 +406,9 @@ button:disabled { opacity:.7; cursor:default }
 .cc-editor .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap }
 .cc-editor textarea { width:100%; min-height:80px; padding:8px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; color:#eaf6f6; box-sizing:border-box }
 .cc-editor input[type="number"] { width:80px; height:32px; padding:6px 8px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; color:#eaf6f6 }
-.cc-editor input[type="file"] { height:32px; padding:4px 6px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; color:#eaf6f6 }
 .cc-editor .buttons { display:flex; gap:8px; justify-content:flex-end; margin-top:8px }
 .cc-editor button { background:#56cfe1; color:#0d1b2a; border:2px solid #56cfe1; border-radius:6px; padding:6px 12px; cursor:pointer }
 .cc-editor .secondary { background:transparent; color:#eaf6f6; border-color:#56cfe1 }
-.cc-editor .small { padding:4px 8px; font-size:.75rem }
-.cc-file-wrap { display:flex; align-items:center; gap:10px; }
-.cc-file-btn { background:#56cfe1; color:#0d1b2a; border:2px solid #56cfe1; border-radius:6px; padding:6px 14px; cursor:pointer; font-weight:600; box-shadow:0 0 6px rgba(86,207,225,.3); }
-.cc-file-btn:hover { background:#48bfe3; border-color:#48bfe3 }
-.cc-file-name { font-size:.75rem; padding:4px 8px; background:#0d1b2a; border:1px solid #56cfe1; border-radius:6px; max-width:200px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; color:#cde9f2 }
-.img-preview-wrapper { margin:8px 0; display:flex; gap:12px; align-items:center }
-.img-preview-wrapper img { max-width:140px; max-height:140px; border:2px solid #56cfe1; border-radius:8px; object-fit:cover; }
 /* Image placeholder */
 .img-placeholder { width:100%; height:120px; border-radius:6px; border:2px solid #56cfe1; background:#0d1b2a; }
 /* Real image styling */
@@ -478,18 +441,11 @@ interface State {
   weapons: ApiItem[];
   avgCache: {[key: string]: number};
   toast: {text: string; type: 'info'|'success'|'error'} | null;
-  minimalMode?: boolean;
 }
 
 class AppRoot extends HTMLElement {
   logged: boolean = false;
   private eventsBound = false;
-  // Cache por tipo para fallback de ID lógicos
-  private getCacheByTipo(tipo: Tipo): ApiItem[] {
-    if (tipo === 'armor') return this.state.armors || [];
-    if (tipo === 'weapon') return this.state.weapons || [];
-    return this.state.items || [];
-  }
   state: State = {
     tipo: 'item',
     idOrOid: '1',
@@ -508,7 +464,6 @@ class AppRoot extends HTMLElement {
     weapons: [],
     avgCache: {},
     toast: null,
-    minimalMode: false,
   };
 
   constructor(){ super(); this.attachShadow({ mode: 'open' }); }
@@ -521,11 +476,6 @@ class AppRoot extends HTMLElement {
       return;
     }
 
-    // Detectar modo minimal (usado desde inventario): no mostrar grillas, solo modal cuando se invoque
-    if (this.hasAttribute('minimal')) {
-      this.state.minimalMode = true;
-    }
-
     loadTokenFromStorage();
     // Read role and username from main app
     const role = (localStorage.getItem('role') || 'player').toLowerCase();
@@ -536,45 +486,7 @@ class AppRoot extends HTMLElement {
     // Omitimos token Bearer; identidad por nombre
     (this as any).logged = true;
     await this.render();
-    if (!this.state.minimalMode) {
-      await Promise.all([this.loadItems(), this.loadArmors(), this.loadWeapons()]);
-    } else {
-      // En modo minimal ocultar vistas principales si llegaran a existir
-      const hide = () => {
-        const lv = this.shadowRoot?.getElementById('logged-view');
-        const nlv = this.shadowRoot?.getElementById('not-logged-view');
-        if (lv) (lv as HTMLElement).style.display = 'none';
-        if (nlv) (nlv as HTMLElement).style.display = 'none';
-      };
-      hide();
-      // Reaplicar tras microtask por si render posterior cambia
-      setTimeout(hide,0);
-    }
-
-    // Listener global para abrir modal desde fuera (inventario principal)
-    // Uso: window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo: 'item', id: 12 }}))
-    const handler = (ev: Event) => {
-      const ce = ev as CustomEvent<{ tipo: Tipo; id: number | string; name?: string }>; 
-      if (!ce.detail) return;
-      const { tipo, id, name } = ce.detail;
-      if (!tipo || !id) return;
-      if (name) this.state.name = name;
-      // En modo minimal, si no se cargaron catálogos aún, cargar solo el necesario
-      const ensureCatalog = async () => {
-        if (!this.state.minimalMode) return;
-        if (tipo === 'item' && this.state.items.length === 0) {
-          try { this.state.items = await apiService.getItems(); } catch {}
-        } else if (tipo === 'armor' && this.state.armors.length === 0) {
-          try { this.state.armors = await apiService.getArmors(); } catch {}
-        } else if (tipo === 'weapon' && this.state.weapons.length === 0) {
-          try { this.state.weapons = await apiService.getWeapons(); } catch {}
-        }
-      };
-      ensureCatalog().then(() => this.openCommentsModal(tipo, String(id), name));
-    };
-    window.addEventListener('open-comments', handler as any);
-    // Guardar para cleanup si se desea en disconnectedCallback futuro
-    (this as any)._extOpenHandler = handler;
+    await Promise.all([this.loadItems(), this.loadArmors(), this.loadWeapons()]);
   }
 
   setState(partial: Partial<State>){ this.state = { ...this.state, ...partial }; this.render(); }
@@ -618,12 +530,6 @@ class AppRoot extends HTMLElement {
 
   async render(){
     if (!this.shadowRoot) this.attachShadow({ mode:'open' });
-    // Conservar modal abierto (si existe) para reinsertarlo luego de regenerar innerHTML
-  const existingModal = this.shadowRoot?.querySelector('.cc-modal-overlay');
-    let preservedModal: HTMLElement | null = null;
-    if (existingModal) {
-      preservedModal = existingModal as HTMLElement;
-    }
     const logged = localStorage.getItem('loggedIn') === 'true';
     if (!logged) {
       window.location.replace('/login');
@@ -670,15 +576,6 @@ class AppRoot extends HTMLElement {
     }
 
     this.bindEvents();
-
-    // Si había un modal abierto antes del render, volver a anexarlo al final para que no "desaparezca"
-    if (preservedModal) {
-      // Evitar duplicados si se volvió a crear otro modal antes
-      const current = this.shadowRoot?.querySelector('.cc-modal-overlay');
-      if (!current && this.shadowRoot) {
-        this.shadowRoot.appendChild(preservedModal);
-      }
-    }
   }
 
   renderLoggedView() {
@@ -824,114 +721,22 @@ class AppRoot extends HTMLElement {
     }
   }
 
-  private _tipoCache: Record<string,{ tipo: Tipo; id: string }> = {};
-
-  private renderStars(avg: number): string {
-    const clamped = Math.max(0, Math.min(5, avg || 0));
-    const full = Math.floor(clamped);
-    const half = (clamped - full) >= 0.5;
-    const stars: string[] = [];
-    for (let i=0;i<full;i++) stars.push('★');
-    if (half) stars.push('☆'); // could use half style; fallback ☆ as placeholder
-    while (stars.length < 5) stars.push('☆');
-    return `<span class="stars-text">${stars.join('')}</span>`;
-  }
-
-  private updateSummaryUI(){
-    const summaryBox = this.shadowRoot?.getElementById('cc-summary');
-    if (!summaryBox) return;
-    if (!this.state.summary) { summaryBox.style.display='none'; return; }
-    // Normalizar distintos nombres posibles del backend
-    const raw = this.state.summary || {};
-    const avg = (
-      raw.averageRating ?? raw.average ?? raw.avg ?? raw.promedio ?? raw.stats?.average ?? raw.stats?.avg ?? 0
-    ) as number;
-    const total = (
-      raw.totalComments ?? raw.total ?? raw.count ?? raw.cantidad ?? raw.stats?.total ?? raw.stats?.count ?? 0
-    ) as number;
-    const starsEl = this.shadowRoot?.getElementById('cc-stars');
-    const scoreEl = this.shadowRoot?.getElementById('cc-score');
-    if (starsEl) starsEl.innerHTML = this.renderStars(avg);
-    if (scoreEl) scoreEl.textContent = `★ ${avg.toFixed(1)} (${total})`;
-    summaryBox.style.display = 'block';
-  }
-
-  openCommentsModal(tipo: Tipo, id: string, productName?: string) {
+  openCommentsModal(tipo: Tipo, id: string) {
     const modal = this.shadowRoot?.getElementById('tpl-modal') as HTMLTemplateElement;
-    if (!modal || !this.shadowRoot) return;
-    let container = this.shadowRoot.getElementById('modal-persistent-container');
-    if (!container) {
-      container = document.createElement('div');
-      container.id = 'modal-persistent-container';
-      this.shadowRoot.appendChild(container);
-    }
-    container.querySelector('.cc-modal-overlay')?.remove();
-    const clone = document.importNode(modal.content, true);
-    container.appendChild(clone);
+    if (modal && this.shadowRoot) {
+      // If a modal is already open, remove it to avoid duplicates
+      const existing = this.shadowRoot.querySelector('.cc-modal-overlay');
+      existing?.remove();
+      // Append modal inside shadow root to keep styles and structure self-contained
+      const clone = document.importNode(modal.content, true);
+      this.shadowRoot.appendChild(clone);
 
-    // Ocultar lista mientras resolvemos tipo correcto
-    const listEl = this.shadowRoot.getElementById('cc-list');
-    const msgEl = this.shadowRoot.getElementById('cc-msg');
-    const loadingEl = this.shadowRoot.getElementById('cc-loading');
-    if (listEl) (listEl as HTMLElement).style.display = 'none';
-    if (msgEl) (msgEl as HTMLElement).style.display = 'none';
-    if (loadingEl) (loadingEl as HTMLElement).style.display = 'block';
+      // Configure modal for the specific item
+      this.state.tipo = tipo;
+      this.state.idOrOid = id;
 
-    const origTipo = tipo;
-    const origId = id;
-    const nameTarget = (productName || this.state.name || '').toLowerCase();
-    const cacheKey = `${nameTarget}::${origId}::${origTipo}`;
-
-    const ensureCatalog = async (t: Tipo) => {
-      if (t === 'item' && this.state.items.length === 0) this.state.items = await apiService.getItems();
-      if (t === 'armor' && this.state.armors.length === 0) this.state.armors = await apiService.getArmors();
-      if (t === 'weapon' && this.state.weapons.length === 0) this.state.weapons = await apiService.getWeapons();
-    };
-
-    const resolve = async (): Promise<{ tipo: Tipo; id: string }> => {
-      // Cache
-      if (this._tipoCache[cacheKey]) return this._tipoCache[cacheKey];
-      if (!nameTarget) return { tipo: origTipo, id: origId };
-      await ensureCatalog(origTipo);
-      const listOrig = origTipo === 'item' ? this.state.items : (origTipo === 'armor' ? this.state.armors : this.state.weapons);
-      const byId = listOrig.find(it => String(it.id) === String(origId));
-      if (byId && (byId.name||'').toLowerCase() === nameTarget) {
-        this._tipoCache[cacheKey] = { tipo: origTipo, id: String(byId.id) };
-        return this._tipoCache[cacheKey];
-      }
-      // Buscar por nombre exacto en otros catálogos
-      for (const t of ['item','armor','weapon'] as Tipo[]) {
-        await ensureCatalog(t);
-        const list = t === 'item' ? this.state.items : (t === 'armor' ? this.state.armors : this.state.weapons);
-        const match = list.find(it => (it.name||'').toLowerCase() === nameTarget);
-        if (match) {
-          this._tipoCache[cacheKey] = { tipo: t, id: String(match.id) };
-          return this._tipoCache[cacheKey];
-        }
-      }
-      return { tipo: origTipo, id: origId }; // fallback
-    };
-
-    (async () => {
-      try {
-        const r = await resolve();
-        this.state.tipo = r.tipo;
-        this.state.idOrOid = r.id;
-        // Obtener summary (promedio y total) antes de cargar comentarios
-        try {
-          const summary = await apiService.getSummary(this.state.tipo, this.state.idOrOid);
-          this.state.summary = summary;
-          this.updateSummaryUI();
-        } catch (e) {
-          this.state.summary = null;
-          this.updateSummaryUI();
-        }
-        await this.loadComments();
-      } finally {
-        if (loadingEl) (loadingEl as HTMLElement).style.display = 'none';
-        if (listEl) (listEl as HTMLElement).style.display = 'block';
-      }
-    })();
+      // Load comments
+      this.loadComments();
 
       // Bind modal events scoped to shadow root
       const closeBtn = this.shadowRoot.getElementById('cc-close-modal');
@@ -985,7 +790,7 @@ class AppRoot extends HTMLElement {
       };
       closeBtn?.addEventListener('click', cleanup);
     }
-    
+  }
 
   closeModal() {
     const overlay = this.shadowRoot?.querySelector('.cc-modal-overlay');
@@ -993,100 +798,20 @@ class AppRoot extends HTMLElement {
   }
 
   async loadComments() {
-    const loading = this.shadowRoot?.getElementById('cc-loading');
-    if (loading) loading.style.display = 'block';
-    const msgEl = this.shadowRoot?.getElementById('cc-msg');
-    if (msgEl) msgEl.style.display = 'none';
-    let attempted: Array<string|number> = [];
-    const tryFetch = async (idCandidate: string|number) => {
-      attempted.push(idCandidate);
-      return apiService.getComments(this.state.tipo, idCandidate, { orderBy: this.state.orderBy as any, order: this.state.order as any });
-    };
     try {
-      let comments: Comment[] = [];
-      try {
-        comments = await tryFetch(this.state.idOrOid);
-      } catch (err: any) {
-        const msg = String(err?.message || '');
-        if (/400/.test(msg)) {
-          // fallback alternando campos lógicos sólo si tenemos un item en caches
-          const cacheArr = this.getCacheByTipo(this.state.tipo);
-          const candidate = cacheArr.find((i: any) => String(i.id) === String(this.state.idOrOid));
-          let altId: any;
-          if (candidate) {
-            if (this.state.tipo === 'armor') altId = (candidate as any).armorId ?? candidate.id;
-            else if (this.state.tipo === 'weapon') altId = (candidate as any).weaponId ?? candidate.id;
-            else altId = (candidate as any).itemId ?? candidate.id;
-          }
-          // Si no se encontró candidate por id pero tenemos nombre, buscar por nombre
-          if (!candidate && this.state.name) {
-            const byName = cacheArr.find((i: any) => (i.name || i.nombre) === this.state.name);
-            if (byName) {
-              if (this.state.tipo === 'armor') altId = (byName as any).armorId ?? byName.id;
-              else if (this.state.tipo === 'weapon') altId = (byName as any).weaponId ?? byName.id;
-              else altId = (byName as any).itemId ?? byName.id;
-            }
-          }
-            if (altId && String(altId) !== String(this.state.idOrOid)) {
-              console.debug('[Comments] Retry with alternate id', { original: this.state.idOrOid, altId });
-              comments = await tryFetch(altId);
-              this.state.idOrOid = String(altId);
-            } else {
-              // Segundo fallback: extraer primera secuencia numérica si el id original no es válido
-              const orig = this.state.idOrOid;
-              const isNumeric = /^\d+$/.test(String(orig));
-              const isOid = /^[a-fA-F0-9]{24}$/.test(String(orig));
-              if (!isNumeric && !isOid) {
-                const digits = String(orig).match(/\d+/);
-                if (digits) {
-                  const numericAlt = digits[0];
-                  console.debug('[Comments] Retry with extracted numeric digits', { original: orig, numericAlt });
-                  try {
-                    comments = await tryFetch(numericAlt);
-                    this.state.idOrOid = numericAlt;
-                  } catch (inner) {
-                    throw err; // mantener error original si también falla
-                  }
-                } else {
-                  throw err;
-                }
-              } else {
-                throw err;
-              }
-            }
-        } else {
-          throw err;
-        }
-      }
+      const comments = await apiService.getComments(this.state.tipo, parseInt(this.state.idOrOid), { orderBy: this.state.orderBy as any, order: this.state.order as any });
       this.state.comments = comments;
-      // Fallback: si summary vacío, derivar localmente
-      try {
-        const raw = this.state.summary || {};
-        const totalExisting = raw.totalComments ?? raw.total ?? raw.count ?? raw.stats?.total ?? raw.stats?.count;
-        const avgExisting = raw.averageRating ?? raw.average ?? raw.avg ?? raw.stats?.average;
-        const rated = comments.filter(c => typeof c.valoracion === 'number');
-        const needLocal = !this.state.summary || rated.length > 0 && (
-          typeof totalExisting === 'undefined' || Number(totalExisting) === 0 || Number(totalExisting) !== comments.length || typeof avgExisting === 'undefined'
-        );
-        if (needLocal) {
-          if (rated.length) {
-            const avg = rated.reduce((a,c)=>a+(c.valoracion||0),0)/rated.length;
-            this.state.summary = { averageRating: avg, totalComments: comments.length };
-          } else {
-            this.state.summary = { averageRating: 0, totalComments: comments.length };
-          }
-          this.updateSummaryUI();
-        }
-      } catch {}
-      const list = this.shadowRoot?.getElementById('cc-list') as any;
-      if (list) {
-        list.data = { comments, isAdmin: this.state.isAdmin, username: this.state.loggedUser };
-        list.style.display = 'block';
+      
+      const commentsList = this.shadowRoot?.getElementById('cc-list') as any;
+      if (commentsList) {
+        commentsList.data = { comments, isAdmin: this.state.isAdmin, username: this.state.loggedUser };
+        commentsList.style.display = 'block';
       }
+      
+      const loading = this.shadowRoot?.getElementById('cc-loading');
       if (loading) loading.style.display = 'none';
     } catch (error) {
-      console.error('Error loading comments:', error, { attemptedIds: attempted });
-      if (loading) loading.style.display = 'none';
+      console.error('Error loading comments:', error);
       const msg = this.shadowRoot?.getElementById('cc-msg');
       if (msg) {
         msg.textContent = 'Error cargando comentarios';
@@ -1110,40 +835,10 @@ class AppRoot extends HTMLElement {
   const cancelBtn = this.shadowRoot?.getElementById('cc-ed-cancel');
   const titleEl = this.shadowRoot?.querySelector('.cc-editor .ed-title');
   if (titleEl) titleEl.textContent = 'Nuevo comentario';
-
-      // Manejo de imagen
-      const fileInput = this.shadowRoot?.getElementById('cc-ed-img') as HTMLInputElement | null;
-      const fileTrigger = this.shadowRoot?.getElementById('cc-file-trigger') as HTMLButtonElement | null;
-      const fileNameLbl = this.shadowRoot?.getElementById('cc-file-name') as HTMLElement | null;
-      const previewWrap = this.shadowRoot?.getElementById('cc-img-preview') as HTMLElement | null;
-      const previewImg = this.shadowRoot?.getElementById('cc-img-preview-img') as HTMLImageElement | null;
-      const clearBtn = this.shadowRoot?.getElementById('cc-img-clear') as HTMLButtonElement | null;
-      (this as any)._pendingImage = undefined;
-      fileTrigger?.addEventListener('click', ()=> fileInput?.click());
-      fileInput?.addEventListener('change', () => {
-        if (!fileInput.files || !fileInput.files[0]) { (this as any)._pendingImage = undefined; if (previewWrap) previewWrap.style.display='none'; return; }
-        const file = fileInput.files[0];
-        if (fileNameLbl) fileNameLbl.textContent = file.name;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = String(e.target?.result || '');
-          (this as any)._pendingImage = result; // data URL base64
-          if (previewImg) previewImg.src = result;
-          if (previewWrap) previewWrap.style.display = 'flex';
-        };
-        reader.readAsDataURL(file);
-      });
-      clearBtn?.addEventListener('click', () => {
-        (this as any)._pendingImage = undefined;
-        if (fileInput) fileInput.value='';
-        if (previewWrap) previewWrap.style.display='none';
-        if (fileNameLbl) fileNameLbl.textContent = 'Ninguna';
-      });
       
       saveBtn?.addEventListener('click', () => this.saveNewComment());
       cancelBtn?.addEventListener('click', () => {
         this.shadowRoot?.querySelector('.cc-editor')?.remove();
-        (this as any)._pendingImage = undefined;
       });
     }
   }
@@ -1173,7 +868,7 @@ class AppRoot extends HTMLElement {
       const texto = (textArea?.value || '').trim();
       if (!texto) return;
       try {
-  await apiService.createReply(this.state.tipo, this.state.idOrOid, String(commentId), { texto });
+        await apiService.createReply(this.state.tipo, parseInt(this.state.idOrOid), String(commentId), { texto });
         this.shadowRoot?.querySelector('.cc-editor')?.remove();
         await this.loadComments();
         const msg = this.shadowRoot?.getElementById('cc-msg');
@@ -1181,6 +876,64 @@ class AppRoot extends HTMLElement {
       } catch (e) {
         const msg = this.shadowRoot?.getElementById('cc-msg');
         if (msg) { msg.textContent = 'Error creando respuesta'; msg.className = 'msg error'; msg.style.display = 'block'; }
+      }
+    });
+    cancelBtn?.addEventListener('click', () => {
+      this.shadowRoot?.querySelector('.cc-editor')?.remove();
+    });
+  }
+
+  private showEditEditor(commentId: string) {
+    if (!this.state.isAdmin) {
+      const msg = this.shadowRoot?.getElementById('cc-msg');
+      if (msg) { msg.textContent = 'No tienes permisos para editar'; msg.className = 'msg error'; msg.style.display = 'block'; }
+      return;
+    }
+    // Buscar el comentario actual para prellenar
+    const target = this.state.comments.find(c => String((c as any)._id || (c as any).id) === String(commentId)) as any;
+    const currTexto = target?.texto || target?.comentario || '';
+    const currVal = typeof target?.valoracion === 'number' ? target.valoracion : undefined;
+
+    const editorTemplate = this.shadowRoot?.getElementById('tpl-editor') as HTMLTemplateElement;
+    if (!editorTemplate) return;
+    const clone = document.importNode(editorTemplate.content, true);
+    const modalBody = this.shadowRoot?.querySelector('.cc-modal-body');
+    this.shadowRoot?.querySelector('.cc-editor')?.remove();
+    modalBody?.appendChild(clone);
+
+    // Ajustar título y valores actuales
+    const titleEl = this.shadowRoot?.querySelector('.cc-editor .ed-title');
+    if (titleEl) titleEl.textContent = 'Editar comentario';
+    const textArea = this.shadowRoot?.getElementById('cc-ed-text') as HTMLTextAreaElement | null;
+    if (textArea) textArea.value = String(currTexto || '');
+    const valInput = this.shadowRoot?.getElementById('cc-ed-val') as HTMLInputElement | null;
+    if (valInput && typeof currVal === 'number') valInput.value = String(currVal);
+
+    const saveBtn = this.shadowRoot?.getElementById('cc-ed-save');
+    const cancelBtn = this.shadowRoot?.getElementById('cc-ed-cancel');
+    saveBtn?.addEventListener('click', async () => {
+      const texto = (textArea?.value || '').trim();
+      if (!texto) {
+        const msg = this.shadowRoot?.getElementById('cc-msg');
+        if (msg) { msg.textContent = 'El texto no puede estar vacío'; msg.className = 'msg error'; msg.style.display = 'block'; }
+        return;
+      }
+      let valNum: number | undefined = undefined;
+      if (valInput) {
+        const parsed = Number.parseInt(valInput.value, 10);
+        if (Number.isFinite(parsed)) {
+          valNum = Math.max(1, Math.min(5, parsed));
+        }
+      }
+      try {
+        await apiService.updateComment(this.state.tipo, parseInt(this.state.idOrOid), String(commentId), { texto, valoracion: valNum });
+        this.shadowRoot?.querySelector('.cc-editor')?.remove();
+        await this.loadComments();
+        const msg = this.shadowRoot?.getElementById('cc-msg');
+        if (msg) { msg.textContent = 'Comentario actualizado'; msg.className = 'msg success'; msg.style.display = 'block'; }
+      } catch (e) {
+        const msg = this.shadowRoot?.getElementById('cc-msg');
+        if (msg) { msg.textContent = 'Error actualizando comentario'; msg.className = 'msg error'; msg.style.display = 'block'; }
       }
     });
     cancelBtn?.addEventListener('click', () => {
@@ -1207,12 +960,10 @@ class AppRoot extends HTMLElement {
           valoracion = Math.max(1, Math.min(5, parsed));
         }
       }
-  const imagen = (this as any)._pendingImage as string | undefined;
-  await apiService.createComment(this.state.tipo, this.state.idOrOid, { texto, valoracion, imagen });
+      await apiService.createComment(this.state.tipo, parseInt(this.state.idOrOid), { texto, valoracion });
 
       // Remove editor and reload comments
       this.shadowRoot?.querySelector('.cc-editor')?.remove();
-  (this as any)._pendingImage = undefined;
       await this.loadComments();
 
       const msg = this.shadowRoot?.getElementById('cc-msg');
@@ -1233,69 +984,7 @@ class AppRoot extends HTMLElement {
   }
 
   private async handleEdit(commentId: string){
-    // Implementación ligera de edición inline (showEditEditor removido durante refactor)
-    const target = this.state.comments.find(c => String((c as any)._id || (c as any).id) === String(commentId));
-    if (!target) return;
-    const editorTemplate = this.shadowRoot?.getElementById('tpl-editor') as HTMLTemplateElement;
-    if (!editorTemplate) return;
-    // Cerrar otro editor
-    this.shadowRoot?.querySelector('.cc-editor')?.remove();
-    const clone = document.importNode(editorTemplate.content, true);
-    const modalBody = this.shadowRoot?.querySelector('.cc-modal-body');
-    modalBody?.appendChild(clone);
-    const titleEl = this.shadowRoot?.querySelector('.cc-editor .ed-title');
-    if (titleEl) titleEl.textContent = 'Editar comentario';
-    // Prellenar
-    const textArea = this.shadowRoot?.getElementById('cc-ed-text') as HTMLTextAreaElement | null;
-    const valInput = this.shadowRoot?.getElementById('cc-ed-val') as HTMLInputElement | null;
-    if (textArea) textArea.value = (target as any).texto || '';
-    if (valInput && typeof (target as any).valoracion !== 'undefined') valInput.value = String((target as any).valoracion);
-    // Imagen existente (si la hay no la re-editamos por simplicidad)
-    const fileInput = this.shadowRoot?.getElementById('cc-ed-img') as HTMLInputElement | null;
-    const previewWrap = this.shadowRoot?.getElementById('cc-img-preview') as HTMLElement | null;
-    const previewImg = this.shadowRoot?.getElementById('cc-img-preview-img') as HTMLImageElement | null;
-    (this as any)._pendingImage = undefined;
-    if (fileInput) fileInput.value='';
-    if (previewWrap) previewWrap.style.display='none';
-    fileInput?.addEventListener('change', () => {
-      if (!fileInput.files || !fileInput.files[0]) { (this as any)._pendingImage = undefined; if (previewWrap) previewWrap.style.display='none'; return; }
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = String(e.target?.result || '');
-        (this as any)._pendingImage = result;
-        if (previewImg) previewImg.src = result;
-        if (previewWrap) previewWrap.style.display='flex';
-      };
-      reader.readAsDataURL(file);
-    });
-    const saveBtn = this.shadowRoot?.getElementById('cc-ed-save');
-    const cancelBtn = this.shadowRoot?.getElementById('cc-ed-cancel');
-    saveBtn?.addEventListener('click', async () => {
-      const newText = (textArea?.value || '').trim();
-      if (!newText) return;
-      let newVal = (target as any).valoracion || 5;
-      if (valInput) {
-        const parsed = Number.parseInt(valInput.value,10);
-        if (Number.isFinite(parsed)) newVal = Math.max(1, Math.min(5, parsed));
-      }
-      try {
-  // La API de updateComment actualmente no acepta imagen (solo texto/valoración)
-  await apiService.updateComment(this.state.tipo, this.state.idOrOid, String(commentId), { texto: newText, valoracion: newVal });
-        this.shadowRoot?.querySelector('.cc-editor')?.remove();
-        (this as any)._pendingImage = undefined;
-        await this.loadComments();
-        const msg = this.shadowRoot?.getElementById('cc-msg');
-        if (msg) { msg.textContent = 'Comentario actualizado'; msg.className = 'msg success'; msg.style.display = 'block'; }
-      } catch (e) {
-        const msg = this.shadowRoot?.getElementById('cc-msg');
-        if (msg) { msg.textContent = 'Error actualizando'; msg.className = 'msg error'; msg.style.display = 'block'; }
-      }
-    });
-    cancelBtn?.addEventListener('click', () => {
-      this.shadowRoot?.querySelector('.cc-editor')?.remove();
-      (this as any)._pendingImage = undefined;
-    });
+    this.showEditEditor(String(commentId));
   }
 
   private async handleDelete(commentId: string){
@@ -1326,7 +1015,7 @@ class AppRoot extends HTMLElement {
       // Cerrar el cuadro inmediatamente para una mejor UX
       cleanup();
       try {
-  await apiService.deleteComment(this.state.tipo, this.state.idOrOid, String(commentId));
+        await apiService.deleteComment(this.state.tipo, parseInt(this.state.idOrOid), String(commentId));
         await this.loadComments();
         const msg = this.shadowRoot?.getElementById('cc-msg');
         if (msg) { msg.textContent = 'Comentario eliminado'; msg.className = 'msg success'; msg.style.display = 'block'; }

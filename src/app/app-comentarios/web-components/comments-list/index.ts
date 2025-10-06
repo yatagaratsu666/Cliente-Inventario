@@ -47,7 +47,6 @@ export class CommentsList extends HTMLElement {
     items.forEach((item, idx) => {
       const c = this._comments[idx];
       const isOwner = !!this._username && c.usuario === this._username;
-      // Editar: SOLO admin. Eliminar: admin o dueño.
       item.data = { comment: c, isAdmin: this._isAdmin, canDelete: this._isAdmin || isOwner, canEdit: this._isAdmin, canReply: true };
     });
     // No re-emit: comment-item already dispatches composed events that bubble to the host

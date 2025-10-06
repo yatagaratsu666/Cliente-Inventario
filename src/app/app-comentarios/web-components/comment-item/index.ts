@@ -24,7 +24,6 @@ const tplRaw = `<li class="card">
       <button id="delete">Eliminar</button>
     </div>
   </div>
-  <div id="img-wrap" class="img-wrap" style="display:none"></div>
   <div id="texto"></div>
   <div id="replies"></div>
 </li>`;
@@ -39,9 +38,7 @@ button:hover { background:#48bfe3; border-color:#48bfe3 }
 button.secondary { background:transparent; color:#eaf6f6 }
 #texto { white-space:pre-wrap; margin-top:8px }
 #replies { margin-top:6px; opacity:.9 }
-#replies > .reply { border-left: 2px solid #56cfe1; padding-left:8px; margin-top:6px }
-.img-wrap { margin-top:8px }
-.img-wrap img { max-width:160px; max-height:160px; border:2px solid #56cfe1; border-radius:8px; object-fit:cover; display:block }`;
+#replies > .reply { border-left: 2px solid #56cfe1; padding-left:8px; margin-top:6px }`;
 
 type Props = { comment: CommentDoc; isAdmin: boolean; canDelete?: boolean; canEdit?: boolean; canReply?: boolean };
 
@@ -60,20 +57,11 @@ export class CommentItem extends HTMLElement {
   this.shadowRoot!.innerHTML = `<style>${css}</style>` + html;
 
     const meta = this.shadowRoot!.getElementById('meta');
-  const texto = this.shadowRoot!.getElementById('texto');
-  const imgWrap = this.shadowRoot!.getElementById('img-wrap') as HTMLElement | null;
+    const texto = this.shadowRoot!.getElementById('texto');
     const replies = this.shadowRoot!.getElementById('replies');
 
     if (meta) meta.textContent = `${comment.usuario} · ${new Date(comment.fecha).toLocaleString()} · ⭐ ${comment.valoracion}`;
     if (texto) texto.textContent = comment.comentario;
-    // Soportar imagen (prop imagen base64 o URL)
-    const rawImg = (comment as any).imagen || (comment as any).image;
-    if (rawImg && imgWrap) {
-      imgWrap.innerHTML = `<img alt="imagen" src="${rawImg}" />`;
-      imgWrap.style.display = 'block';
-    } else if (imgWrap) {
-      imgWrap.style.display = 'none';
-    }
     if (replies) {
       replies.innerHTML = (comment.respuestas||[]).map((r: Reply)=>`<div class="reply"><b>${r.usuario}</b> · ${new Date(r.fecha).toLocaleString()}<br/>${r.comentario}</div>`).join('');
     }

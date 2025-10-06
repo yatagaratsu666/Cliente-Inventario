@@ -116,9 +116,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   this.filtered = this.auctions.filter(a => {
     // Filtro por nombre/descripción solo si hay mínimo 4 caracteres
     if (q.length >= 4) {
-      const title = (a.title ?? '').toLowerCase().trim();
-      const desc = (a.description ?? '').toLowerCase().trim();
-      if (!title.includes(q) && !desc.includes(q)) return false;
+      const name = (a.item?.name ?? '').toLowerCase().trim();
+      const desc = (a.item?.description ?? '').toLowerCase().trim();
+      if (q.length >= 4 && !name.includes(q) && !desc.includes(q)) return false;
     }
 
     // Filtro por tipo
@@ -139,7 +139,11 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     return true;
   });
+  if (q.length < 4 && !this.selectedType && !this.selectedDuration && !this.maxPrice) {
+    this.filtered = [...this.auctions];
+  }
 }
+
 
 
 

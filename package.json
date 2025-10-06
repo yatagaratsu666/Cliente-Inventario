@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^19.2.14",
     "@angular/platform-browser-dynamic": "^19.2.14",
     "@angular/router": "^19.2.14",
+    "axios": "^1.12.2",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.22.4",
@@ -43,6 +44,5 @@
   "allowedCommonJsDependencies": [
     "sweetalert2",
     "axios"
-
   ]
 }

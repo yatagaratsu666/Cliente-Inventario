@@ -17,6 +17,7 @@ interface Comment {
   fecha: string;
   texto: string;
   valoracion?: number;
+  imagen?: string; // base64 o URL
   replies?: Reply[];
 }
 
@@ -162,16 +163,15 @@ class ApiService {
   async createComment(tipo: Tipo, id: number, commentData: {
     texto: string;
     valoracion?: number;
+    imagen?: string;
   }): Promise<Comment> {
-    
+    // Usamos URLSearchParams para mantener compatibilidad; añadimos 'imagen' si existe
     const body = new URLSearchParams();
     body.set('comentario', commentData.texto);
     if (typeof commentData.valoracion !== 'undefined') body.set('valoracion', String(commentData.valoracion));
     body.set('usuario', this.currentUser());
-    const response = await fetch(`${this.baseUrl}/${tipo}/${id}/comments`, {
-      method: 'POST',
-      body
-    });
+    if (commentData.imagen) body.set('imagen', commentData.imagen);
+    const response = await fetch(`${this.baseUrl}/${tipo}/${id}/comments`, { method: 'POST', body });
     
     if (!response.ok) {
       throw new Error(`Failed to create comment: ${response.status}`);
@@ -331,6 +331,14 @@ const tplRaw = `<div id="loading-mask" hidden>
       <label for="cc-ed-val">Valoración (1-5, opcional)</label>
       <input id="cc-ed-val" type="number" min="1" max="5" value="5">
     </div>
+    <div class="row img-row">
+      <label for="cc-ed-img">Imagen (opcional)</label>
+      <input id="cc-ed-img" type="file" accept="image/*" />
+    </div>
+    <div class="img-preview-wrapper" id="cc-img-preview" style="display:none">
+      <img id="cc-img-preview-img" alt="preview" />
+      <button id="cc-img-clear" type="button" class="secondary small">Quitar imagen</button>
+    </div>
     <div class="buttons">
       <button id="cc-ed-cancel" class="secondary">Cancelar</button>
       <button id="cc-ed-save">Guardar</button>
@@ -406,9 +414,13 @@ button:disabled { opacity:.7; cursor:default }
 .cc-editor .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap }
 .cc-editor textarea { width:100%; min-height:80px; padding:8px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; color:#eaf6f6; box-sizing:border-box }
 .cc-editor input[type="number"] { width:80px; height:32px; padding:6px 8px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; color:#eaf6f6 }
+.cc-editor input[type="file"] { height:32px; padding:4px 6px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; color:#eaf6f6 }
 .cc-editor .buttons { display:flex; gap:8px; justify-content:flex-end; margin-top:8px }
 .cc-editor button { background:#56cfe1; color:#0d1b2a; border:2px solid #56cfe1; border-radius:6px; padding:6px 12px; cursor:pointer }
 .cc-editor .secondary { background:transparent; color:#eaf6f6; border-color:#56cfe1 }
+.cc-editor .small { padding:4px 8px; font-size:.75rem }
+.img-preview-wrapper { margin:8px 0; display:flex; gap:12px; align-items:center }
+.img-preview-wrapper img { max-width:140px; max-height:140px; border:2px solid #56cfe1; border-radius:8px; object-fit:cover; }
 /* Image placeholder */
 .img-placeholder { width:100%; height:120px; border-radius:6px; border:2px solid #56cfe1; background:#0d1b2a; }
 /* Real image styling */
@@ -835,10 +847,35 @@ class AppRoot extends HTMLElement {
   const cancelBtn = this.shadowRoot?.getElementById('cc-ed-cancel');
   const titleEl = this.shadowRoot?.querySelector('.cc-editor .ed-title');
   if (titleEl) titleEl.textContent = 'Nuevo comentario';
+
+      // Manejo de imagen
+      const fileInput = this.shadowRoot?.getElementById('cc-ed-img') as HTMLInputElement | null;
+      const previewWrap = this.shadowRoot?.getElementById('cc-img-preview') as HTMLElement | null;
+      const previewImg = this.shadowRoot?.getElementById('cc-img-preview-img') as HTMLImageElement | null;
+      const clearBtn = this.shadowRoot?.getElementById('cc-img-clear') as HTMLButtonElement | null;
+      (this as any)._pendingImage = undefined;
+      fileInput?.addEventListener('change', () => {
+        if (!fileInput.files || !fileInput.files[0]) { (this as any)._pendingImage = undefined; if (previewWrap) previewWrap.style.display='none'; return; }
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const result = String(e.target?.result || '');
+          (this as any)._pendingImage = result; // data URL base64
+          if (previewImg) previewImg.src = result;
+          if (previewWrap) previewWrap.style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+      });
+      clearBtn?.addEventListener('click', () => {
+        (this as any)._pendingImage = undefined;
+        if (fileInput) fileInput.value='';
+        if (previewWrap) previewWrap.style.display='none';
+      });
       
       saveBtn?.addEventListener('click', () => this.saveNewComment());
       cancelBtn?.addEventListener('click', () => {
         this.shadowRoot?.querySelector('.cc-editor')?.remove();
+        (this as any)._pendingImage = undefined;
       });
     }
   }
@@ -960,10 +997,12 @@ class AppRoot extends HTMLElement {
           valoracion = Math.max(1, Math.min(5, parsed));
         }
       }
-      await apiService.createComment(this.state.tipo, parseInt(this.state.idOrOid), { texto, valoracion });
+  const imagen = (this as any)._pendingImage as string | undefined;
+  await apiService.createComment(this.state.tipo, parseInt(this.state.idOrOid), { texto, valoracion, imagen });
 
       // Remove editor and reload comments
       this.shadowRoot?.querySelector('.cc-editor')?.remove();
+  (this as any)._pendingImage = undefined;
       await this.loadComments();
 
       const msg = this.shadowRoot?.getElementById('cc-msg');

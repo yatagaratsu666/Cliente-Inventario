@@ -199,6 +199,24 @@
   border-radius: 6px;
 }
 
+/* Botón inline de comentarios debajo de cada item */
+.comments-inline-btn {
+  margin-top: 4px;
+  width: 100%;
+  background: #56cfe1;
+  color: #0d1b2a;
+  border: 1px solid #56cfe1;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.comments-inline-btn:hover { background:#48bfe3; box-shadow:0 0 6px rgba(86,207,225,0.6); }
+.comments-inline-btn:active { transform:translateY(1px); }
+
 .slot-label {
   font-size: 10px;
   font-weight: bold;

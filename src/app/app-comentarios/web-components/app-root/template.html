@@ -1,0 +1,79 @@
+<div id="loading-mask" hidden>
+  <div class="box">Cargando…</div>
+  </div>
+<div id="toast" class="toast" hidden></div>
+<!-- Not logged view removed -->
+
+<!-- Logged view -->
+<div class="container" id="logged-view" hidden>
+  <h1>Comentarios</h1>
+  <filter-bar></filter-bar>
+  <div class="row top-actions">
+    <div class="flex1"></div>
+    <button id="top-logout">Cerrar sesión</button>
+  </div>
+  <section class="card section">
+    <h2>Items</h2>
+    <div class="items-grid" id="items-grid"></div>
+  </section>
+  <section class="card section">
+    <h2>Armors</h2>
+    <div class="items-grid" id="armors-grid"></div>
+  </section>
+  <section class="card section">
+    <h2>Weapons</h2>
+    <div class="items-grid" id="weapons-grid"></div>
+  </section>
+</div>
+
+<!-- Modal template -->
+<template id="tpl-modal">
+  <div class="cc-modal-overlay">
+    <div class="cc-modal" role="dialog" aria-modal="true">
+      <div class="cc-modal-header">
+        <span>Comentarios</span>
+        <div class="header-actions">
+          <button id="cc-new">Nuevo comentario</button>
+          <button id="cc-close-modal" aria-label="Cerrar">✕</button>
+        </div>
+      </div>
+      <div class="cc-modal-body">
+        <div id="cc-msg" class="msg" style="display:none"></div>
+        <div id="cc-loading" class="loading">Cargando comentarios…</div>
+        <comments-list id="cc-list" style="display:none"></comments-list>
+      </div>
+    </div>
+  </div>
+  </template>
+
+<!-- Inline editor template -->
+<template id="tpl-editor">
+  <div class="cc-editor">
+    <h3 class="ed-title">Nuevo comentario</h3>
+    <div class="row">
+      <textarea id="cc-ed-text" placeholder="Escribe tu comentario..."></textarea>
+    </div>
+    <div class="row">
+      <label for="cc-ed-val">Valoración (1-5, opcional)</label>
+      <input id="cc-ed-val" type="number" min="1" max="5" value="5">
+    </div>
+    <div class="buttons">
+      <button id="cc-ed-cancel" class="secondary">Cancelar</button>
+      <button id="cc-ed-save">Guardar</button>
+    </div>
+  </div>
+</template>
+
+<!-- Confirm template -->
+<template id="tpl-confirm">
+  <div class="cc-confirm-overlay">
+    <div class="cc-confirm" role="dialog" aria-modal="true">
+      <h3>Confirmación</h3>
+      <div class="cc-confirm-message">¿Seguro?</div>
+      <div class="cc-confirm-buttons">
+        <button id="cc-cancel">Cancelar</button>
+        <button id="cc-accept" class="danger">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</template>

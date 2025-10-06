@@ -173,6 +173,10 @@ export class AppComponent {
     this.router.navigate(['/cuenta']);
   }
 
+   onComentarios(){
+    this.router.navigate(['/comentarios']);
+  }
+
   toggleCuenta() {
     this.mostrarCuenta = !this.mostrarCuenta;
   }

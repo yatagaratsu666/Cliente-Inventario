@@ -1,0 +1,20 @@
+:host { display:block }
+/* Container rows */
+.row { display:flex; gap:12px }
+.form-row { display:flex; gap:12px; align-items:flex-end; flex-wrap:nowrap; width:100% }
+
+/* Field column */
+.field { display:flex; flex-direction:column; flex:1 1 auto; min-width:0 }
+label { margin-bottom:4px; color:#e6e6ef }
+input { height:32px; padding:6px 8px; border-radius:6px; border:1px solid #2a2e49; background:#0f1020; color:#e6e6ef; width:100%; box-sizing:border-box }
+
+/* Button stays to the right without overlapping */
+button { height:32px; padding:0 12px; border-radius:6px; border:1px solid #2a2e49; background:#7f5af0; color:#fff; cursor:pointer; flex:0 0 auto; align-self:flex-end }
+button:disabled { opacity:.7; cursor:default }
+button:disabled::after { content:' (cargando)'; font-size:.9em }
+
+/* Small screens: allow wrapping and make button full width below */
+@media (max-width: 480px) {
+	.form-row { flex-wrap:wrap }
+	button { width:100% }
+}

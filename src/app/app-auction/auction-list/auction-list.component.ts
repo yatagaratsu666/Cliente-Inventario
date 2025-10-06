@@ -48,7 +48,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     this.auctionSocket.connect();
 
-    // 🔹 actualizar subasta existente
     this.subs.push(
       this.auctionSocket.onAuctionUpdated().subscribe(updated => {
         this.auctions = this.auctions.map(a =>
@@ -59,7 +58,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       })
     );
 
-    // 🔹 nueva subasta, evitando duplicados
     this.subs.push(
       this.auctionSocket.onNewAuction().subscribe(created => {
         const exists = this.auctions.some(a => a.id === created.id);
@@ -71,7 +69,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       })
     );
 
-    // 🔹 subasta cerrada
     this.subs.push(
       this.auctionSocket.onAuctionClosed().subscribe(closed => {
         this.auctions = this.auctions.filter(a => a.id !== closed.id);
@@ -92,11 +89,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.auctions = this.onlyMyBids && this.userId
   ? all.filter(a => a.bids?.some(b => b.userId === this.userId) && !a.isClosed)
   : all;
-
-
-      // 🔹 eliminar duplicados por ID
       this.auctions = Array.from(new Map(this.auctions.map(a => [a.id, a])).values());
-
       this.refreshTypes();
       this.applyFilter();
     } catch (err) {
@@ -112,34 +105,28 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   applyFilter() {
   const q = this.filter.trim().toLowerCase();
-
   this.filtered = this.auctions.filter(a => {
-    // Filtro por nombre/descripción solo si hay mínimo 4 caracteres
     if (q.length >= 4) {
-      const title = (a.title ?? '').toLowerCase().trim();
-      const desc = (a.description ?? '').toLowerCase().trim();
-      if (!title.includes(q) && !desc.includes(q)) return false;
+      const name = (a.item?.name ?? '').toLowerCase().trim();
+      const desc = (a.item?.description ?? '').toLowerCase().trim();
+      if (q.length >= 4 && !name.includes(q) && !desc.includes(q)) return false;
     }
-
-    // Filtro por tipo
     if (this.selectedType && a.item?.type !== this.selectedType) return false;
-
-    // Filtro por duración restante
     if (this.selectedDuration) {
       const ends = new Date(a.endsAt).getTime();
       const now = Date.now();
       const remainingHours = (ends - now) / (1000 * 60 * 60);
-
       if (this.selectedDuration === '24' && remainingHours > 24) return false;
       if (this.selectedDuration === '48' && remainingHours > 48) return false;
     }
-
-    // Filtro por precio máximo
     if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
-
     return true;
   });
+  if (q.length < 4 && !this.selectedType && !this.selectedDuration && !this.maxPrice) {
+    this.filtered = [...this.auctions];
+  }
 }
+
 
 
 

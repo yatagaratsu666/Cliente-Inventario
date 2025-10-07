@@ -11,9 +11,10 @@
 
 import { Injectable } from '@angular/core';
 import { RedirectCommand, Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { ApiConfigService } from './api.config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class LoginService {
 
   private apiUrl: string;
 
-  constructor(private readonly router: Router, private apiConfig: ApiConfigService, private http: HttpClient) {
+  constructor(private readonly router: Router, private apiConfig: ApiConfigService, private http: HttpClient, private usuarioService: UsuarioService) {
     this.apiUrl = this.apiConfig.getUsersUrl();
   }
 
@@ -135,14 +136,14 @@ export class LoginService {
    * @param userData Datos del usuario a registrar
    * @returns Observable<any> Respuesta del servidor con el usuario creado
    */
-  registerUser(userData: {
+ registerUser(userData: {
     nombres: string;
     apellidos: string;
     apodo: string;
     email: string;
     password: string;
   }): Observable<any> {
-    // construimos el body que la API espera
+    // ✅ Construimos el body que la API espera
     const body = {
       nombres: userData.nombres,
       apellidos: userData.apellidos,
@@ -154,8 +155,8 @@ export class LoginService {
     };
 
     return new Observable<any>(subscriber => {
-      fetch(`${this.apiUrl}/api/usuarios/register
-`, {
+      // 1️⃣ Enviar al endpoint principal
+      fetch(`${this.apiUrl}/api/usuarios/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -163,12 +164,8 @@ export class LoginService {
         body: JSON.stringify(body)
       })
         .then(async response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
           const contentType = response.headers.get('content-type');
-          let data;
+          let data: any;
 
           if (contentType && contentType.includes('application/json')) {
             data = await response.json();
@@ -176,16 +173,38 @@ export class LoginService {
             data = await response.text();
           }
 
-          console.log('User registration successful:', data);
-          subscriber.next(data);
+          // Si falla, lanza error
+          if (!response.ok) {
+            console.error('Error en registro principal:', data);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          console.log('Registro principal exitoso:', data);
+
+          // 2️⃣ Crear usuario en tu backend usando el servicio CreateUser
+          // (sin valores extra, el backend los genera)
+          return firstValueFrom(
+            this.usuarioService.CreateUser({
+              nombres: userData.nombres,
+              apellidos: userData.apellidos,
+              apodo: userData.apodo,
+              email: userData.email,
+              password: userData.password
+            })
+          );
+        })
+        .then(createResponse => {
+          console.log('Usuario creado en el backend propio:', createResponse);
+          subscriber.next(createResponse);
           subscriber.complete();
         })
         .catch(error => {
-          console.error('Error during user registration:', error);
+          console.error('Error durante registro completo:', error);
           subscriber.error(error);
         });
     });
   }
+
 
   /*login(username: string, password: string): Observable<boolean> {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {

@@ -7,7 +7,7 @@
   color: #eaf6f6;
   font-family: "Times New Roman", serif;
   position: relative;
-  height: 678px;
+  height: 642px;
 }
 
 .top-section {
@@ -310,7 +310,7 @@
   height: 265px;
   box-sizing: border-box;
   overflow: hidden;
-  margin-top: -150px;
+  margin-top: -115px;
   z-index: 10;
   position: relative;
   align-items: center;
@@ -698,9 +698,28 @@
 @media (min-width: 1629px) and (min-height: 767px) {
   .bottom-section{
     height: 300px;
+    margin-top: -150px;
   }
 
   .battle-arena {
     height: 715px;
   }
 }
+
+.players-formation {
+  display: grid;
+  grid-template-areas:
+    ". top ."
+    "mid-left mid-right"
+    "bottom-left bottom bottom-right";
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-top { grid-area: top; }
+.player-mid-left { grid-area: mid-left; }
+.player-mid-right { grid-area: mid-right; }
+.player-bottom-left { grid-area: bottom-left; }
+.player-bottom { grid-area: bottom; }
+.player-bottom-right { grid-area: bottom-right; }

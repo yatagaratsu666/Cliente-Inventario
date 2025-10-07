@@ -33,6 +33,9 @@ import { AuctionDetailsComponent } from './app-auction/auction-details/auction-d
 import { TransactionHistoryComponent } from './app-auction/transaction-history/transaction-history.component';
 import { CreateAuctionFormComponent } from './app-auction/create-auction-form/create-auction-form.component';
 import { RegisterComponent } from './register/register.component';
+import { AppRecoverComponent } from './app-recover/app-recover.component';
+import { SetPasswordComponent } from './app-setpassword/app-setpassword.component';
+
 
 /**
  * Definición de rutas principales de la app.
@@ -212,6 +215,14 @@ const routeConfig: Routes = [
     path: 'comentarios',
     loadComponent: () => import('./app-comentarios/comentarios.component').then(m => m.ComentariosComponent),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'recover',
+    component: AppRecoverComponent
+  },
+  {
+    path: 'setpassword/:token',
+    component: SetPasswordComponent
   }
 ];
 

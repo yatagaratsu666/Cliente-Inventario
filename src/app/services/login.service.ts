@@ -11,10 +11,10 @@
 
 import { Injectable } from '@angular/core';
 import { RedirectCommand, Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { ApiConfigService } from './api.config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class LoginService {
 
   private apiUrl: string;
 
-  constructor(private readonly router: Router, private apiConfig: ApiConfigService, private http: HttpClient) {
+  constructor(private readonly router: Router, private apiConfig: ApiConfigService, private http: HttpClient, private usuarioService: UsuarioService) {
     this.apiUrl = this.apiConfig.getUsersUrl();
   }
 
@@ -136,14 +136,15 @@ export class LoginService {
    * @param userData Datos del usuario a registrar
    * @returns Observable<any> Respuesta del servidor con el usuario creado
    */
-  registerUser(userData: {
+ registerUser(userData: {
     nombres: string;
     apellidos: string;
     apodo: string;
     email: string;
     password: string;
   }): Observable<any> {
-    const bodyAPI = {
+    // ✅ Construimos el body que la API espera
+    const body = {
       nombres: userData.nombres,
       apellidos: userData.apellidos,
       apodo: userData.apodo,
@@ -154,10 +155,11 @@ export class LoginService {
     };
 
     return new Observable<any>(subscriber => {
+      // 1️⃣ Enviar al endpoint principal
       fetch(`${this.apiUrl}/api/usuarios/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyAPI)
+        body: JSON.stringify(body)
       })
         .then(async response => {
           const contentType = response.headers.get('content-type');
@@ -169,49 +171,29 @@ export class LoginService {
             data = await response.text();
           }
 
+          // Si falla, lanza error
           if (!response.ok) {
-            console.error('Error en registro 1:', data);
-            throw new Error(`Registro 1 falló: ${response.statusText}`);
+            console.error('Error en registro principal:', data);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
-          console.log('Registro 1 exitoso:', data);
+          console.log('Registro principal exitoso:', data);
 
-          const userGame = {
-            nombreUsuario: userData.apodo,
-            rol: 'player',
-            creditos: 1000,
-            exp: 0,
-            inventario: {},
-            equipados: {}
-          };
-
-          return fetch(`http://146.148.77.95:1882/usuarios/create`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userGame)
-          });
+          // 2️⃣ Crear usuario en tu backend usando el servicio CreateUser
+          // (sin valores extra, el backend los genera)
+          return firstValueFrom(
+            this.usuarioService.CreateUser({
+              nombres: userData.nombres,
+              apellidos: userData.apellidos,
+              apodo: userData.apodo,
+              email: userData.email,
+              password: userData.password
+            })
+          );
         })
-        .then(async response => {
-          if (!response) return;
-
-          const contentType = response.headers.get('content-type');
-          let gameData;
-
-          if (contentType && contentType.includes('application/json')) {
-            gameData = await response.json();
-          } else {
-            gameData = await response.text();
-          }
-
-          if (!response.ok) {
-            console.warn('Error creando usuario en el servidor mio:', gameData);
-            subscriber.next({ message: 'API principal OK, juego falló' });
-            subscriber.complete();
-            return;
-          }
-
-          console.log('Usuario creado en el servidor mio:', gameData);
-          subscriber.next(gameData);
+        .then(createResponse => {
+          console.log('Usuario creado en el backend propio:', createResponse);
+          subscriber.next(createResponse);
           subscriber.complete();
         })
         .catch(error => {
@@ -220,7 +202,6 @@ export class LoginService {
         });
     });
   }
-
 
 
   /*login(username: string, password: string): Observable<boolean> {

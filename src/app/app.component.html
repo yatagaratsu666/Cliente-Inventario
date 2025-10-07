@@ -9,11 +9,14 @@
       <a (click)="onTournament()">Torneo</a>
       <a (click)="onInventory()">Mi Inventario</a>
       <a (click)="openLogin()">Mi Cuenta</a>
+<<<<<<< HEAD
       <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
 
       <!-- Dropdown Panel Gestión -->
+=======
+>>>>>>> c9b8dbd5fc9fec50ae1cfa277d0b6eb7e39593b5
       <div class="dropdown" *ngIf="isRole()">
-        <a class="dropdown-toggle">Panel Gestión</a>
+        <a>Panel Gestión</a>
         <div class="dropdown-menu">
           <a (click)="goToGestion('heroes')">Gestión de Héroes</a>
           <a (click)="goToGestion('items')">Gestión de Ítems</a>
@@ -108,10 +111,13 @@
       </div>
     </div>
   </div>
-
+  
+<div class="logout-wrapper">
   <button class="logout-button" *ngIf="loginService?.isLoggedIn()" (click)="logout()">
     Cerrar sesión
   </button>
+</div>
+
 
   <!-- Chatbot -->
   <div class="chatbot-container" *ngIf="chatbotVisible">
@@ -154,3 +160,10 @@
 
 <router-outlet></router-outlet>
 <app-toast></app-toast>
+<<<<<<< HEAD
+=======
+<app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
+
+
+
+>>>>>>> c9b8dbd5fc9fec50ae1cfa277d0b6eb7e39593b5

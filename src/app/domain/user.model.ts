@@ -7,8 +7,8 @@ export enum Roles {
 }
 
 export default class User {
-  nombreUsuario: string;
   avatar: string;
+  nombreUsuario: string;
   rol: Roles;
   creditos: number;
   inventario: Inventario;
@@ -16,8 +16,8 @@ export default class User {
   exp: number;
 
   constructor(
-    nombreUsuario: string = '',
     avatar: string = '',
+    nombreUsuario: string = '',
     rol: Roles = Roles.JUGADOR,
     creditos: number = 0,
     inventario: Inventario = new Inventario(),

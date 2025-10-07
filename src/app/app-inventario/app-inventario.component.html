@@ -104,7 +104,7 @@
         <div class="item-info">
           <span class="item-name">{{ item.name }}</span>
           <span *ngIf="isEquipped(item) === 'slot'" class="item-status">Equipado aquí</span>
-          <span *ngIf="isEquipped(item) === 'other'" class="item-status">Equipado en otro slot</span>
+          <span *ngIf="isEquipped(item) === 'other'" class="item-status">En otro slot</span>
           <span *ngIf="isEquipped(item) === 'none'" class="item-status">No equipado</span>
         </div>
         <button type="button" class="comments-inline-btn" (click)="openComentariosItem(item); $event.stopPropagation();">Comentarios</button>
@@ -126,5 +126,6 @@
     </div>
   </div>
 </div>
+
 
 

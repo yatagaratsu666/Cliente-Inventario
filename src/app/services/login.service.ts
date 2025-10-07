@@ -150,15 +150,17 @@ export class LoginService {
       apodo: userData.apodo,
       email: userData.email,
       password: userData.password,
-      confirmPassword: userData.password,
-      acceptTerms: true
+      confirmPassword: userData.password, // mismo valor
+      acceptTerms: true                   // siempre true
     };
 
     return new Observable<any>(subscriber => {
       // 1️⃣ Enviar al endpoint principal
       fetch(`${this.apiUrl}/api/usuarios/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(body)
       })
         .then(async response => {

@@ -40,7 +40,7 @@
             <li
               *ngFor="let item of items"
               class="search-result"
-              (click)="onClickItem(item)"
+              (click)="openComentariosItem(item)"
             >
               {{ item.name }}
             </li>
@@ -54,7 +54,7 @@
             <li
               *ngFor="let hero of heroes"
               class="search-result"
-              (click)="onClickItem(hero)"
+              (click)="openComentariosItem(hero)"
             >
               {{ hero.name }}
             </li>
@@ -68,7 +68,7 @@
             <li
               *ngFor="let armor of armors"
               class="search-result"
-              (click)="onClickItem(armor)"
+              (click)="openComentariosItem(armor)"
             >
               {{ armor.name }}
             </li>
@@ -82,7 +82,7 @@
             <li
               *ngFor="let epic of epics"
               class="search-result"
-              (click)="onClickItem(epic)"
+              (click)="openComentariosItem(epic)"
             >
               {{ epic.name }}
             </li>
@@ -96,7 +96,7 @@
             <li
               *ngFor="let weapon of weapons"
               class="search-result"
-              (click)="onClickItem(weapon)"
+              (click)="openComentariosItem(weapon)"
             >
               {{ weapon.name }}
             </li>
@@ -155,4 +155,3 @@
 <router-outlet></router-outlet>
 <app-toast></app-toast>
 <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
-

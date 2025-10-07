@@ -205,30 +205,51 @@ export class AppComponent {
     this.weapons = this.allWeapons.filter((w) => matchesQuery(w));
   }
 
-  onClickItem(item: any) {
+    // (Eliminados métodos de integración con comentarios)
+  /** Garantiza que exista el custom element de comentarios una sola vez */
+  private async ensureCommentsRoot(): Promise<void> {
+    if (document.querySelector('comments-root')) return;
+    try {
+      if ((window as any).customElements && !customElements.get('comments-root')) {
+        await customElements.whenDefined('comments-root');
+      }
+    } catch {}
+    const host = document.createElement('comments-root');
+    host.setAttribute('minimal','');
+    document.body.appendChild(host);
+  }
+
+  /** Abre comentarios para un item/armor/weapon mostrado en el modal */
+  async openComentariosItem(item: any): Promise<void> {
     if (!item) return;
-
-    const knownArmorTypes = ['HELMET', 'CHEST', 'GLOVERS', 'BRACERS', 'PANTS', 'BOOTS'];
+    // Determinar tipo (más estricto): sólo considerar armor si armorType está en la lista conocida
     let tipo: 'item' | 'armor' | 'weapon' = 'item';
-
-    if (item.weaponType) tipo = 'weapon';
-    else if (item.armorType && knownArmorTypes.includes(item.armorType)) tipo = 'armor';
-
-    const id =
-      item.itemId ??
-      item.id ??
-      item._id ??
-      item.weaponId ??
-      item.armorId;
-
-    if (!id) {
-      console.warn('[App] ID inválido para comentarios', item);
+    const knownArmorTypes = ['HELMET','CHEST','GLOVERS','BRACERS','PANTS','BOOTS'];
+    if (item.weaponType) {
+      tipo = 'weapon';
+    } else if (item.armorType && knownArmorTypes.includes(item.armorType)) {
+      tipo = 'armor';
+    } else {
+      tipo = 'item'; // utilitarios como piedra de afilar quedan como item
+    }
+    // Resolver id preferente por tipo
+    let id: any;
+    if (tipo === 'armor') {
+      id = item.armorId ?? item.id ?? item._id ?? item.itemId ?? item.weaponId;
+    } else if (tipo === 'weapon') {
+      id = item.weaponId ?? item.id ?? item._id ?? item.itemId ?? item.armorId;
+    } else {
+      id = item.itemId ?? item.id ?? item._id ?? item.weaponId ?? item.armorId;
+    }
+    if (id === undefined || id === null || id === '') {
+      console.warn('[Inventario] ID inválido para comentarios', item);
       return;
     }
-
-    console.debug('[App] abrir comentarios desde buscador', { tipo, id, name: item.name });
-
-    // Reutiliza el mismo evento que entiende comments-root
+    await this.ensureCommentsRoot();
+    if ((window as any).customElements && !customElements.get('comments-root')) {
+      try { await customElements.whenDefined('comments-root'); } catch {}
+    }
+    console.debug('[Inventario] abrir comentarios', { tipo, id, nombre: item.name });
     window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
   }
 

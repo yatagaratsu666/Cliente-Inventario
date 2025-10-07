@@ -173,7 +173,7 @@ export class AppComponent {
     this.router.navigate(['/cuenta']);
   }
 
-   onComentarios(){
+  onComentarios() {
     this.router.navigate(['/comentarios']);
   }
 
@@ -181,30 +181,57 @@ export class AppComponent {
     this.mostrarCuenta = !this.mostrarCuenta;
   }
 
-onSearchChange(): void {
-  const query = this.searchQuery.trim().toLowerCase();
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
 
-  // si no hay texto o menos de 4 caracteres → no mostrar nada
-  if (!query || query.length < 4) {
-    this.items = [];
-    this.heroes = [];
-    this.armors = [];
-    this.epics = [];
-    this.weapons = [];
-    return;
+    // si no hay texto o menos de 4 caracteres → no mostrar nada
+    if (!query || query.length < 4) {
+      this.items = [];
+      this.heroes = [];
+      this.armors = [];
+      this.epics = [];
+      this.weapons = [];
+      return;
+    }
+
+    // función para buscar en todo el objeto
+    const matchesQuery = (obj: any): boolean => {
+      return JSON.stringify(obj).toLowerCase().includes(query);
+    };
+
+    this.items = this.allItems.filter((i) => matchesQuery(i));
+    this.heroes = this.allHeroes.filter((h) => matchesQuery(h));
+    this.armors = this.allArmors.filter((a) => matchesQuery(a));
+    this.epics = this.allEpics.filter((e) => matchesQuery(e));
+    this.weapons = this.allWeapons.filter((w) => matchesQuery(w));
   }
 
-  // función para buscar en todo el objeto
-  const matchesQuery = (obj: any): boolean => {
-    return JSON.stringify(obj).toLowerCase().includes(query);
-  };
+  onClickItem(item: any) {
+    if (!item) return;
 
-  this.items = this.allItems.filter((i) => matchesQuery(i));
-  this.heroes = this.allHeroes.filter((h) => matchesQuery(h));
-  this.armors = this.allArmors.filter((a) => matchesQuery(a));
-  this.epics = this.allEpics.filter((e) => matchesQuery(e));
-  this.weapons = this.allWeapons.filter((w) => matchesQuery(w));
-}
+    const knownArmorTypes = ['HELMET', 'CHEST', 'GLOVERS', 'BRACERS', 'PANTS', 'BOOTS'];
+    let tipo: 'item' | 'armor' | 'weapon' = 'item';
+
+    if (item.weaponType) tipo = 'weapon';
+    else if (item.armorType && knownArmorTypes.includes(item.armorType)) tipo = 'armor';
+
+    const id =
+      item.itemId ??
+      item.id ??
+      item._id ??
+      item.weaponId ??
+      item.armorId;
+
+    if (!id) {
+      console.warn('[App] ID inválido para comentarios', item);
+      return;
+    }
+
+    console.debug('[App] abrir comentarios desde buscador', { tipo, id, name: item.name });
+
+    // Reutiliza el mismo evento que entiende comments-root
+    window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
+  }
 
   goToComprar() {
     this.router.navigate(['/auctions']);

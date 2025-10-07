@@ -14,6 +14,7 @@ import { RedirectCommand, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { ApiConfigService } from './api.config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,7 @@ export class LoginService {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ apodo: username, password }) // 👈 el backend usa "apodo"
+        body: JSON.stringify({ apodo: username, password })
       })
         .then(async response => {
           if (!response.ok) {
@@ -142,33 +143,25 @@ export class LoginService {
     email: string;
     password: string;
   }): Observable<any> {
-    // construimos el body que la API espera
-    const body = {
+    const bodyAPI = {
       nombres: userData.nombres,
       apellidos: userData.apellidos,
       apodo: userData.apodo,
       email: userData.email,
       password: userData.password,
-      confirmPassword: userData.password, // mismo valor
-      acceptTerms: true                   // siempre true
+      confirmPassword: userData.password,
+      acceptTerms: true
     };
 
     return new Observable<any>(subscriber => {
-      fetch(`${this.apiUrl}/api/usuarios/register
-`, {
+      fetch(`${this.apiUrl}/api/usuarios/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyAPI)
       })
         .then(async response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
           const contentType = response.headers.get('content-type');
-          let data;
+          let data: any;
 
           if (contentType && contentType.includes('application/json')) {
             data = await response.json();
@@ -176,16 +169,59 @@ export class LoginService {
             data = await response.text();
           }
 
-          console.log('User registration successful:', data);
-          subscriber.next(data);
+          if (!response.ok) {
+            console.error('Error en registro 1:', data);
+            throw new Error(`Registro 1 falló: ${response.statusText}`);
+          }
+
+          console.log('Registro 1 exitoso:', data);
+
+          const userGame = {
+            nombreUsuario: userData.apodo,
+            rol: 'player',
+            creditos: 1000,
+            exp: 0,
+            inventario: {},
+            equipados: {}
+          };
+
+          return fetch(`http://146.148.77.95:1882/usuarios/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userGame)
+          });
+        })
+        .then(async response => {
+          if (!response) return;
+
+          const contentType = response.headers.get('content-type');
+          let gameData;
+
+          if (contentType && contentType.includes('application/json')) {
+            gameData = await response.json();
+          } else {
+            gameData = await response.text();
+          }
+
+          if (!response.ok) {
+            console.warn('Error creando usuario en el servidor mio:', gameData);
+            subscriber.next({ message: 'API principal OK, juego falló' });
+            subscriber.complete();
+            return;
+          }
+
+          console.log('Usuario creado en el servidor mio:', gameData);
+          subscriber.next(gameData);
           subscriber.complete();
         })
         .catch(error => {
-          console.error('Error during user registration:', error);
+          console.error('Error durante registro completo:', error);
           subscriber.error(error);
         });
     });
   }
+
+
 
   /*login(username: string, password: string): Observable<boolean> {
     if (username === this.USERNAME2 && password === this.PASSWORD2) {

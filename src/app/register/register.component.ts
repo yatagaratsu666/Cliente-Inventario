@@ -38,7 +38,7 @@ export class RegisterComponent {
     if (input.files && input.files.length > 0) {
       this.avatarFile = input.files[0];
 
-      // Validar tipo de archivo
+
       const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (!allowedTypes.includes(this.avatarFile.type)) {
         this.errorMessage = 'Por favor selecciona un archivo PNG, JPG o JPEG';
@@ -47,7 +47,7 @@ export class RegisterComponent {
         return;
       }
 
-      // Validar tamaño (ej: máximo 5MB)
+      // tamaño máximo 5MB
       if (this.avatarFile.size > 5 * 1024 * 1024) {
         this.errorMessage = 'El archivo es demasiado grande. Máximo 5MB';
         this.avatarFile = undefined;
@@ -55,7 +55,7 @@ export class RegisterComponent {
         return;
       }
 
-      this.errorMessage = ''; // Limpiar errores si el archivo es válido
+      this.errorMessage = ''; 
     } else {
       this.avatarFile = undefined;
     }
@@ -70,64 +70,38 @@ export class RegisterComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    try {
-      // 1. Obtener URL de subida para el avatar
-      //const fileExtension = this.getFileExtension(this.avatarFile.name);
-      //const uploadUrlResponse = await this.getUploadUrl(this.username, fileExtension);
+    const userData = {
+      nombres: this.firstName,
+      apellidos: this.lastName,
+      apodo: this.username,
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+      acceptTerms: true
+    };
 
-      // 2. Subir el archivo a Google Cloud Storage
-      //await this.uploadAvatarToGCS(uploadUrlResponse.uploadUrl, this.avatarFile);
+    this.loginService.registerUser(userData).subscribe({
+      next: (response) => {
+        this.router.navigate(['/login']);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error registrando usuario:', error);
 
-      // 3. Registrar el usuario con la URL pública del avatar
-      const userData = {
-        nombres: this.firstName,
-        apellidos: this.lastName,
-        apodo: this.username,
-        email: this.email,
-        password: this.password,
-        confirmPassword: this.confirmPassword, // viene del formulario
-        acceptTerms: true, // marcado en el form
-        //urlAvatar: uploadUrlResponse.publicUrl // solo si backend lo permite
-
-      };
-      this.loginService.registerUser(userData).subscribe({
-        next: (response) => {
-          console.log('Usuario registrado exitosamente:', response);
-          this.router.navigate(['/login']);
-        },
-        error: (error) => {
-          console.error('Error registrando usuario:', error);
-          this.errorMessage = 'Error al registrar usuario. Por favor intenta de nuevo.';
-          this.isLoading = false;
-        }
-      });
-
-    } catch (error) {
-      console.error('Error durante el registro:', error);
-      this.errorMessage = 'Error durante el registro. Por favor intenta de nuevo.';
-      this.isLoading = false;
-    }
+        this.errorMessage =
+          error.message?.includes('Registro principal')
+            ? 'El servidor principal no pudo registrar el usuario.'
+            : 'Error durante el registro. Por favor intenta de nuevo.';
+        this.isLoading = false;
+      }
+    });
   }
+
 
   private getFileExtension(filename: string): string {
     return filename.split('.').pop()?.toLowerCase() || '';
   }
-/*
-  private async getUploadUrl(username: string, extension: string): Promise<{ uploadUrl: string, publicUrl: string }> {
-    const response = await fetch(`${this.apiUrl}/users/avatar/upload-url?username=${encodeURIComponent(username)}&extension=${extension}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
 
-    if (!response.ok) {
-      throw new Error(`Error obteniendo URL de subida: ${response.status} ${response.statusText}`);
-    }
-
-    return await response.json();
-  }
-*/
   private async uploadAvatarToGCS(uploadUrl: string, file: File): Promise<void> {
     const response = await fetch(uploadUrl, {
       method: 'PUT',

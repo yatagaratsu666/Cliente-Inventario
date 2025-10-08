@@ -35,8 +35,15 @@ import { CreateAuctionFormComponent } from './app-auction/create-auction-form/cr
 //rutas torneo no jodi nada si algo fue luis, pedro no toco nada mas si algo fue luis.
 import { AppTorneoComponent } from './app-torneo/app-torneo.component';
 import { AppTorneoInscripcionComponent } from './app-torneo/app-torneo-inscripcion/app-torneo-inscripcion.component';
-import { AppMisionesComponent } from './app-misiones/app-misioneses.component';
+import { AppMisionesComponent } from './app-misiones/app-misiones.component';
+
+
 import { RegisterComponent } from './register/register.component';
+import { MissionDetailPage } from './app-misiones/app-misiones-detalle';
+import { ProgressPage } from './app-misiones/progress.page';
+import { EnrollPage } from './app-misiones/enroll.page';
+import { ResultPage } from './app-misiones/result.page';
+// import { ResultPage } from './app-misiones/result.page';
 
 /**
  * Definición de rutas principales de la app.
@@ -211,7 +218,7 @@ const routeConfig: Routes = [
   {
     path: 'register',
     component: RegisterComponent
-  }
+  },
   //TorneoRutas
   {
     path: 'torneo',
@@ -223,9 +230,21 @@ const routeConfig: Routes = [
     component: AppTorneoInscripcionComponent,
   },
   //Misiones
+
+  { path: 'misiones',
+    component: AppMisionesComponent },
+  { path: 'missions/:id', 
+    component: MissionDetailPage, 
+    title: 'Detalle de Misión' },
+  {path: 'missions/:id/enroll',loadComponent: () => import('./app-misiones/enroll.page').then(m => m.EnrollPage)
+  },
   {
-    path: 'misiones',
-    component: AppMisionesComponent,
+    path: 'missions/progress/:execId',
+    component: ProgressPage,
+  },
+  {
+    path: 'missions/result/:execId',
+    component: ResultPage,
   },
 
 ];

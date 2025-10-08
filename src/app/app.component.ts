@@ -300,15 +300,33 @@ export class AppComponent {
       },
       error: (err) => {
         console.error('Error en chatbot:', err);
-        this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
+        this.chatbotMessages.push({ from: 'bot', text: 'Error al conectar con el servidor.' });
         this.isProcessing = false;
       }
     });
   }
 
 
+  mostrarNotificaciones = true; // visible por defecto
+  notificaciones: string[] = []; // lista de notificaciones
 
+  cerrarNotificaciones() {
+    this.mostrarNotificaciones = false;
+  }
 
+  abrirNotificaciones() {
+    this.mostrarNotificaciones = true;
+  }
 
-
+  // método para agregar nuevas notificaciones en el futuro
+  agregarNotificacion(msg: string) {
+    this.notificaciones.push(msg);
+  }
 }
+
+
+
+
+
+
+

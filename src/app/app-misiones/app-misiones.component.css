@@ -1,79 +1,59 @@
-/* Contenedor principal de misiones */
+/* Estilo general de Misiones (listado/detalle/progreso) inspirado en ddd/style.css */
+
+/* Contenedor principal oscuro con borde y sombra */
 .mision-container {
-  max-width: 1800px;
-  padding: 20px;
+  position: relative;
+  max-width: 1100px;
+  padding: 25px;
   background-color: #2a2a3d;
   border-radius: 15px;
-  margin: auto;
-  border: 3px solid #444;
-  margin-top: 60px;
-  margin-bottom: 60px;
+  margin: 60px auto;
+  border: 3px solid rgb(219, 204, 118);
   text-align: center;
   box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+  color: #e5e7eb;
 }
 
-/* Título principal */
+/* Tarjetas internas (detalle, listas, etc.) con el mismo look */
+.card,
+.mision,
+.mision-cuadro,
+.lista-card,
+.detalle-card,
+.progress-card {
+  background-color: #2a2a3d;
+  border: 3px solid rgb(219, 204, 118);
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+  padding: 16px;
+}
+
+/* Títulos azules con brillo */
 .mision-titulo {
-  font-size: 2rem;  
+  font-size: 2rem;
   color: #00c3ff;
   text-shadow: 2px 2px 5px #000;
   margin-bottom: 20px;
-}
-
-/* Subtítulo */
-#mision-titulo {
-  font-size: 1.5rem;
-  color: #f1f1f1;
-  margin-bottom: 18px;
-}
-
-/* Cuadro de misiones */
-.mision-cuadro {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-/* Cada misión */
-.mision {
-  background-color: #2f2f45;
-  padding: 16px;
-  border-radius: 12px;
-  border: 2px solid #555;
-  transition: all 0.3s ease;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  
 }
 
-.mision:hover {
-  transform: scale(1.05);
-  border-color: #00c3ff;
-  box-shadow: 0 0 15px rgba(0, 195, 255, 0.7);
-}
-
-/* Título de cada misión */
-.mision h3 {
-  margin-bottom: 12px;
-  color: #00c3ff;
-  text-shadow: 1px 1px 3px #000;
-  font-size: 1.2rem;
-}
-
-/* Slots de misión */
-.mision-info p {
-  margin: 6px 0;
-  color: #f1f1f1;
-  font-size: 0.95rem;
-}
-
-.mision-nombre {
+/* Subtítulo (id usado en listado) */
+#mision-titulo {
   font-size: 1.4rem;
   color: #00c3ff;
-  margin-bottom: 10px;
-  text-shadow: 1px 1px 4px #000;
+  text-shadow: 1px 1px 3px #000;
+  margin: 8px 0 16px;
 }
 
+/* Encabezados dentro de tarjetas */
+.card h2, .card h3,
+.mision h2, .mision h3 {
+  color: #00c3ff;
+  text-shadow: 1px 1px 3px #000;
+  margin-top: 6px;
+}
+
+/* Lore y textos descriptivos */
 .mision-lore {
   font-size: 0.95rem;
   color: #ddd;
@@ -82,39 +62,57 @@
   line-height: 1.4;
 }
 
+/* Info y etiquetas */
+.mision-info p {
+  margin: 6px 0;
+  color: #f1f1f1;
+  font-size: 0.95rem;
+}
 
+/* Etiquetas de dificultad (base + variantes opcionales) */
 .dificultad {
   padding: 2px 8px;
   border-radius: 6px;
   font-weight: bold;
+  display: inline-block;
 }
-
 .dificultad.facil { background: #4caf50; color: #fff; }
 .dificultad.media { background: #ffc107; color: #000; }
 .dificultad.dificil { background: #e53935; color: #fff; }
+.dificultad.epica { background: #9c27b0; color: #fff; }
 
+/* Badge genérica (tipo, recompensas, etc.) */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgb(219, 204, 118);
+  color: #e5e7eb;
+}
+
+/* Boss y Master en detalle */
 .mision-boss {
   margin-top: 10px;
   font-size: 0.95rem;
   color: #ffcc00;
   font-weight: bold;
 }
-
 .mision-master {
   margin-top: 8px;
   font-size: 0.95rem;
   color: #76ff76;
 }
-
 .epic-item {
   color: #ff66ff;
   font-weight: bold;
 }
 
-
-.mision-boton{
-  margin-top: 10px;
-  padding: 7px 14px;
+/* Botón de acción de misión */
+.mision-button {
+  display: inline-block;
+  padding: 10px 16px;
   background: linear-gradient(135deg, #0077ff, #005ecb);
   border: none;
   border-radius: 8px;
@@ -122,9 +120,29 @@
   color: #fff;
   font-weight: bold;
   transition: 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  text-decoration: none;
 }
-
-button:hover {
+.mision-button:hover {
   background: linear-gradient(135deg, #005ecb, #003e99);
   transform: scale(1.05);
+}
+
+/* Utilidades */
+.small { font-size: 12px; }
+.error { color: #f87171; }
+
+/* Inputs y selects en tema oscuro */
+input, select {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148,163,184,0.3);
+  color: #e5e7eb;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 640px) {
+  .mision-container { margin: 30px 12px; padding: 16px; }
+  .card, .mision, .mision-cuadro { padding: 12px; }
 }

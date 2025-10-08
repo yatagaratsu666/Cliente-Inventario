@@ -136,29 +136,31 @@ export class LoginService {
    * @param userData Datos del usuario a registrar
    * @returns Observable<any> Respuesta del servidor con el usuario creado
    */
- registerUser(userData: {
+  registerUser(userData: {
     nombres: string;
     apellidos: string;
     apodo: string;
     email: string;
     password: string;
   }): Observable<any> {
-    // ✅ Construimos el body que la API espera
+    // Construimos el body 
     const body = {
       nombres: userData.nombres,
       apellidos: userData.apellidos,
       apodo: userData.apodo,
       email: userData.email,
       password: userData.password,
-      confirmPassword: userData.password,
-      acceptTerms: true
+      confirmPassword: userData.password, // mismo valor
+      acceptTerms: true                   // siempre true
     };
 
     return new Observable<any>(subscriber => {
       // 1️⃣ Enviar al endpoint principal
       fetch(`${this.apiUrl}/api/usuarios/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(body)
       })
         .then(async response => {
@@ -171,7 +173,6 @@ export class LoginService {
             data = await response.text();
           }
 
-          // Si falla, lanza error
           if (!response.ok) {
             console.error('Error en registro principal:', data);
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -179,8 +180,7 @@ export class LoginService {
 
           console.log('Registro principal exitoso:', data);
 
-          // 2️⃣ Crear usuario en tu backend usando el servicio CreateUser
-          // (sin valores extra, el backend los genera)
+
           return firstValueFrom(
             this.usuarioService.CreateUser({
               nombres: userData.nombres,
@@ -231,6 +231,46 @@ export class LoginService {
   isLoggedIn(): boolean {
     return localStorage.getItem('loggedIn') === 'true';
   }
+
+  recoverPassword(email: string): Observable<any> {
+    const url = 'https://thenexusbattles-771648021041.southamerica-east1.run.app/api/usuarios/recuperar';
+
+    return new Observable<any>(subscriber => {
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+        .then(async response => {
+          const contentType = response.headers.get('content-type');
+          let data;
+
+          if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+          } else {
+            data = await response.text();
+          }
+
+          if (!response.ok) {
+            throw new Error(data?.message || 'Error al recuperar contraseña');
+          }
+
+          subscriber.next(data);
+          subscriber.complete();
+        })
+        .catch(error => {
+          subscriber.error(error);
+        });
+    });
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    const url = 'https://thenexusbattles-771648021041.southamerica-east1.run.app/api/usuarios/reset-password';
+    const body = { token, newPassword };
+    return this.http.post(url, body);
+  }
+
+
 
   getRole(): string | null {
     return localStorage.getItem('role');

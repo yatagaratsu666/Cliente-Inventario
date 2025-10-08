@@ -1,0 +1,59 @@
+@import '../app-inventario/app-inventario.component.css';
+
+/* Tema oscuro solo para Enroll */
+.mision-container {
+  max-width: 980px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #0d1b2a, #1b2b43);
+  color: #e5e7eb;
+}
+
+/* Tarjetas y modal */
+.card {
+  background: rgba(9, 17, 26, 0.55);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+.equipment-modal.dark,
+.modal-content.equipment-modal.dark {
+  background: rgba(9, 17, 26, 0.95) !important;
+  color: #e5e7eb !important;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+.equipment-item {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(148,163,184,0.2);
+}
+.equipment-item.item-selected { outline: 2px solid #7aa2ff; }
+
+/* Inputs */
+input, select {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148,163,184,0.3);
+  color: #e5e7eb;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+/* Botones */
+.btn.primary { background: linear-gradient(135deg, #0077ff, #005ecb); color: #fff; }
+.btn.success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+.btn.outline { background: transparent; border: 1px solid #94a3b8; color: #e5e7eb; }
+.btn {
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: transform .1s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.btn:disabled { opacity: .6; cursor: default; }
+.btn:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,.25); }
+
+/* Utilidades */
+.small { font-size: 12px; }
+.small.error { color: #f87171; }
+.small.muted { color: #94a3b8; }

@@ -161,11 +161,11 @@ export class AppComponent {
   }
 
   onTournament() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/torneo']);
   }
 
   onMission() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/misiones']);
   }
 
   onAccount() {
@@ -343,15 +343,23 @@ export class AppComponent {
       },
       error: (err) => {
         console.error('Error en chatbot:', err);
-        this.chatbotMessages.push({ from: 'bot', text: '⚠️ Error al conectar con el servidor.' });
+        this.chatbotMessages.push({ from: 'bot', text: 'Error al conectar con el servidor.' });
         this.isProcessing = false;
       }
     });
   }
 
 
+  mostrarNotificaciones = true; // visible por defecto
+  notificaciones: string[] = []; // lista de notificaciones
 
+  cerrarNotificaciones() {
+    this.mostrarNotificaciones = false;
+  }
 
+  abrirNotificaciones() {
+    this.mostrarNotificaciones = true;
+  }
 
 
 }

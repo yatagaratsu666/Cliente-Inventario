@@ -32,7 +32,18 @@ import { AuctionListComponent } from './app-auction/auction-list/auction-list.co
 import { AuctionDetailsComponent } from './app-auction/auction-details/auction-details.component';
 import { TransactionHistoryComponent } from './app-auction/transaction-history/transaction-history.component';
 import { CreateAuctionFormComponent } from './app-auction/create-auction-form/create-auction-form.component';
+//rutas torneo no jodi nada si algo fue luis, pedro no toco nada mas si algo fue luis.
+import { AppTorneoComponent } from './app-torneo/app-torneo.component';
+import { AppTorneoInscripcionComponent } from './app-torneo/app-torneo-inscripcion/app-torneo-inscripcion.component';
+import { AppMisionesComponent } from './app-misiones/app-misiones.component';
+
+
 import { RegisterComponent } from './register/register.component';
+import { MissionDetailPage } from './app-misiones/app-misiones-detalle';
+import { ProgressPage } from './app-misiones/progress.page';
+import { EnrollPage } from './app-misiones/enroll.page';
+import { ResultPage } from './app-misiones/result.page';
+// import { ResultPage } from './app-misiones/result.page';
 import { AppRecoverComponent } from './app-recover/app-recover.component';
 import { SetPasswordComponent } from './app-setpassword/app-setpassword.component';
 
@@ -211,6 +222,34 @@ const routeConfig: Routes = [
     path: 'register',
     component: RegisterComponent
   },
+  //TorneoRutas
+  {
+    path: 'torneo',
+    component: AppTorneoComponent,
+  },
+
+  {
+    path: 'torneo/Inscripcion',
+    component: AppTorneoInscripcionComponent,
+  },
+  //Misiones
+
+  { path: 'misiones',
+    component: AppMisionesComponent },
+  { path: 'missions/:id', 
+    component: MissionDetailPage, 
+    title: 'Detalle de Misión' },
+  {path: 'missions/:id/enroll',loadComponent: () => import('./app-misiones/enroll.page').then(m => m.EnrollPage)
+  },
+  {
+    path: 'missions/progress/:execId',
+    component: ProgressPage,
+  },
+  {
+    path: 'missions/result/:execId',
+    component: ResultPage,
+  },
+
    {
     path: 'comentarios',
     loadComponent: () => import('./app-comentarios/comentarios.component').then(m => m.ComentariosComponent),

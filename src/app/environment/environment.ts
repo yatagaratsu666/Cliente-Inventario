@@ -17,6 +17,9 @@ export const environment = {
   api: { base: 'http://localhost:3000/api' },
   socket: { base: 'http://localhost:3000' },
 
+  missionsApiBaseUrl: 'http://localhost:4001',    
+  missionsSseBaseUrl: 'http://localhost:4001',
+
   usersUrl: 'https://thenexusbattles-771648021041.southamerica-east1.run.app'
 
 };

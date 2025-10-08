@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<div class="mision-container">
+  <h1 class="mision-titulo">MISIONES</h1>
+  <h2 id="mision-titulo">Misiones disponibles:</h2>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <ng-container *ngIf="error; else content">
+    <div class="small">{{ error }}</div>
+  </ng-container>
+
+  <ng-template #content>
+    <div *ngIf="missions; else loading" class="misiones-list">
+
+      <!-- quita el mision-container interno para respetar el estilo del contenedor -->
+      <article class="mision" *ngFor="let m of missions">
+        <!-- ...existing code... -->
+        <h3 class="mision-titulo">{{ m.name }}</h3>
+
+        <div class="mision-info">
+          <p><strong>Dificultad:</strong> <span class="dificultad">{{ m.difficulty }}</span></p>
+          <p><strong>Tipo: </strong> <span class="badge">{{ m.type }}</span></p>
+          <p><strong>Nivel Recomendado: </strong> {{ m.recommendedLevel[0] }} – {{ m.recommendedLevel[1] }}</p>
+          <p><strong>XP base: </strong> {{ m.rewards.xpBase }}</p>
+        </div>
+
+        <div>
+          <br>
+
+          <a class="mision-button" [routerLink]="['/missions', m.id]">Inscribir</a><br>
+        </div>
+        <br>
+ 
+      </article>
+    </div>
+
+    <ng-template #loading>
+      <div class="small">Cargando misiones…</div>
+    </ng-template>
+  </ng-template>
+</div>

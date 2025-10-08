@@ -17,7 +17,6 @@ import { EpicsService } from './services/epics.service';
 import { WeaponsService } from './services/weapons.service';
 import { ToastComponent } from "./toast/toast.component";
 import User from './domain/user.model';
-import { AppLoginComponent } from './app-login/app-login.component';
 import { ChatbotService } from './services/chatbot.service';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
 
@@ -173,6 +172,10 @@ export class AppComponent {
     this.router.navigate(['/cuenta']);
   }
 
+  onComentarios() {
+    this.router.navigate(['/comentarios']);
+  }
+
   toggleCuenta() {
     this.mostrarCuenta = !this.mostrarCuenta;
   }
@@ -180,36 +183,76 @@ export class AppComponent {
   onSearchChange(): void {
     const query = this.searchQuery.trim().toLowerCase();
 
-    if (!query) {
-      // restaurar todo si no hay texto
-      this.items = this.allItems;
-      this.heroes = this.allHeroes;
-      this.armors = this.allArmors;
-      this.epics = this.allEpics;
-      this.weapons = this.allWeapons;
+    // si no hay texto o menos de 4 caracteres → no mostrar nada
+    if (!query || query.length < 4) {
+      this.items = [];
+      this.heroes = [];
+      this.armors = [];
+      this.epics = [];
+      this.weapons = [];
       return;
     }
 
-    this.items = this.allItems.filter((i) =>
-      i.name?.toLowerCase().includes(query)
-    );
+    // función para buscar en todo el objeto
+    const matchesQuery = (obj: any): boolean => {
+      return JSON.stringify(obj).toLowerCase().includes(query);
+    };
 
-    this.heroes = this.allHeroes.filter((h) =>
-      h.name?.toLowerCase().includes(query)
-    );
-
-    this.armors = this.allArmors.filter((a) =>
-      a.name?.toLowerCase().includes(query)
-    );
-
-    this.epics = this.allEpics.filter((e) =>
-      e.name?.toLowerCase().includes(query)
-    );
-
-    this.weapons = this.allWeapons.filter((w) =>
-      w.name?.toLowerCase().includes(query)
-    );
+    this.items = this.allItems.filter((i) => matchesQuery(i));
+    this.heroes = this.allHeroes.filter((h) => matchesQuery(h));
+    this.armors = this.allArmors.filter((a) => matchesQuery(a));
+    this.epics = this.allEpics.filter((e) => matchesQuery(e));
+    this.weapons = this.allWeapons.filter((w) => matchesQuery(w));
   }
+
+    // (Eliminados métodos de integración con comentarios)
+  /** Garantiza que exista el custom element de comentarios una sola vez */
+  private async ensureCommentsRoot(): Promise<void> {
+    if (document.querySelector('comments-root')) return;
+    try {
+      if ((window as any).customElements && !customElements.get('comments-root')) {
+        await customElements.whenDefined('comments-root');
+      }
+    } catch {}
+    const host = document.createElement('comments-root');
+    host.setAttribute('minimal','');
+    document.body.appendChild(host);
+  }
+
+  /** Abre comentarios para un item/armor/weapon mostrado en el modal */
+  async openComentariosItem(item: any): Promise<void> {
+    if (!item) return;
+    // Determinar tipo (más estricto): sólo considerar armor si armorType está en la lista conocida
+    let tipo: 'item' | 'armor' | 'weapon' = 'item';
+    const knownArmorTypes = ['HELMET','CHEST','GLOVERS','BRACERS','PANTS','BOOTS'];
+    if (item.weaponType) {
+      tipo = 'weapon';
+    } else if (item.armorType && knownArmorTypes.includes(item.armorType)) {
+      tipo = 'armor';
+    } else {
+      tipo = 'item'; // utilitarios como piedra de afilar quedan como item
+    }
+    // Resolver id preferente por tipo
+    let id: any;
+    if (tipo === 'armor') {
+      id = item.armorId ?? item.id ?? item._id ?? item.itemId ?? item.weaponId;
+    } else if (tipo === 'weapon') {
+      id = item.weaponId ?? item.id ?? item._id ?? item.itemId ?? item.armorId;
+    } else {
+      id = item.itemId ?? item.id ?? item._id ?? item.weaponId ?? item.armorId;
+    }
+    if (id === undefined || id === null || id === '') {
+      console.warn('[Inventario] ID inválido para comentarios', item);
+      return;
+    }
+    await this.ensureCommentsRoot();
+    if ((window as any).customElements && !customElements.get('comments-root')) {
+      try { await customElements.whenDefined('comments-root'); } catch {}
+    }
+    console.debug('[Inventario] abrir comentarios', { tipo, id, nombre: item.name });
+    window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
+  }
+
   goToComprar() {
     this.router.navigate(['/auctions']);
   }
@@ -267,7 +310,7 @@ export class AppComponent {
     'cómo hago una subasta',
     'cómo ganar créditos',
     'escudo de dragón efectos'
-];
+  ];
 
   // --- Chatbot Hover ---
   toggleChatbot() {
@@ -318,15 +361,5 @@ export class AppComponent {
     this.mostrarNotificaciones = true;
   }
 
-  // método para agregar nuevas notificaciones en el futuro
-  agregarNotificacion(msg: string) {
-    this.notificaciones.push(msg);
-  }
+
 }
-
-
-
-
-
-
-

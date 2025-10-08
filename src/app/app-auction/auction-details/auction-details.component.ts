@@ -112,23 +112,53 @@ export class AuctionDetailsComponent implements OnInit, OnDestroy {
   }
 
   private fetchComments() {
-  const itemId = Number(this.freshAuction.item?.id);
-  if (!itemId) return;
+  const item = this.freshAuction?.item;
+  if (!item) {
+    console.error('Item no disponible en la subasta.');
+    return;
+  }
 
-  this.commentService.getItemComments(itemId).subscribe({
-  next: res => {
-    console.log('DEBUG completo del backend:', res);
-    this.comments = Array.isArray(res) ? res : res.comments ?? [];
-    if (Array.isArray(res)) {
-      const ratings = res.map(c => c.valoracion).filter(v => v != null);
-      this.averageRating = ratings.length ? ratings.reduce((a,b) => a+b, 0)/ratings.length : null;
-    } else {
+  const itemId = Number(item.id);
+  if (!itemId) {
+    console.error('ID del item no válido.');
+    return;
+  }
+
+  const type = item.type;
+  if (!type) {
+    console.error('Tipo de item no disponible.');
+    return;
+  }
+
+  this.commentService.getItemComments(itemId, type).subscribe({
+    next: res => {
+      console.log('DEBUG completo del backend:', res);
+
+      // Comentarios y rating
+      this.comments = res.comments ?? [];
       this.averageRating = res.stats?.average ?? null;
-    }
-  },
-  error: err => console.error(err)
-});
+
+      // Actualiza el item según el tipo
+      const typeMap: Record<string, string> = {
+        "Armaduras": "armor",
+        "Héroes": "hero",
+        "Armas": "weapon",
+        "Ítems": "item",
+        "Habilidades especiales": "epic"
+      };
+
+      const prop = typeMap[type];
+      if (prop && res.product?.[prop]) {
+        this.freshAuction.item = {
+          ...this.freshAuction.item,
+          ...res.product[prop]
+        };
+      }
+    },
+    error: err => console.error('Error fetching comments:', err)
+  });
 }
+
   close() { this.onClose.emit(); }
 
   async placeBid() {

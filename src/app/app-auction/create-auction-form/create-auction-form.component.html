@@ -28,31 +28,45 @@
 
         <div *ngIf="loading">Cargando items...</div>
 
-        <!-- 🔹 Grid de ítems en lugar de select -->
+        <!-- 🔹 Grid de ítems seleccionables -->
         <div class="items-grid">
-          <div class="item-card" *ngFor="let item of allItems" (click)="itemId = '' + item.id"
-            [class.selected]="itemId === '' + item.id">
-
-            <img [src]="item.imagen" [alt]="item.name" *ngIf="item.imagen" />
+          <div 
+            class="item-card" 
+            *ngFor="let item of allItems" 
+            (click)="itemId = '' + item.id"
+            [class.selected]="itemId === '' + item.id"
+          >
+            <img [src]="item.imagen" [alt]="item.name || 'Item sin nombre'" />
+            <p class="item-name">{{ item.name || 'Sin nombre' }}</p>
           </div>
         </div>
 
-
         <label class="block">
           Precio inicial:
-          <input type="number" placeholder="Precio inicial" [value]="form.startingPrice"
-            (input)="handleInputChange('startingPrice', $event)" />
+          <input 
+            type="number" 
+            placeholder="Precio inicial" 
+            [value]="form.startingPrice"
+            (input)="handleInputChange('startingPrice', $event)" 
+          />
         </label>
 
         <label class="block">
           Compra rápida:
-          <input type="number" placeholder="Compra rápida" [value]="form.buyNowPrice || ''"
-            (input)="handleInputChange('buyNowPrice', $event)" />
+          <input 
+            type="number" 
+            placeholder="Compra rápida" 
+            [value]="form.buyNowPrice || ''"
+            (input)="handleInputChange('buyNowPrice', $event)" 
+          />
         </label>
 
         <label class="block">
           Duración:
-          <select [value]="form.durationHours" (change)="handleInputChange('durationHours', $event)">
+          <select 
+            [value]="form.durationHours" 
+            (change)="handleInputChange('durationHours', $event)"
+          >
             <option [value]="24">24 horas</option>
             <option [value]="48">48 horas</option>
           </select>

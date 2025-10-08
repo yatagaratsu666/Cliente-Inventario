@@ -44,6 +44,9 @@ import { ProgressPage } from './app-misiones/progress.page';
 import { EnrollPage } from './app-misiones/enroll.page';
 import { ResultPage } from './app-misiones/result.page';
 // import { ResultPage } from './app-misiones/result.page';
+import { AppRecoverComponent } from './app-recover/app-recover.component';
+import { SetPasswordComponent } from './app-setpassword/app-setpassword.component';
+
 
 /**
  * Definición de rutas principales de la app.
@@ -247,6 +250,19 @@ const routeConfig: Routes = [
     component: ResultPage,
   },
 
+   {
+    path: 'comentarios',
+    loadComponent: () => import('./app-comentarios/comentarios.component').then(m => m.ComentariosComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'recover',
+    component: AppRecoverComponent
+  },
+  {
+    path: 'setpassword/:token',
+    component: SetPasswordComponent
+  }
 ];
 
 export default routeConfig;

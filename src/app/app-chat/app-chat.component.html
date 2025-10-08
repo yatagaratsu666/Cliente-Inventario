@@ -25,7 +25,7 @@
     <textarea
       [(ngModel)]="chatInput"
       (keydown)="onKeydown($event)"
-      placeholder="Escribe un mensaje… (Enter para enviar, Shift+Enter para salto)"
+      placeholder="Escribe un mensaje…"
       maxlength="500"
       rows="2"
       [disabled]="!canChat"

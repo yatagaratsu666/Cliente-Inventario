@@ -1,4 +1,3 @@
-
 .auction-page {
   min-height: 100vh;
   background: linear-gradient(160deg, #0d1b2a, #1b2b43);
@@ -7,7 +6,6 @@
   box-sizing: border-box;
   font-family: "Segoe UI", Roboto, sans-serif;
 }
-
 
 .auction-page .toolbar {
   display: flex;
@@ -34,7 +32,6 @@
   box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
 }
 
-
 .filters {
   display: flex;
   gap: 15px;
@@ -60,13 +57,11 @@
   box-shadow: 0 0 10px rgba(86, 207, 225, 0.5);
 }
 
-
 .list {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-
 
 app-auction-card {
   display: block;
@@ -84,7 +79,6 @@ app-auction-card:hover {
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.3);
 }
 
-
 app-auction-details {
   display: block;
   margin-top: 20px;
@@ -95,12 +89,13 @@ app-auction-details {
   box-shadow: 0 0 14px rgba(86, 207, 225, 0.2);
 }
 
-
 .content-layout {
   display: flex;
   gap: 20px;
+  overflow-x: hidden;
+  flex-wrap: wrap;
+  justify-content: center;
 }
-
 
 .sidebar {
   width: 200px;
@@ -128,8 +123,181 @@ app-auction-details {
   box-shadow: 0 0 10px rgba(86, 207, 225, 0.4);
 }
 
-
 .main-content {
   flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
+/* ========================================================= */
+/* 📱 RESPONSIVIDAD */
+/* ========================================================= */
+
+@media (max-width: 1600px) {
+  .content-layout {
+    gap: 16px;
+    padding: 0 1.5rem;
+  }
+
+  .sidebar {
+    width: 180px;
+  }
+
+  .main-content {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .content-layout {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .main-content {
+    width: 100%;
+    flex: none;
+  }
+
+  .filters {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 992px) {
+  .auction-page {
+    padding: 20px;
+  }
+
+  .toolbar {
+    justify-content: center;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .filters input,
+  .filters select {
+    width: 90%;
+  }
+
+  .list {
+    align-items: center;
+  }
+
+  app-auction-card {
+    width: 90%;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auction-page {
+    padding: 15px;
+  }
+
+  .content-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 10px;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .filters input,
+  .filters select {
+    width: 100%;
+  }
+
+  app-auction-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .auction-page {
+    padding: 10px;
+  }
+
+  .content-layout {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sidebar {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .sidebar button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .toolbar button {
+    width: 100%;
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filters input,
+  .filters select {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  app-auction-card {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  app-auction-details {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .auction-page {
+    padding: 8px;
+  }
+
+  .sidebar button {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .filters input,
+  .filters select {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  app-auction-card {
+    font-size: 13px;
+  }
+}

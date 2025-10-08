@@ -5,8 +5,8 @@ header {
   align-items: center;
   background: linear-gradient(160deg, #0d1b2a, #1b2b43);
   color: #eaf6f6;
-  font-size: 15px;
-  padding: 25px 0;
+  font-size: 14px;
+  padding: 10px 0; /* más delgado */
   border-bottom: 2px solid #56cfe1;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
   position: relative;
@@ -14,12 +14,12 @@ header {
 
 /* Logo */
 .logo {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   color: #eaf6f6;
   cursor: pointer;
-  margin-left: 25px;
-  margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 5px;
   transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
@@ -28,8 +28,8 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 25px; 
-  margin-right: 20%;
+  gap: 20px; 
+  margin-right: 15%;
   position: relative; /* para que la ventana se posicione respecto al input */
 }
 
@@ -37,14 +37,13 @@ header {
 .nav-links {
   display: flex;
   flex-direction: row;
-  gap: 20px; 
+  gap: 15px; 
 }
 
 .nav-links a {
   text-decoration: none;
   color: #eaf6f6;
   font-weight: bold;
-  gap: 20px;
   transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
   cursor: pointer;
 }
@@ -63,11 +62,11 @@ header {
 }
 
 .search-bar {
-  width: 250px;
-  padding: 8px;
-  font-size: 14px;
+  width: 200px; /* más pequeño */
+  padding: 6px;
+  font-size: 13px;
   border: 2px solid #56cfe1;
-  border-radius: 8px;
+  border-radius: 6px;
   background: rgba(86, 207, 225, 0.05);
   color: #eaf6f6;
   outline: none;
@@ -84,23 +83,23 @@ header {
   position: absolute;
   top: 100%; /* justo debajo del input */
   left: 0;
-  width: 280px; /* ventana pequeña y compacta */
+  width: 250px; /* reducido */
   background: #0d1b2a;
   border: 1px solid #56cfe1;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
-  max-height: 250px;
+  max-height: 220px;
   overflow-y: auto;
   z-index: 1000;
-  font-size: 14px;
-  padding: 10px 0;
+  font-size: 13px;
+  padding: 8px 0;
   color: #eaf6f6;
 }
 
 /* Categorías dentro de los resultados */
 .search-results strong {
   display: block;
-  padding: 6px 15px;
+  padding: 5px 12px;
   font-weight: bold;
   color: #56cfe1;
   background: rgba(86, 207, 225, 0.05);
@@ -116,7 +115,7 @@ header {
 
 /* Ítems individuales */
 .search-results li {
-  padding: 6px 15px;
+  padding: 5px 12px;
   cursor: pointer;
   border-bottom: 1px solid rgba(86, 207, 225, 0.2);
   transition: background 0.2s ease, color 0.2s ease;
@@ -150,11 +149,11 @@ header {
 
 /* Botón logout */
 button.logout-button {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px;
+  font-size: 13px;
   font-weight: bold;
   border: 2px solid #56cfe1;
-  border-radius: 10px;
+  border-radius: 8px;
   background: transparent;
   color: #56cfe1;
   cursor: pointer;
@@ -239,13 +238,16 @@ button.logout-button:hover {
 .dropdown {
   position: relative;
   display: inline-block;
+  gap: 0px;
 }
 
 .dropdown-toggle {
   font-weight: bold;
+  font-size: 13px;
   color: #eaf6f6;
   cursor: pointer;
   transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  gap: 0px;
 }
 
 .dropdown-toggle:hover {
@@ -262,12 +264,12 @@ button.logout-button:hover {
   left: 0;
   background: #0d1b2a;
   border: 1px solid #56cfe1;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
-  min-width: 200px;
+  min-width: 180px;
   z-index: 2000;
   flex-direction: column;
-  padding: 8px 0;
+  padding: 6px 0;
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -278,10 +280,10 @@ button.logout-button:hover {
 
 /* Links del menú */
 .dropdown-menu a {
-  padding: 10px 15px;
+  padding: 8px 12px;
   color: #eaf6f6;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
@@ -302,7 +304,54 @@ button.logout-button:hover {
   }
 }
 
+/* --- Responsive barra fija --- */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 
+  .logo {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 0;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+  }
+
+  .search-bar {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  button.logout-button {
+    align-self: flex-start;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .dropdown-menu {
+    position: relative;
+    min-width: 100%;
+  }
+}
 
 /* --- Chatbot Hover --- */
 .chatbot-container {
@@ -319,7 +368,7 @@ button.logout-button:hover {
   flex-direction: column;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  z-index: 1500;
+  z-index: 9999;
   font-size: 14px;
 }
 
@@ -439,4 +488,19 @@ button.logout-button:hover {
 
 .chatbot-suggestions button:hover {
   background: #48bfe3;
+}
+
+.chatbot-container {
+  z-index: 2147483647;
+}
+.chatbot-toggle-button {
+  z-index: 2147483647;
+}
+
+.logout-wrapper {
+  min-width: 120px; /* Asegura espacio fijo */
+  height: 36px;      /* Alto similar al botón */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

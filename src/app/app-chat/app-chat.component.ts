@@ -43,7 +43,7 @@ interface ChatMessage {
 })
 export class AppChatComponent implements OnInit, OnDestroy {
   /** URL del backend de sockets*/
-  @Input() serverUrl = 'http://34.71.235.33:4000';
+  serverUrl = 'http://localhost:4000';
 
   /** Canal de comunicación de los sockets */
   @Input() channel: 'global' | `battle-${string}` = 'global';

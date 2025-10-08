@@ -46,12 +46,11 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     await this.loadAuctions();
 
-    // Conectar socket sin token
     this.auctionSocket.connect();
 
     this.subs.push(
       this.auctionSocket.onAuctionUpdated().subscribe(updated => {
-        this.auctions = this.auctions.map(a => 
+        this.auctions = this.auctions.map(a =>
           a.id === updated.id ? { ...a, ...updated } : a
         );
         this.refreshTypes();
@@ -61,9 +60,12 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
     this.subs.push(
       this.auctionSocket.onNewAuction().subscribe(created => {
-        this.auctions.push(created);
-        this.refreshTypes();
-        this.applyFilter();
+        const exists = this.auctions.some(a => a.id === created.id);
+        if (!exists) {
+          this.auctions.push(created);
+          this.refreshTypes();
+          this.applyFilter();
+        }
       })
     );
 
@@ -85,8 +87,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     try {
       const all = await this.auctionService.listAuctions();
       this.auctions = this.onlyMyBids && this.userId
-        ? all.filter(a => a.highestBidderId === this.userId && !a.isClosed)
-        : all;
+  ? all.filter(a => a.bids?.some(b => b.userId === this.userId) && !a.isClosed)
+  : all;
+      this.auctions = Array.from(new Map(this.auctions.map(a => [a.id, a])).values());
       this.refreshTypes();
       this.applyFilter();
     } catch (err) {
@@ -101,46 +104,47 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   applyFilter() {
-    const q = this.filter.trim().toLowerCase();
-    this.filtered = this.auctions.filter(a => {
-      if (q && q.length >= 4) {
-        const matchTitle = a.title?.toLowerCase().includes(q);
-        const matchDesc = a.description?.toLowerCase().includes(q);
-        if (!matchTitle && !matchDesc) return false;
-      }
-      if (this.selectedType && a.item?.type !== this.selectedType) return false;
-      if (this.selectedDuration) {
-        const created = new Date(a.createdAt).getTime();
-        const ends = new Date(a.endsAt).getTime();
-        const durationHours = (ends - created) / (1000 * 60 * 60);
-        if (this.selectedDuration === '24' && durationHours > 24) return false;
-        if (this.selectedDuration === '48' && durationHours > 48) return false;
-      }
-      if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
-      return true;
-    });
+  const q = this.filter.trim().toLowerCase();
+  this.filtered = this.auctions.filter(a => {
+    if (q.length >= 4) {
+      const name = (a.item?.name ?? '').toLowerCase().trim();
+      const desc = (a.item?.description ?? '').toLowerCase().trim();
+      if (q.length >= 4 && !name.includes(q) && !desc.includes(q)) return false;
+    }
+    if (this.selectedType && a.item?.type !== this.selectedType) return false;
+    if (this.selectedDuration) {
+      const ends = new Date(a.endsAt).getTime();
+      const now = Date.now();
+      const remainingHours = (ends - now) / (1000 * 60 * 60);
+      if (this.selectedDuration === '24' && remainingHours > 24) return false;
+      if (this.selectedDuration === '48' && remainingHours > 48) return false;
+    }
+    if (this.maxPrice && a.currentPrice > this.maxPrice) return false;
+    return true;
+  });
+  if (q.length < 4 && !this.selectedType && !this.selectedDuration && !this.maxPrice) {
+    this.filtered = [...this.auctions];
   }
+}
+
+
+
 
   openDetails(a: AuctionDTO) { this.selected = a; }
   closeDetails() { this.selected = undefined; }
 
   handleBought(updated: AuctionDTO) {
-  // 🔹 eliminamos la subasta comprada inmediatamente
-  this.auctions = this.auctions.filter(a => a.id !== updated.id);
-  this.applyFilter();
-  if (this.selected?.id === updated.id) this.closeDetails();
-}
+    this.auctions = this.auctions.filter(a => a.id !== updated.id);
+    this.applyFilter();
+    if (this.selected?.id === updated.id) this.closeDetails();
+  }
 
-  //este mismo
   goToComprar() { this.router.navigate(['/auctions']); }
-  //create-auction-form
   goToVender() { this.router.navigate(['/auctions/vender']); }
-  //transaction-history
   goToRecoger() { this.router.navigate(['/auctions/recoger']); }
-  //a este mismo
   goToMisPujas() { this.router.navigate(['/auctions/mis-pujas']); }
 
-  filterByCategory(category: string): void {this.router.navigate(['/auctions/vender']);
-}
-
+  filterByCategory(category: string): void {
+    this.router.navigate(['/auctions/vender']);
+  }
 }

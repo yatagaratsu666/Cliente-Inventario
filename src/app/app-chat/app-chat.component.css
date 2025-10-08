@@ -7,7 +7,8 @@
   border: 2px solid #c2b97f;
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(0,0,0,.35);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .chat-header {
@@ -95,11 +96,20 @@
   border-top: 1px solid rgba(86, 207, 225, .25);
   padding: .6rem; background: #1B262C;
 }
+
 .chat-input textarea {
   resize: none; background: transparent; color: #BBE1FA;
   border: 1px solid #0F4C75; border-radius: 10px;
   padding: .5rem .6rem; outline: none;
 }
+
+@media (min-width: 1629px) and (min-height: 767px) {
+  .bottom-section{
+    height: 300px;
+  }
+}
+
+
 .chat-input textarea::placeholder { color: rgba(255,255,255,.45); }
 .chat-input button {
   background: #3282B8; color: #0b1220; font-weight: 700;

@@ -1,0 +1,9 @@
+:host { display:block }
+.card { background: var(--panel, #13162b); border:1px solid var(--border, #2a2e49); border-radius:8px; padding:10px; color:#e6e6ef }
+.row { display:flex; gap:8px; justify-content:space-between; align-items:center }
+.actions { display:flex; gap:6px }
+button { background:#7f5af0; color:#fff; border:none; border-radius:6px; padding:6px 10px; cursor:pointer }
+button.secondary { background:#2cb67d }
+#texto { white-space:pre-wrap; margin-top:8px }
+#replies { margin-top:6px; opacity:.9 }
+#replies > .reply { border-left: 2px solid #7f5af0; padding-left:8px; margin-top:6px }

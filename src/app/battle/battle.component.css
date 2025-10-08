@@ -155,10 +155,10 @@
 
 .team-label {
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
-  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0.3rem;
   border-radius: 8px;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   width: 98%;
@@ -177,7 +177,7 @@
 /* Formación de jugadores */
 .players-formation {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   gap: 1rem;
   flex-wrap: nowrap;
@@ -203,12 +203,23 @@
 }
 
 .battle-player.player-center {
-  transform: translateX(0px);
+  transform: translate(-220px, -111px);
+  z-index: 2;
+}
+
+.battle-player.player-below {
+  transform: translate(-110px, -180px);
   z-index: 2;
 }
 
 .team-b .battle-player.player-center {
-  transform: translateX(0px);
+  transform: translate(220px, -111px);
+  z-index: 2;
+}
+
+.team-b .battle-player.player-below {
+  transform: translate(110px, -180px);
+  z-index: 2;
 }
 
 .battle-player.enemy-target:hover {
@@ -307,7 +318,6 @@
   padding: 0.5rem 1rem;
   border-top: 2px solid rgba(86, 207, 225, 0.3);
   background: rgba(15, 76, 117, 0.15);
-  height: 265px;
   box-sizing: border-box;
   overflow: hidden;
   margin-top: -115px;
@@ -697,24 +707,12 @@
 
 @media (min-width: 1629px) and (min-height: 767px) {
   .bottom-section{
-    height: 300px;
     margin-top: -150px;
   }
 
   .battle-arena {
-    height: 715px;
+    height: 710px;
   }
-}
-
-.players-formation {
-  display: grid;
-  grid-template-areas:
-    ". top ."
-    "mid-left mid-right"
-    "bottom-left bottom bottom-right";
-  gap: 1rem;
-  justify-content: center;
-  align-items: center;
 }
 
 .player-top { grid-area: top; }
@@ -723,3 +721,29 @@
 .player-bottom-left { grid-area: bottom-left; }
 .player-bottom { grid-area: bottom; }
 .player-bottom-right { grid-area: bottom-right; }
+
+.battle-player {
+  max-width: 100%;  /* que no exceda el ancho de la celda */
+  max-height: 100%; /* lo mismo para la altura */
+  box-sizing: border-box; /* para que padding y border no aumenten el tamaño */
+}
+
+.player-top {
+  grid-area: top;
+  justify-self: center;
+  align-self: center;
+}
+
+/* lo mismo para las otras áreas */
+.player-mid-left {
+  grid-area: mid-left;
+  justify-self: center;
+  align-self: center;
+}
+
+.battle-player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* si contienen imágenes o contenido */
+}
+

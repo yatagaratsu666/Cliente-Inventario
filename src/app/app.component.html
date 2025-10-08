@@ -152,25 +152,6 @@
   </div>
 </header>
 
-<!-- Barra de notificaciones -->
-<div class="notification-bar" *ngIf="mostrarNotificaciones">
-  <div class="notification-header">
-    <span class="notification-title">Notificaciones</span>
-    <button class="close-btn" (click)="cerrarNotificaciones()">✕</button>
-  </div>
-
-  <div class="notification-content">
-    <p *ngIf="!notificaciones.length">Sin notificaciones pendientes</p>
-    <ul *ngIf="notificaciones.length">
-      <li *ngFor="let notificacion of notificaciones">{{ notificacion }}</li>
-    </ul>
-  </div>
-</div>
-
-
-
-
-<router-outlet></router-outlet>
 <router-outlet></router-outlet>
 <app-toast></app-toast>
 <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>

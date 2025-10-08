@@ -29,27 +29,19 @@
     </div>
   </div>
 
-  <!-- Área central - Equipos -->
   <div class="battlefield">
-    <!-- Equipo A (izquierda) -->
     <div class="team team-a">
       <div class="team-label">EQUIPO A</div>
       <div class="players-formation">
-        <div 
-          *ngFor="let player of teamA; let i = index" 
-          class="battle-player"
-          [class.player-center]="i === 1 && teamA.length === 3"
-          [class.selected-target]="selectedTarget === player.username"
-          [class.enemy-target]="isEnemyPlayer(player.username)"
-          (click)="selectTarget(player.username)">
-          
-          <!-- Avatar del jugador -->
+        <div *ngFor="let player of teamA; let i = index" class="battle-player"
+          [class.player-center]="(teamA.length === 2 && i === 1) || (teamA.length === 3 && i === 1)"
+          [class.player-below]="teamA.length === 3 && i === 2" [class.selected-target]="selectedTarget === player.username"
+          [class.enemy-target]="isEnemyPlayer(player.username)" (click)="selectTarget(player.username)">
           <div class="player-avatar">
             <img [src]="player.heroStats.hero.image" [alt]="player.username">
             <div class="power-indicator">{{ player.heroStats.hero.power }}</div>
           </div>
 
-          <!-- Barra de vida -->
           <div class="health-container">
             <div 
               class="health-bar" 
@@ -59,31 +51,23 @@
             <div class="health-text">{{ player.heroStats.hero.health }}</div>
           </div>
 
-          <!-- Nombre del usuario -->
           <div class="player-name">{{ player.username }}</div>
         </div>
       </div>
     </div>
 
-    <!-- Equipo B (derecha) -->
     <div class="team team-b">
       <div class="team-label">EQUIPO B</div>
       <div class="players-formation">
-        <div 
-          *ngFor="let player of teamB; let i = index" 
-          class="battle-player"
-          [class.player-center]="i === 1 && teamB.length === 3"
-          [class.selected-target]="selectedTarget === player.username"
-          [class.enemy-target]="isEnemyPlayer(player.username)"
-          (click)="selectTarget(player.username)">
-          
-          <!-- Avatar del jugador -->
+        <div *ngFor="let player of teamB; let i = index" class="battle-player"
+          [class.player-center]="(teamA.length === 2 && i === 1) || (teamA.length === 3 && i === 1)"
+          [class.player-below]="teamA.length === 3 && i === 2" [class.selected-target]="selectedTarget === player.username"
+          [class.enemy-target]="isEnemyPlayer(player.username)" (click)="selectTarget(player.username)">
           <div class="player-avatar">
-            <img [src]="player.heroStats.hero.image" [alt]="player.username" class="flipped">
+            <img [src]="player.heroStats.hero.image" [alt]="player.username">
             <div class="power-indicator">{{ player.heroStats.hero.power }}</div>
           </div>
 
-          <!-- Barra de vida -->
           <div class="health-container">
             <div 
               class="health-bar" 
@@ -93,16 +77,13 @@
             <div class="health-text">{{ player.heroStats.hero.health }}</div>
           </div>
 
-          <!-- Nombre del usuario -->
           <div class="player-name">{{ player.username }}</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Área inferior -->
   <div class="bottom-section">
-    <!-- Logs de batalla (inferior izquierda) -->
     <div class="battle-logs">
       <div class="logs-header">
         <h4>Registro de Batalla</h4>
@@ -120,7 +101,6 @@
       </div>
     </div>
 
-    <!-- Botones de acción (inferior centro) -->
     <div class="action-buttons" *ngIf="isMyTurn()">
       <button 
         class="action-btn basic-attack"

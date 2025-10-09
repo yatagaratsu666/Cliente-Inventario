@@ -1,24 +1,27 @@
+:host {
+  display: block;
+  overflow: hidden;
+}
 
-/* Contenedor principal */
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   background: linear-gradient(160deg, #0f4c75, #1b262c);
-  padding: 1rem; /* en lugar de 2px para que respire en móviles */
   box-sizing: border-box;
-  height: 100%;
 }
 
 /* Logo */
 .logo {
   color: #bbe1fa;
-  font-size: 1.5rem; 
+  font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
   transition: transform .3s ease;
-  margin-bottom: 10%;
+}
+
+.logo img {
+  height: 91vh;
 }
 
 /* Grupo de botones */
@@ -26,14 +29,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem; /* espacio flexible */
+  gap: 1rem;
+  /* espacio flexible */
   width: 100%;
   max-width: 340px;
 }
 
 /* Botones */
 .button-group button {
-  font-size: 1rem; /* responsive */
+  font-size: 1rem;
+  /* responsive */
   font-weight: bold;
   padding: 0.8rem 1rem;
   border: none;
@@ -63,16 +68,8 @@
   box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
 }
 
-@media (max-width: 480px) {
-  .logo {
-    font-size: 1.2rem;
-  }
-  .button-group {
-    gap: 0.8rem;
-    max-width: 90%; /* que se adapte más en móviles */
-  }
-  .button-group button {
-    font-size: 0.9rem;
-    padding: 0.7rem;
+@media (min-width: 1629px) and (min-height: 767px) {
+  .logo img {
+    height: 91.5vh;
   }
 }

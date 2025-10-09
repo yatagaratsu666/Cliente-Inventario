@@ -565,7 +565,7 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 100vh; /* ocupa toda la ventana */
+  height: 91vh; /* ocupa toda la ventana */
   max-width: 100vw;
   max-height: 100vh;
   aspect-ratio: 1630 / 768; /* mantiene proporción original */
@@ -692,6 +692,7 @@
   box-sizing: border-box;
   gap: 0.3rem;
   overflow: hidden; /* evita scrolls internos */
+  height: 100%;
 }
 
 /* Hero Info ocupa altura flexible mínima */
@@ -1412,6 +1413,12 @@ app-chat .chat-input {
 }
 
 .right-panel {
-  height: 92%;
+  height: 100%;
   width: 50%;
+}
+
+@media (min-width: 1629px) and (min-height: 767px) {
+  .lobby-container{
+    height: 92.5vh;
+  }
 }

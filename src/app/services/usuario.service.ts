@@ -15,7 +15,6 @@ export class UsuarioService {
     private http: HttpClient,
     private apiConfigService: ApiConfigService
   ) {
-    // Construye la URL base combinando la URL de la API con el endpoint /heroes
     this.apiUrl = `${apiConfigService.getApiUrl()}/usuarios`;
   }
 

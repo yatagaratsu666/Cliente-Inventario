@@ -1,0 +1,185 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2147483647;
+  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: #0d1b2a;
+  border: 2px solid #56cfe1;
+  border-radius: 10px;
+  color: #eaf6f6;
+  padding: 20px;
+  width: 600px;
+  height: 75vh;
+  overflow-y: auto;
+  box-shadow: 0 0 20px rgba(86, 207, 225, 0.3);
+  animation: popIn 0.2s ease-out forwards;
+  transform: scale(0.98);
+  position: relative;
+}
+
+/* --- Animaciones coherentes con diseño global --- */
+@keyframes fadeIn {
+  from { background: rgba(0, 0, 0, 0); }
+  to { background: rgba(0, 0, 0, 0.6); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* --- Botón de cierre (match con botones del diseño base) --- */
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 22px;
+  color: #56cfe1;
+  background: transparent;
+  border: 2px solid transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 6px rgba(86, 207, 225, 0.5);
+}
+
+.close-btn:hover {
+  color: #0d1b2a;
+  background: #56cfe1;
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.7);
+  transform: scale(1.1);
+}
+
+.detalle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imagen img {
+  width: 160px;
+  height: 160px;
+  border-radius: 10px;
+  border: 2px solid #56cfe1;
+  object-fit: cover;
+  box-shadow: 0 0 12px rgba(86, 207, 225, 0.4);
+}
+
+.no-image {
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #56cfe1;
+  border-radius: 10px;
+  background: #0d2539;
+  color: #cde9f2;
+  font-size: 13px;
+  text-shadow: 0 0 6px rgba(86, 207, 225, 0.3);
+}
+
+.detalles{
+    width: 100%;
+}
+
+.detalles h2 {
+  text-align: center;
+  color: #56cfe1;
+  font-size: 1.8rem;
+  text-shadow: 0 0 8px rgba(86, 207, 225, 0.6);
+}
+
+.detalles p {
+  font-size: 1rem;
+  color: #eaf6f6;
+  text-align: justify;
+}
+
+.no-item {
+  text-align: center;
+  padding: 18px;
+  color: #eaf6f6;
+  background: #0d2539;
+  border: 1px solid #56cfe1;
+  border-radius: 8px;
+  box-shadow: inset 0 0 10px rgba(86, 207, 225, 0.2);
+  font-size: 0.95rem;
+}
+
+
+#comments-container {
+  width: 100%;
+  border-radius: 12px;
+  padding: 10px;
+  height: 100%;
+}
+
+.comments-wrapper {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.comments-wrapper * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3282b8, #56cfe1);
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(86, 207, 225, 0.4);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #56cfe1, #80ffdb);
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.7);
+}
+
+/* --- Scroll coherente para el contenedor de comentarios --- */
+#comments-container::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+#comments-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+#comments-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3282b8, #56cfe1);
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(86, 207, 225, 0.4);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#comments-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #56cfe1, #80ffdb);
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.7);
+}
+
+
+
+

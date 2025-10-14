@@ -17,8 +17,8 @@ export const environment = {
   api: { base: 'https://auction-deploy-272361825762.us-east1.run.app/api' },
   socket: { base: 'https://auction-deploy-272361825762.us-east1.run.app' },
 
-  missionsApiBaseUrl: 'https://nexus-295839446356.us-central1.run.app',    
-  missionsSseBaseUrl: 'https://nexus-295839446356.us-central1.run.app',
+  missionsApiBaseUrl: 'https://nexus-295839446356.us-central1.run.app:4001',    
+  missionsSseBaseUrl: 'https://nexus-295839446356.us-central1.run.app:4001',
 
   usersUrl: 'https://thenexusbattles-771648021041.southamerica-east1.run.app'
 

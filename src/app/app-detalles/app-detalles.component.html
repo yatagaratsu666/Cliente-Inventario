@@ -1,0 +1,29 @@
+<div class="modal-overlay" *ngIf="isVisible">
+    <div class="modal-content">
+        <button class="close-btn" (click)="cerrar()">×</button>
+
+        <div class="detalle-container" *ngIf="item; else sinItem">
+            <div class="imagen">
+                <img *ngIf="item.image; else noImagen" [src]="item.image" [alt]="item.name || 'Sin nombre'" />
+                <ng-template #noImagen>
+                    <div class="no-image">Sin imagen disponible</div>
+                </ng-template>
+            </div>
+
+            <div class="detalles">
+                <h2>{{ item.name || 'Sin nombre' }}</h2>
+                <p><strong>Descripción: </strong>{{ item.description }}</p>
+            </div>
+
+            <div id="comments-container">
+                <div class="comments-wrapper"></div>
+            </div>
+        </div>
+
+        <ng-template #sinItem>
+            <div class="no-item">
+                <p>No hay información disponible para mostrar.</p>
+            </div>
+        </ng-template>
+    </div>
+</div>

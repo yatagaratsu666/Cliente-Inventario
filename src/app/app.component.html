@@ -154,7 +154,7 @@
 <app-toast></app-toast>
 <app-cuenta [isOpen]="isLoginOpen"></app-cuenta>
 <app-detalles
-  *ngIf="isModalVisible"
+  *ngIf="isModalVisible && loginService.isLoggedIn()"
   [item]="selectedItem"
   [isVisible]="isModalVisible"
   (closeModal)="cerrarModal()">

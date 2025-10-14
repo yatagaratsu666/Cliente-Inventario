@@ -89,27 +89,40 @@
       <h3>Seleccionar {{ getSlotName(selectedSlot) }}</h3>
     </div>
 
-    <div class="equipment-grid">
-      <div *ngFor="let item of getPaginatedItems(selectedSlot)" class="equipment-item"
-        [class.equipped-slot]="isEquipped(item) === 'slot'" [class.equipped-other]="isEquipped(item) === 'other'"
-        [class.not-equipped]="isEquipped(item) === 'none'" [class.item-selected]="selectedItem === item"
-        (click)="selectedItem = item">
+<div class="equipment-grid">
+  <div *ngFor="let item of getPaginatedItems(selectedSlot)" 
+       class="equipment-item"
+       [class.equipped-slot]="isEquipped(item) === 'slot'" 
+       [class.equipped-other]="isEquipped(item) === 'other'"
+       [class.not-equipped]="isEquipped(item) === 'none'" 
+       [class.item-selected]="selectedItem === item"
+       (click)="selectedItem = item"
+       (mouseenter)="onItemHover($event, item)"
+       (mouseleave)="onItemLeave($event)">
 
-        <img [src]="item.image" [alt]="item.name">
-        <div class="item-info">
-          <span class="item-name">{{ item.name }}</span>
-          <span *ngIf="isEquipped(item) === 'slot'" class="item-status">Equipado aquí</span>
-          <span *ngIf="isEquipped(item) === 'other'" class="item-status">En otro slot</span>
-          <span *ngIf="isEquipped(item) === 'none'" class="item-status">No equipado</span>
-        </div>
-        <button type="button" class="comments-inline-btn"
-          (click)="openComentariosInline(item); $event.stopPropagation();">
-          Comentarios
-        </button>
-
-      </div>
-
+    <img [src]="item.image" [alt]="item.name">
+    <div class="item-info">
+      <span class="item-name">{{ item.name }}</span>
+      <span *ngIf="isEquipped(item) === 'slot'" class="item-status">Equipado aquí</span>
+      <span *ngIf="isEquipped(item) === 'other'" class="item-status">En otro slot</span>
+      <span *ngIf="isEquipped(item) === 'none'" class="item-status">No equipado</span>
     </div>
+    <button type="button" class="comments-inline-btn"
+            (click)="openComentariosInline(item); $event.stopPropagation();">
+      Comentarios
+    </button>
+  </div>
+</div>
+
+<!-- Tooltip flotante -->
+<div *ngIf="showTooltip" [ngStyle]="tooltipStyle" class="custom-tooltip">
+  {{ tooltipContent }}
+</div>
+
+
+    <div *ngIf="showTooltip" [ngStyle]="tooltipStyle" class="custom-tooltip">
+  {{ tooltipContent }}
+</div>
 
     <div class="pagination-controls" *ngIf="getTotalPages(selectedSlot) > 1">
       <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>

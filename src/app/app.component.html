@@ -31,7 +31,7 @@
       />
 
       <!-- Dropdown de resultados -->
-      <div class="search-results" *ngIf="searchQuery">
+      <div class="search-results" *ngIf="searchQuery && loginService.isLoggedIn()">
         <div *ngIf="items.length">
           <strong>Ítems</strong>
           <ul>

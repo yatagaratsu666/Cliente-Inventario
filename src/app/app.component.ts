@@ -236,6 +236,15 @@ export class AppComponent {
  * @returns {void}
  */
   onSearchChange(): void {
+
+    if (!this.loginService.isLoggedIn()) {
+      this.items = [];
+      this.heroes = [];
+      this.armors = [];
+      this.epics = [];
+      this.weapons = [];
+      return;
+    }
     const query = this.searchQuery.trim().toLowerCase();
 
     // si no hay texto o menos de 4 caracteres → no mostrar nada

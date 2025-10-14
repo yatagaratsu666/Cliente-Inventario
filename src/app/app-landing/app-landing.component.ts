@@ -6,12 +6,14 @@ import { Router } from '@angular/router';
 /**
  * AppLandingComponent
  *
- * Componente Angular para la pantalla de aterrizaje (landing page) de la aplicación.
- * Se encarga de:
- * - Servir como punto de entrada inicial para el usuario
- * - Ofrecer opciones para iniciar sesión o ir directamente al menú principal
- * - Redirigir al login o al menú según la acción del usuario
+ * Componente principal de la pantalla de aterrizaje (landing page) de la aplicación.
  *
+ * Este componente sirve como punto de entrada inicial del usuario y permite:
+ * - Mostrar la interfaz de bienvenida.
+ * - Redirigir al usuario hacia la pantalla de inicio de sesión.
+ * - Acceder directamente al menú principal del juego o aplicación.
+ *
+ * @property {Router} router - Servicio de enrutamiento para manejar la navegación entre pantallas.
  */
 @Component({
   selector: 'app-app-landing',
@@ -23,13 +25,17 @@ import { Router } from '@angular/router';
 export class AppLandingComponent {
 
   /**
-   * Constructor
-   * @param router Servicio de Angular Router para navegación
+   * Constructor del componente.
+   *
+   * Se utiliza para inyectar dependencias necesarias para la navegación entre pantallas.
+   *
+   * @param {Router} router - Servicio de enrutamiento de Angular utilizado para redirigir al usuario.
    */
   constructor(private router: Router) { }
 
   /**
-   * Redirige al usuario a la pantalla de login
+   * Redirige al usuario a la pantalla de inicio de sesión.
+   *
    * @returns {void}
    */
   onLogin(): void {
@@ -37,7 +43,8 @@ export class AppLandingComponent {
   }
 
   /**
-   * Redirige al usuario al menú principal de la aplicación
+   * Redirige al usuario al menú principal de la aplicación.
+   *
    * @returns {void}
    */
   onPlay(): void {

@@ -7,15 +7,20 @@ import { Router } from '@angular/router';
  * AppMenuComponent
  *
  * Componente Angular que representa el menú principal del juego.
- * Se encarga de:
- * - Mostrar las opciones principales al usuario
- * - Permitir iniciar la navegación hacia la sección de batallas
+ *
+ * Este componente se encarga de:
+ * - Mostrar las opciones principales al usuario.
+ * - Permitir la navegación hacia la sección de batallas o gestión de cuenta.
  *
  * Características:
- * - Uso de `Router` para redirigir al usuario al presionar "Play"
- * - Diseño simple, integrando módulos comunes (`CommonModule`, `FormsModule`)
+ * - Utiliza `Router` para manejar la navegación.
+ * - Implementa un diseño simple con integración de módulos comunes (`CommonModule`, `FormsModule`).
+ *
+ * @property {boolean} mostrarCuenta - Indica si la sección "Mi cuenta" está visible.
+ * @property {string} jugadorNombre - Nombre del jugador mostrado en el menú.
+ * @property {number} cantidadTokens - Cantidad de tokens actuales del jugador.
+ * @property {Router} router - Servicio de enrutamiento para manejar la navegación.
  */
-
 @Component({
   selector: 'app-app-menu',
   imports: [CommonModule, FormsModule],
@@ -24,16 +29,30 @@ import { Router } from '@angular/router';
 })
 export class AppMenuComponent {
 
-  mostrarCuenta = false;
-  jugadorNombre = 'Jugador1';
-  cantidadTokens = 150;
+  /** Indica si la sección "Mi cuenta" está visible */
+  mostrarCuenta: boolean = false;
 
-  constructor(private router: Router) { }
-  
+  /** Nombre del jugador mostrado en el menú */
+  jugadorNombre: string = 'Jugador1';
+
+  /** Cantidad de tokens actuales del jugador */
+  cantidadTokens: number = 150;
+
   /**
- * Alterna la visibilidad del contenedor "Mi cuenta".
- */
-  toggleCuenta() {
+   * Constructor del componente.
+   *
+   * Inyecta el servicio de enrutamiento para permitir la navegación entre vistas.
+   *
+   * @param {Router} router - Servicio de enrutamiento de Angular utilizado para redirigir al usuario.
+   */
+  constructor(private router: Router) { }
+
+  /**
+   * Alterna la visibilidad de la sección "Mi cuenta".
+   *
+   * @returns {void}
+   */
+  toggleCuenta(): void {
     this.mostrarCuenta = !this.mostrarCuenta;
   }
 }

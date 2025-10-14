@@ -5,6 +5,28 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsuarioService } from '../services/usuario.service';
 import { MissionsService } from '../services/missions.service';
 
+/**
+ * EnrollPage
+ *
+ * Componente encargado de gestionar el proceso de inscripción de un usuario a una misión específica.
+ * Permite seleccionar héroe, habilidad épica y duración, enviando la información al backend para crear la inscripción.
+ *
+ * @property {string | null} missionId - Identificador de la misión obtenido desde la ruta.
+ * @property {string} userId - Nombre de usuario obtenido del almacenamiento local.
+ * @property {any} user - Datos completos del usuario obtenidos desde el servicio `UsuarioService`.
+ * @property {any} selectedHero - Héroe actualmente seleccionado para la misión.
+ * @property {any} selectedEpic - Habilidad épica seleccionada por el usuario.
+ * @property {number} [durationSeconds] - Duración de la misión en segundos.
+ * @property {boolean} loading - Indica si la solicitud de inscripción está en proceso.
+ * @property {string | null} error - Mensaje de error mostrado al usuario.
+ * @property {boolean} showEquipmentModal - Controla la visibilidad del modal de selección de ítems.
+ * @property {'hero' | 'epicSkill'} selectedSlot - Tipo de ítem actualmente seleccionado en el modal.
+ * @property {number} itemsPerPage - Número de elementos por página en el modal.
+ * @property {number} currentPage - Página actual en la paginación del modal.
+ * @property {any} selectedItem - Elemento temporalmente seleccionado en el modal.
+ */
+
+
 @Component({
   standalone: true,
   selector: 'app-enroll',
@@ -107,28 +129,43 @@ import { MissionsService } from '../services/missions.service';
     </div>
   `
 })
+
 export class EnrollPage implements OnInit {
+
+  /** Identificador de la misión (extraído de la ruta). */
   missionId: string | null = null;
+
+  /** ID o nombre de usuario obtenido del almacenamiento local. */
   userId: string = localStorage.getItem('username') || '';
+
+  /** Objeto con los datos completos del usuario. */
   user: any = null;
 
-  // Selección actual
+  /** Héroe seleccionado para la inscripción. */
   selectedHero: any = null;
+
+  /** Habilidad épica seleccionada para la inscripción. */
   selectedEpic: any = null;
 
-  // Duración y acción
+  /** Duración de la misión en segundos. */
   durationSeconds?: number;
+
+  /** Indica si se está ejecutando la solicitud de inscripción. */
   loading = false;
+
+  /** Contiene el mensaje de error actual, si existe. */
   error: string | null = null;
 
+  /** Expresión regular para validar IDs de héroes en formato H-###. */
   private readonly HCODE_RE = /^H-\d{3}$/i;
 
-  private formatHCodeFromNumeric(n: number | string): string {
-    const num = typeof n === 'number' ? n : parseInt(String(n), 10);
-    if (Number.isNaN(num)) return '';
-    return `H-${String(num).padStart(3, '0')}`;
-  }
-
+  /**
+   * Constructor del componente.
+   * @param {ActivatedRoute} route - Servicio para acceder a parámetros de la ruta.
+   * @param {Router} router - Servicio de enrutamiento para navegación entre páginas.
+   * @param {MissionsService} api - Servicio encargado de la comunicación con el backend de misiones.
+   * @param {UsuarioService} userService - Servicio encargado de obtener los datos del usuario.
+   */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -136,18 +173,26 @@ export class EnrollPage implements OnInit {
     private userService: UsuarioService
   ) {}
 
+  /**
+   * Inicializa el componente cargando la información del usuario y los parámetros de la misión.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.missionId = this.route.snapshot.paramMap.get('id') || this.route.snapshot.paramMap.get('missionId');
     this.loadUserEquipment();
     if (this.durationSeconds == null) this.durationSeconds = 22; // valor por defecto
   }
 
-  private loadUserEquipment() {
+  /**
+   * Carga los datos del usuario y establece héroe y épica iniciales.
+   * @private
+   * @returns {void}
+   */
+  private loadUserEquipment(): void {
     if (!this.userId) return;
     this.userService.getUsuarioById(this.userId).subscribe({
       next: (data) => {
         this.user = data;
-        // Igual que Inventario: prioriza equipados, luego inventario
         this.selectedHero = this.user?.equipados?.hero?.[0] || this.user?.inventario?.hero?.[0] || null;
         this.selectedEpic = this.user?.equipados?.epicAbility?.[0] || this.user?.inventario?.epicAbility?.[0] || null;
       },
@@ -157,18 +202,31 @@ export class EnrollPage implements OnInit {
     });
   }
 
-  // Duración rápida
-  setDuration(v: number) {
+  /**
+   * Establece rápidamente la duración predefinida de la misión.
+   * @param {number} v - Duración en segundos.
+   */
+  setDuration(v: number): void {
     this.durationSeconds = Number.isFinite(v as number) ? Number(v) : 22;
   }
 
+  /**
+   * Convierte y valida la duración ingresada por el usuario.
+   * @private
+   * @returns {number} Duración normalizada en segundos.
+   */
   private coerceDuration(): number {
     const n = Number(this.durationSeconds);
     if (!Number.isFinite(n) || n <= 0) return 22;
     return Math.floor(n);
   }
 
-  // Normaliza tokens para rotations (SPECIAL:<EPIC>)
+  /**
+   * Normaliza un código o nombre a formato de token válido.
+   * @private
+   * @param {string} [x] - Cadena original.
+   * @returns {string | null} Token normalizado.
+   */
   private normalizeToken(x?: string): string | null {
     if (!x || typeof x !== 'string') return null;
     const t = x.trim();
@@ -176,21 +234,23 @@ export class EnrollPage implements OnInit {
     return t.toUpperCase().replace(/\s+/g, '_');
   }
 
-  // Deriva heroId H-### 
+  /**
+   * Deriva un ID de héroe en formato H-### a partir de las propiedades del héroe seleccionado.
+   * @private
+   * @returns {string | null} ID del héroe en formato válido.
+   */
   private getMissionHeroId(): string | null {
     const h = this.selectedHero;
 
-    // 1) Si el id es numérico (o string numérica), convertir a H-###
     if (typeof h?.id === 'number') {
       return this.formatHCodeFromNumeric(h.id);
     }
     if (typeof h?.id === 'string') {
       const idStr = h.id.trim().toUpperCase();
-      if (this.HCODE_RE.test(idStr)) return idStr;         // ya viene como H-###
-      if (/^\d+$/.test(idStr)) return this.formatHCodeFromNumeric(idStr); // "7" -> H-007
+      if (this.HCODE_RE.test(idStr)) return idStr;
+      if (/^\d+$/.test(idStr)) return this.formatHCodeFromNumeric(idStr);
     }
 
-    // 2) Otras claves posibles (code/heroId o input previo)
     const candidates = [
       h?.code,
       h?.heroId,
@@ -204,6 +264,23 @@ export class EnrollPage implements OnInit {
     return match || null;
   }
 
+  /**
+   * Da formato a un número como ID de héroe (H-###).
+   * @private
+   * @param {number | string} n - Número del héroe.
+   * @returns {string} ID formateado.
+   */
+  private formatHCodeFromNumeric(n: number | string): string {
+    const num = typeof n === 'number' ? n : parseInt(String(n), 10);
+    if (Number.isNaN(num)) return '';
+    return `H-${String(num).padStart(3, '0')}`;
+  }
+
+  /**
+   * Envía la solicitud para inscribirse a una misión.
+   * Valida los campos requeridos y maneja la respuesta del backend.
+   * @returns {void}
+   */
   enroll(): void {
     this.error = null;
     if (!this.missionId) { this.error = 'ID de misión inválido.'; return; }
@@ -234,24 +311,34 @@ export class EnrollPage implements OnInit {
     });
   }
 
-  // Modal
   showEquipmentModal = false;
   selectedSlot: 'hero' | 'epicSkill' = 'hero';
   itemsPerPage = 8;
   currentPage = 1;
   selectedItem: any = null;
 
+  /**
+   * Abre el modal para seleccionar héroe o habilidad épica.
+   * @param {'hero' | 'epicSkill'} slot - Tipo de ítem a seleccionar.
+   */
   openEquipmentModal(slot: 'hero' | 'epicSkill'): void {
     this.selectedSlot = slot;
     this.currentPage = 1;
     this.selectedItem = null;
     this.showEquipmentModal = true;
   }
+
+  /** Cierra el modal de selección. */
   closeEquipmentModal(): void {
     this.showEquipmentModal = false;
     this.selectedItem = null;
   }
 
+  /**
+   * Obtiene los ítems disponibles (inventario + equipados) según el tipo actual.
+   * @private
+   * @returns {any[]} Lista de ítems disponibles.
+   */
   private getAvailableItems(): any[] {
     if (!this.user) return [];
     if (this.selectedSlot === 'hero') {
@@ -265,17 +352,26 @@ export class EnrollPage implements OnInit {
     }
   }
 
+  /**
+   * Obtiene los ítems correspondientes a la página actual.
+   * @returns {any[]} Lista de ítems paginados.
+   */
   getPaginatedItems(): any[] {
     const all = this.getAvailableItems();
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return all.slice(start, start + this.itemsPerPage);
   }
 
+  /**
+   * Calcula el total de páginas disponibles.
+   * @returns {number} Total de páginas.
+   */
   getTotalPages(): number {
     const all = this.getAvailableItems();
     return Math.max(1, Math.ceil(all.length / this.itemsPerPage));
   }
 
+  /** Cambia a la página anterior en el modal. */
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -283,6 +379,7 @@ export class EnrollPage implements OnInit {
     }
   }
 
+  /** Cambia a la página siguiente en el modal. */
   nextPage(): void {
     if (this.currentPage < this.getTotalPages()) {
       this.currentPage++;
@@ -290,9 +387,9 @@ export class EnrollPage implements OnInit {
     }
   }
 
+  /** Asigna el ítem seleccionado y cierra el modal. */
   equipSelectedItem(): void {
     if (!this.selectedItem) return;
-
     if (this.selectedSlot === 'hero') {
       this.selectedHero = this.selectedItem;
     } else {

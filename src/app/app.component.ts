@@ -20,6 +20,39 @@ import User from './domain/user.model';
 import { ChatbotService } from './services/chatbot.service';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
 
+/**
+ * AppComponent
+ *
+ * Componente principal del sistema de inventario y batallas.
+ * 
+ * Este componente gestiona la navegación global, la búsqueda de elementos,
+ * la integración con el chatbot, el sistema de notificaciones y el control
+ * de visibilidad de paneles (como cuenta, login y chatbot).
+ *
+ * @property {string} title - Título principal de la aplicación.
+ * @property {string} searchQuery - Texto ingresado en el buscador.
+ * @property {boolean} mostrarCuenta - Controla la visibilidad del panel de cuenta.
+ * @property {string} jugadorNombre - Nombre del jugador obtenido de localStorage.
+ * @property {number} cantidadTokens - Tokens iniciales del jugador.
+ * @property {Item[]} items - Lista de ítems filtrados mostrados.
+ * @property {Hero[]} heroes - Lista de héroes filtrados mostrados.
+ * @property {Armor[]} armors - Lista de armaduras filtradas mostradas.
+ * @property {Epic[]} epics - Lista de épicos filtrados mostrados.
+ * @property {Weapon[]} weapons - Lista de armas filtradas mostradas.
+ * @property {User} user - Información del usuario actual.
+ * @property {string} role - Rol actual del usuario (obtenido del login).
+ * @property {boolean} isBattleRoute - Indica si la ruta actual pertenece a batallas.
+ * @property {boolean} isAccountPanelVisible - Controla la visibilidad del panel de cuenta.
+ * @property {boolean} isLoginOpen - Controla la apertura del modal de login.
+ * @property {boolean} chatbotVisible - Controla la visibilidad del chatbot.
+ * @property {{ from: 'user' | 'bot'; text: string }[]} chatbotMessages - Historial de mensajes del chatbot.
+ * @property {string} chatbotInput - Entrada actual del usuario en el chatbot.
+ * @property {boolean} isProcessing - Indica si el chatbot está procesando una solicitud.
+ * @property {string[]} chatbotSuggestions - Lista de sugerencias iniciales del chatbot.
+ * @property {boolean} mostrarNotificaciones - Controla la visibilidad del panel de notificaciones.
+ * @property {string[]} notificaciones - Lista de notificaciones actuales.
+ */
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -63,6 +96,20 @@ export class AppComponent {
 
   isAccountPanelVisible = false;
 
+  /**
+ * Constructor del componente.
+ * Se encarga de inyectar servicios y detectar cambios en la ruta.
+ * @param {Router} router - Servicio de enrutamiento Angular.
+ * @param {ChatService} chatService - Servicio de chat en tiempo real.
+ * @param {ChatbotService} chatbotService - Servicio de chatbot conversacional.
+ * @param {ItemsService} itemService - Servicio de ítems.
+ * @param {HeroesService} heroService - Servicio de héroes.
+ * @param {ArmorsService} armorService - Servicio de armaduras.
+ * @param {EpicsService} epicsService - Servicio de épicos.
+ * @param {WeaponsService} weaponService - Servicio de armas.
+ * @param {LoginService} loginService - Servicio de autenticación y roles.
+ */
+
   constructor(
     public router: Router,
     private chatService: ChatService,
@@ -95,6 +142,10 @@ export class AppComponent {
     this.router.navigate(['/gestion']);
   }
 
+  /**
+ * Inicializa el componente cargando todos los datos base
+ * (ítems, héroes, armaduras, épicos y armas).
+ */
   ngOnInit() {
     // Traer todos los datos una sola vez
     this.itemService.showAllItems().subscribe({
@@ -180,6 +231,10 @@ export class AppComponent {
     this.mostrarCuenta = !this.mostrarCuenta;
   }
 
+  /**
+ * Filtra los datos según el texto ingresado en el buscador.
+ * @returns {void}
+ */
   onSearchChange(): void {
     const query = this.searchQuery.trim().toLowerCase();
 
@@ -205,7 +260,7 @@ export class AppComponent {
     this.weapons = this.allWeapons.filter((w) => matchesQuery(w));
   }
 
-    // (Eliminados métodos de integración con comentarios)
+  // (Eliminados métodos de integración con comentarios)
   /** Garantiza que exista el custom element de comentarios una sola vez */
   private async ensureCommentsRoot(): Promise<void> {
     if (document.querySelector('comments-root')) return;
@@ -213,18 +268,22 @@ export class AppComponent {
       if ((window as any).customElements && !customElements.get('comments-root')) {
         await customElements.whenDefined('comments-root');
       }
-    } catch {}
+    } catch { }
     const host = document.createElement('comments-root');
-    host.setAttribute('minimal','');
+    host.setAttribute('minimal', '');
     document.body.appendChild(host);
   }
 
-  /** Abre comentarios para un item/armor/weapon mostrado en el modal */
+  /**
+   * Abre los comentarios asociados a un elemento (ítem, arma o armadura).
+   * @param {any} item - Elemento seleccionado.
+   * @returns {Promise<void>}
+   */
   async openComentariosItem(item: any): Promise<void> {
     if (!item) return;
     // Determinar tipo (más estricto): sólo considerar armor si armorType está en la lista conocida
     let tipo: 'item' | 'armor' | 'weapon' = 'item';
-    const knownArmorTypes = ['HELMET','CHEST','GLOVERS','BRACERS','PANTS','BOOTS'];
+    const knownArmorTypes = ['HELMET', 'CHEST', 'GLOVERS', 'BRACERS', 'PANTS', 'BOOTS'];
     if (item.weaponType) {
       tipo = 'weapon';
     } else if (item.armorType && knownArmorTypes.includes(item.armorType)) {
@@ -247,7 +306,7 @@ export class AppComponent {
     }
     await this.ensureCommentsRoot();
     if ((window as any).customElements && !customElements.get('comments-root')) {
-      try { await customElements.whenDefined('comments-root'); } catch {}
+      try { await customElements.whenDefined('comments-root'); } catch { }
     }
     console.debug('[Inventario] abrir comentarios', { tipo, id, nombre: item.name });
     window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
@@ -269,6 +328,10 @@ export class AppComponent {
     this.router.navigate(['/auctions/mis-pujas']);
   }
 
+  /**
+ * Redirige al módulo de gestión según la opción seleccionada.
+ * @param {string} option - Categoría a gestionar.
+ */
   goToGestion(option: string) {
     switch (option) {
       case 'heroes':

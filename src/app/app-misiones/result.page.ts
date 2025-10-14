@@ -5,6 +5,25 @@ import { MissionsService } from '../services/missions.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environment/environment';
 
+/**
+ * ResultPage
+ *
+ * Página encargada de mostrar el resultado final de una misión ejecutada.
+ * Una vez obtenidos los datos desde el backend, se encarga de acreditar automáticamente
+ * una cantidad fija de créditos al usuario que completó la misión.
+ *
+ * Responsabilidades principales:
+ * - Obtener el ID de la ejecución de la misión desde la ruta activa.
+ * - Consultar los resultados de la misión al backend.
+ * - Acreditar automáticamente créditos al usuario tras recibir el resultado.
+ *
+ * @property {string} execId - Identificador único de la ejecución de la misión.
+ * @property {any} data - Datos del resultado de la misión obtenidos del backend.
+ * @property {boolean} creditedXp - Indica si ya se acreditó la experiencia (reservado para futuras mejoras).
+ * @property {boolean} creditedCredits - Indica si ya se acreditaron los créditos para evitar duplicación.
+ * @property {number} CREDITOS_A_AGREGAR - Cantidad de créditos a otorgar tras finalizar la misión.
+ */
+
 @Component({
   standalone: true,
   selector: 'app-result',
@@ -54,20 +73,47 @@ import { environment } from '../environment/environment';
   </div>
   `
 })
+
+
 export class ResultPage implements OnInit {
+
+  /** Identificador único de la ejecución de la misión */
   execId!: string;
+
+  /** Resultado de la misión, obtenido desde el backend */
   data: any;
+
+  /** Indica si ya se acreditó la experiencia (reservado para uso futuro) */
   private creditedXp = false;
+
+  /** Indica si ya se acreditaron los créditos del usuario */
   private creditedCredits = false;
+
+  /** Cantidad fija de créditos que se otorgan al completar la misión */
   private readonly CREDITOS_A_AGREGAR = 20;
 
+  /**
+   * Constructor del componente.
+   * Inyecta los servicios necesarios para acceder a los parámetros de la ruta,
+   * obtener resultados de misiones y realizar actualizaciones en el backend.
+   *
+   * @param {ActivatedRoute} route - Servicio para acceder a los parámetros de la ruta activa.
+   * @param {MissionsService} api - Servicio para interactuar con la API de misiones.
+   * @param {HttpClient} http - Cliente HTTP para enviar solicitudes al backend.
+   */
   constructor(
     private route: ActivatedRoute,
     private api: MissionsService,
     private http: HttpClient
-  ) {}
+  ) { }
 
-  ngOnInit() {
+  /**
+   * Inicializa la página, obtiene el resultado de la misión desde la API
+   * y desencadena la acreditación automática de créditos al usuario.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
     this.execId = this.route.snapshot.paramMap.get('execId')!;
     this.api.result(this.execId).subscribe((r) => {
       this.data = r;
@@ -75,23 +121,37 @@ export class ResultPage implements OnInit {
     });
   }
 
-  private creditarCreditos() {
+  /**
+   * Acredita los créditos correspondientes al usuario que completó la misión.
+   * Este proceso se ejecuta una sola vez para evitar duplicados.
+   * 
+   * - Obtiene el nombre de usuario desde `localStorage`.
+   * - Construye dinámicamente la URL del endpoint a partir del `environment`.
+   * - Envía una solicitud `PATCH` al backend para actualizar los créditos.
+   *
+   * @private
+   * @returns {void}
+   */
+  private creditarCreditos(): void {
+    // Evita múltiples acreditaciones
     if (this.creditedCredits) return;
 
+    // Obtiene el nombre de usuario almacenado localmente
     const username = localStorage.getItem('username') || '';
     if (!username) return;
 
+    // Determina la URL base de la API desde el environment
     const apiBase = String((environment as any)?.apiUrl || (environment as any)?.backendApi || '').replace(/\/+$/, '');
     if (!apiBase) return;
 
+    // Construcción del endpoint y cuerpo de la solicitud
     const url = `${apiBase}/usuarios/${encodeURIComponent(username)}/creditos`;
-    const body = { ['créditos']: this.CREDITOS_A_AGREGAR as number }; // número, no string
+    const body = { ['créditos']: this.CREDITOS_A_AGREGAR as number };
 
-    this.http.patch<any>(url, body).subscribe((resp) => {
-      // resp.creditos es el número actualizado
-      this.creditedCredits = true;
-    }, () => {
-      this.creditedCredits = true;
-    });
+    // Realiza la petición PATCH para actualizar los créditos del usuario
+    this.http.patch<any>(url, body).subscribe(
+      () => { this.creditedCredits = true; },
+      () => { this.creditedCredits = true; }
+    );
   }
 }

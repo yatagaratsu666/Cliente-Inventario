@@ -5,6 +5,25 @@ import { Router } from '@angular/router';
 import { MissionsService } from '../services/missions.service';
 import type { ProgressResponse } from '../domain/mission.models';
 
+/**
+ * ProgressPage
+ *
+ * Página que muestra el progreso en tiempo real de una misión en ejecución.
+ * Se conecta al backend mediante Server-Sent Events (SSE) para recibir actualizaciones
+ * del estado de la misión, incluyendo cambios de turno y finalización.
+ *
+ * Responsabilidades principales:
+ * - Obtener el identificador de ejecución de la misión desde la ruta activa.
+ * - Consultar el progreso actual de la misión.
+ * - Escuchar eventos del servidor para reflejar cambios en tiempo real.
+ * - Redirigir automáticamente al usuario al resultado de la misión cuando esta finaliza.
+ *
+ * @property {string} execId - Identificador único de la ejecución de la misión.
+ * @property {ProgressResponse} data - Información del progreso de la misión.
+ * @property {any[]} events - Lista de eventos recibidos recientemente.
+ * @property {EventSource | undefined} es - Conexión SSE para escuchar actualizaciones del servidor.
+ */
+
 @Component({
   standalone: true,
   selector: 'app-progress',
@@ -51,36 +70,80 @@ import type { ProgressResponse } from '../domain/mission.models';
   `
 })
 
+
 export class ProgressPage implements OnInit, OnDestroy {
-  constructor(private route: ActivatedRoute, private api: MissionsService, private router: Router) {}
-  
+
+  /** Identificador único de la ejecución de la misión */
   execId = '';
+
+  /** Datos de progreso de la misión obtenidos del backend */
   data!: ProgressResponse;
+
+  /** Lista de eventos recientes (máximo 50) */
   events: any[] = [];
+
+  /** Fuente de eventos del servidor (SSE) */
   es?: EventSource;
 
-  ngOnInit() {
+  /**
+   * Constructor del componente.
+   * Inyecta los servicios necesarios para manejar la ruta, la comunicación con el backend
+   * y la navegación dentro de la aplicación.
+   *
+   * @param {ActivatedRoute} route - Permite acceder a los parámetros de la ruta actual.
+   * @param {MissionsService} api - Servicio para interactuar con la API de misiones.
+   * @param {Router} router - Servicio de enrutamiento para la navegación.
+   */
+  constructor(
+    private route: ActivatedRoute,
+    private api: MissionsService,
+    private router: Router
+  ) { }
+
+  /**
+   * Inicializa el componente y configura la conexión SSE para escuchar
+   * actualizaciones de la misión en ejecución.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    // Obtiene el ID de la ejecución desde los parámetros de la ruta
     this.execId = this.route.snapshot.paramMap.get('execId')!;
+
+    // Carga inicial del estado de progreso
     this.api.progress(this.execId).subscribe(d => this.data = d);
+
+    // Conecta al servidor mediante SSE para escuchar eventos
     this.es = this.api.sse(this.execId);
     if (this.es) {
+
+      // Evento: actualización de progreso
       this.es.addEventListener('progressUpdated', (e: MessageEvent) => {
         this.api.progress(this.execId).subscribe(d => this.data = d);
         this.events.unshift({ type: 'progressUpdated', ts: new Date().toISOString() });
-        this.events = this.events.slice(0,50);
+        this.events = this.events.slice(0, 50);
       });
+
+      // Evento: avance de turno
       this.es.addEventListener('turnAdvanced', (e: MessageEvent) => {
         this.events.unshift({ type: 'turnAdvanced', ts: new Date().toISOString() });
-        this.events = this.events.slice(0,50);
+        this.events = this.events.slice(0, 50);
       });
+
+      // Evento: misión finalizada
       this.es.addEventListener('missionEnded', (e: MessageEvent) => {
         if (this.es) this.es.close();
-        // redirige como el front de ejemplo, manteniendo rutas de este app
+        // Redirige al resultado de la misión al finalizar
         this.router.navigate(['/missions', 'result', this.execId]);
       });
     }
   }
 
+  /**
+   * Cierra la conexión SSE al destruir el componente para evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     if (this.es) this.es.close();
   }

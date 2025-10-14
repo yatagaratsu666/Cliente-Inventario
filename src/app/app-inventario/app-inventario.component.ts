@@ -12,17 +12,42 @@ import '../app-comentarios/web-components/app-root';
 /**
  * AppInventarioComponent
  *
- * Componente que gestiona el inventario del jugador:
- * - Muestra los ítems equipados.
- * - Permite equipar ítems.
- * - Administra la paginación de los ítems disponibles.
- * 
- * Propiedades:
- * - `itemsDisponibles`: Lista de ítems.
- * - `itemsPerPage`: Ítems por página.
- * - `currentPage`: Página actual.
- * - `armaEquipada`, `armaduraEquipada`, `itemEquipado`, `epicaEquipada`: Ítems equipados.
+ * Componente que gestiona el inventario del jugador.
+ *
+ * Breve resumen:
+ * - Carga y muestra los ítems del inventario y los ítems equipados.
+ * - Permite equipar/unequipar ítems, armas, armaduras, héroes y habilidades épicas.
+ * - Administra paginación de ítems, modales de selección y notificaciones de UI.
+ * - Actualiza las estadísticas del héroe según los efectos de los ítems equipados.
+ *
+ * Responsabilidades principales:
+ * - Obtener los datos del usuario y su inventario desde el backend.
+ * - Mantener el estado de ítems equipados y actualizar estadísticas del héroe.
+ * - Gestionar la UI del modal de equipamiento (paginación, selección, apertura/cierre).
+ * - Notificar al backend al equipar/unequipar y manejar errores de red.
+ *
+ * @property {string} roomId - ID de la sala actual extraído de la URL.
+ * @property {any[]} players - Lista de jugadores en la sala.
+ * @property {any} heroStats - Estadísticas del héroe del jugador actual.
+ * @property {number} itemsPerPage - Ítems mostrados por página.
+ * @property {number} currentPage - Página actual en la paginación de ítems.
+ * @property {string} userId - ID del jugador actual (obtenido del localStorage).
+ * @property {string} team - Equipo del jugador ('A' por defecto).
+ * @property {boolean} isReady - Indica si el jugador está listo para la batalla.
+ * @property {boolean} showEquipmentModal - Controla la visibilidad del modal de equipamiento.
+ * @property {string} selectedSlot - Slot seleccionado para equipar/unequipar.
+ * @property {any|null} selectedItem - Ítem actualmente seleccionado en el modal.
+ * @property {string|null} alertMessage - Mensaje actual de alerta (toast).
+ * @property {'success'|'error'|'warning'} alertType - Tipo de alerta.
+ * @property {Subscription[]} subs - Subscripciones activas para limpiar en ngOnDestroy.
+ * @property {any} battle - Información de la batalla (si aplica).
+ * @property {boolean} showLimitAlert - Control para mostrar alerta de límite.
+ * @property {string} limitAlertMessage - Mensaje de alerta por límite.
+ * @property {User} user - Modelo del usuario con inventario y equipados.
+ * @property {boolean} firstCharge - Marca para inicializar sólo la primera carga.
+ * @property {object} equippedItems - Mapa con los ítems actualmente equipados por slot.
  */
+
 @Component({
   selector: 'app-inventario',
   templateUrl: './app-inventario.component.html',
@@ -50,24 +75,36 @@ export class AppInventarioComponent {
   team: string = 'A';
 
   // Nuevas propiedades para el equipamiento
+  /** isReady - Propiedad pública. */
   isReady: boolean = false;
+  /** showEquipmentModal - Propiedad pública. */
   showEquipmentModal: boolean = false;
+  /** selectedSlot - Propiedad pública. */
   selectedSlot: string = '';
+  /** selectedItem - Propiedad pública. */
   selectedItem: any = null;
+  /** alertMessage - Propiedad pública. */
 
     alertMessage: string | null = null;
+  /** alertType - Propiedad pública. */
   alertType: 'success' | 'error' | 'warning' = 'success';
+  /** subs - Propiedad pública. */
 
   private subs: Subscription[] = [];
+  /** battle - Propiedad pública. */
   battle: any;
 
   // Propiedad para mostrar el toast
+  /** showLimitAlert - Propiedad pública. */
 showLimitAlert: boolean = false;
+  /** limitAlertMessage - Propiedad pública. */
 limitAlertMessage: string = '';
+  /** user - Propiedad pública. */
 
   user: User = new User();
 
   firstCharge = true;
+  /** equippedItems - Propiedad pública. */
 
   equippedItems: any = {
     helmet: null,
@@ -99,11 +136,17 @@ limitAlertMessage: string = '';
     private userService: UsuarioService
   ) {}
 
+
   /**
-   * Hook de inicialización del componente.
+   * Inicializa el componente cargando los datos del héroe y del inventario.
+   * @returns {void}
+   */
+  /**
+   * Inicializar el componente.
    * - Obtiene `roomId` desde la ruta.
-   * - Recupera las estadísticas del héroe.
-   * - Se suscribe al evento `battleStarted` para redirigir al campo de batalla.
+   * - Carga estadísticas del héroe y el inventario del usuario.
+   * - Se suscribe a observables necesarios.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.roomId = this.route.snapshot.paramMap.get('id') || '';
@@ -126,6 +169,7 @@ limitAlertMessage: string = '';
 
     showAlert(
     message: string,
+  /** type - Propiedad pública. */
     type: 'success' | 'error' | 'warning' = 'success'
   ) {
     this.alertMessage = message;
@@ -135,10 +179,16 @@ limitAlertMessage: string = '';
       this.alertMessage = null;
     }, 3500); // Oculta después de 3.5s
   }
+  /**
+   * Obtener y mostrar el inventario del usuario actual.
+   * Solicita los datos al backend y actualiza `equippedItems`.
+   * @returns {void}
+   */
 
 
   showInventory(): void {
     this.userService.getUsuarioById(this.userId).subscribe({
+  /** next - Propiedad pública. */
       next: (data) => {
         this.user = data;
         this.equippedItems = {
@@ -188,6 +238,7 @@ limitAlertMessage: string = '';
           this.firstCharge = false;
         }
       },
+  /** error - Propiedad pública. */
       error: (error) => {
         console.error('Error al cargar items:', error);
         alert('No se pudo obtener la lista de items.');
@@ -201,6 +252,11 @@ limitAlertMessage: string = '';
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return allItems.slice(startIndex, startIndex + this.itemsPerPage);
   }
+  /**
+   * Calcular el número total de páginas para un slot.
+   * @param {string} slot - Nombre del slot (en español).
+   * @returns {number} Total de páginas.
+   */
 
   getTotalPages(slot: string): number {
     const allItems = this.getAvailableItems(slot) || [];
@@ -220,6 +276,11 @@ limitAlertMessage: string = '';
       this.selectedItem = null;
     }
   }
+  /**
+   * Obtener la URL de la imagen de un ítem por su nombre.
+   * @param {string} itemName - Nombre del ítem.
+   * @returns {string|undefined} URL de la imagen o undefined si no existe.
+   */
 
   getImageByItemName(itemName: string): string | undefined {
     const sources = [
@@ -262,6 +323,7 @@ limitAlertMessage: string = '';
       case 'DEFENSE':
         this.heroStats.hero.defense += effect.value * multiplier;
         break;
+  /** default - Propiedad pública. */
       default:
         console.log('Tipo de efecto no manejado:', effect.effectType);
         break;
@@ -406,6 +468,7 @@ limitAlertMessage: string = '';
           }
         }
         break;
+  /** default - Propiedad pública. */
       default:
         console.error('Slot desconocido:', slot);
         break;
@@ -418,6 +481,11 @@ limitAlertMessage: string = '';
   /**
    * Hook de destrucción del componente.
    * Libera todas las suscripciones a observables para evitar fugas de memoria.
+   */
+  /**
+   * Destruir el componente.
+   * Libera todas las subscripciones para evitar fugas de memoria.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.subs.forEach((s) => s.unsubscribe());
@@ -438,6 +506,11 @@ limitAlertMessage: string = '';
   }
 
   // Obtener nombre del slot en español
+  /**
+   * Convertir la clave del slot a su nombre en español.
+   * @param {string} slot - Clave del slot.
+   * @returns {string} Nombre en español del slot.
+   */
   getSlotName(slot: string): string {
     const slotNames: any = {
       helmet: 'Casco',
@@ -456,6 +529,11 @@ limitAlertMessage: string = '';
     };
     return slotNames[slot] || slot;
   }
+  /**
+   * Convertir nombre del slot en español a la clave interna.
+   * @param {string} slotName - Nombre en español del slot.
+   * @returns {string} Clave interna del slot.
+   */
 
   getSlotKey(slotName: string): string {
     const slotKeys: any = {
@@ -475,6 +553,12 @@ limitAlertMessage: string = '';
     };
     return slotKeys[slotName] || slotName;
   }
+  /**
+   * Obtener la lista de ítems disponibles para un slot específico.
+   * Incluye ítems del inventario y el actualmente equipado (si aplica).
+   * @param {string} selectedSlot - Nombre del slot en español.
+   * @returns {any[]} Lista de ítems disponibles.
+   */
 
   getAvailableItems(selectedSlot: string): any[] {
     switch (selectedSlot) {
@@ -608,10 +692,16 @@ limitAlertMessage: string = '';
         console.log('heroes disponibles:', newHero);
         return newHero;
         break;
+  /** default - Propiedad pública. */
       default:
         return [];
     }
   }
+  /**
+   * Verificar si un ítem está equipado en el slot seleccionado, en otro slot o no está equipado.
+   * @param {any} item - Ítem a verificar.
+   * @returns {'slot'|'other'|'none'} Estado del ítem.
+   */
 
   isEquipped(item: any): 'slot' | 'other' | 'none' {
     const slotKey = this.getSlotKey(this.selectedSlot);
@@ -654,6 +744,13 @@ limitAlertMessage: string = '';
       this.equippedItems[this.selectedSlot] = null;
     }
   }
+  /**
+   * Intentar equipar un producto (armadura, arma, item, épica o héroe) en el slot indicado.
+   * Realiza validaciones de límite y conflictos por slot.
+   * @param {string} itemName - Nombre del ítem a equipar.
+   * @param {string} slot - Nombre del slot en español.
+   * @returns {boolean} true si se equipó correctamente; false si hubo restricción.
+   */
 
 equipProduct(itemName: string, slot: string): boolean {
   const slotKey = this.getSlotKey(slot);
@@ -765,6 +862,7 @@ equipProduct(itemName: string, slot: string): boolean {
       }
       this.equipHero(itemName);
       break;
+  /** default - Propiedad pública. */
 
     default:
       console.error('Slot desconocido:', slot);
@@ -781,6 +879,11 @@ equipProduct(itemName: string, slot: string): boolean {
 
   return true;
 }
+  /**
+   * Buscar un ítem por su nombre en inventario y equipados.
+   * @param {string} itemName - Nombre del ítem.
+   * @returns {any|null} El objeto del ítem o null si no se encuentra.
+   */
 
   getItemByName(itemName: string): any | null {
     const allItems = [
@@ -797,6 +900,12 @@ equipProduct(itemName: string, slot: string): boolean {
 
     return allItems.find((item) => item?.name === itemName) || null;
   }
+  /**
+   * Desequipar un producto según el slot indicado y actualizar estadísticas.
+   * @param {string} itemName - Nombre del ítem a desequipar.
+   * @param {string} slot - Nombre del slot en español.
+   * @returns {void}
+   */
 
   unequipProduct(itemName: string, slot: string): void {
     switch (slot) {
@@ -839,6 +948,7 @@ equipProduct(itemName: string, slot: string): boolean {
       case 'Heroe':
         this.unequipHero(itemName);
         break;
+  /** default - Propiedad pública. */
       default:
         console.error('Slot desconocido:', slot);
         break;
@@ -847,40 +957,61 @@ equipProduct(itemName: string, slot: string): boolean {
     const slotKey = this.getSlotKey(slot);
     this.equippedItems[slotKey] = null;
   }
+  /**
+   * Equipar un ítem de tipo consumible/utilitario via backend.
+   * @param {string} itemName - Nombre del ítem.
+   * @returns {void}
+   */
 
   equipItem(itemName: string): void {
     if (this.isReady) return; // No permitir cambios si ya está listo
     this.userService.equipItem(this.userId, itemName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Ítem ${itemName} equipado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar item:', err);
         this.message = `No se pudo equipar el ítem ${itemName}.`;
       },
     });
   }
+  /**
+   * Equipar un héroe desde el inventario via backend.
+   * @param {string} heroName - Nombre del héroe.
+   * @returns {void}
+   */
 
   equipHero(heroName: string): void {
     this.userService.equipHero(this.userId, heroName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `heroe ${heroName} equipado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar heroe:', err);
         this.message = `No se pudo equipar el heroe ${heroName}.`;
       },
     });
   }
+  /**
+   * Equipar un arma via backend.
+   * @param {string} weaponName - Nombre del arma.
+   * @returns {void}
+   */
 
   equipWeapon(weaponName: string): void {
     this.userService.equipWeapon(this.userId, weaponName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Arma ${weaponName} equipada con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar arma:', err);
         this.message = `No se pudo equipar el arma ${weaponName}.`;
@@ -889,12 +1020,19 @@ equipProduct(itemName: string, slot: string): boolean {
   }
 
   /** Equipar una armadura */
+  /**
+   * Equipar una armadura via backend.
+   * @param {string} armorName - Nombre de la armadura.
+   * @returns {void}
+   */
   equipArmor(armorName: string): void {
     this.userService.equipArmor(this.userId, armorName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Armadura ${armorName} equipada con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar armadura:', err);
         this.message = `No se pudo equipar la armadura ${armorName}.`;
@@ -903,51 +1041,79 @@ equipProduct(itemName: string, slot: string): boolean {
   }
 
   /** Equipar una épica */
+  /**
+   * Equipar una habilidad épica via backend.
+   * @param {string} epicName - Nombre de la épica.
+   * @returns {void}
+   */
   equipEpic(epicName: string): void {
     this.userService.equipEpic(this.userId, epicName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Épica ${epicName} equipada con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar épica:', err);
         this.message = `No se pudo equipar la épica ${epicName}.`;
       },
     });
   }
+  /**
+   * Desequipar un ítem via backend.
+   * @param {string} itemName - Nombre del ítem.
+   * @returns {void}
+   */
 
   unequipItem(itemName: string): void {
     this.userService.unequipItem(this.userId, itemName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Ítem ${itemName} quitado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar item:', err);
         this.message = `No se pudo equipar el ítem ${itemName}.`;
       },
     });
   }
+  /**
+   * Desequipar un héroe via backend.
+   * @param {string} heroName - Nombre del héroe.
+   * @returns {void}
+   */
 
   unequipHero(heroName: string): void {
     this.userService.unequipHero(this.userId, heroName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `heroe ${heroName} quitado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar heroe:', err);
         this.message = `No se pudo equipar el heroe ${heroName}.`;
       },
     });
   }
+  /**
+   * Desequipar un arma via backend.
+   * @param {string} weaponName - Nombre del arma.
+   * @returns {void}
+   */
 
   unequipWeapon(weaponName: string): void {
     this.userService.unequipWeapon(this.userId, weaponName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Arma ${weaponName} quitado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar arma:', err);
         this.message = `No se pudo equipar el arma ${weaponName}.`;
@@ -956,25 +1122,39 @@ equipProduct(itemName: string, slot: string): boolean {
   }
 
   /** Equipar una armadura */
+  /**
+   * Desequipar una armadura via backend.
+   * @param {string} armorName - Nombre de la armadura.
+   * @returns {void}
+   */
   unequipArmor(armorName: string): void {
     this.userService.unequipArmor(this.userId, armorName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Armadura ${armorName} quitado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar armadura:', err);
         this.message = `No se pudo equipar la armadura ${armorName}.`;
       },
     });
   }
+  /**
+   * Desequipar una épica via backend.
+   * @param {string} epicName - Nombre de la épica.
+   * @returns {void}
+   */
 
   unequipEpic(epicName: string): void {
     this.userService.unequipEpic(this.userId, epicName).subscribe({
+  /** next - Propiedad pública. */
       next: () => {
         this.message = `Épica ${epicName} quitado con éxito.`;
         this.showInventory();
       },
+  /** error - Propiedad pública. */
       error: (err) => {
         console.error('Error al equipar épica:', err);
         this.message = `No se pudo equipar la épica ${epicName}.`;
@@ -984,6 +1164,10 @@ equipProduct(itemName: string, slot: string): boolean {
 
     // (Eliminados métodos de integración con comentarios)
   /** Garantiza que exista el custom element de comentarios una sola vez */
+  /**
+   * Garantizar que el custom element de comentarios exista una sola vez en el DOM.
+   * @returns {Promise<void>}
+   */
   private async ensureCommentsRoot(): Promise<void> {
     if (document.querySelector('comments-root')) return;
     try {
@@ -997,6 +1181,12 @@ equipProduct(itemName: string, slot: string): boolean {
   }
 
   /** Abre comentarios para un item/armor/weapon mostrado en el modal */
+  /**
+   * Abrir la vista de comentarios para un ítem (armor/weapon/item).
+   * Determina el tipo y el id a partir del objeto y despacha evento global.
+   * @param {any} item - Objeto del ítem.
+   * @returns {Promise<void>}
+   */
   async openComentariosItem(item: any): Promise<void> {
     if (!item) return;
     // Determinar tipo (más estricto): sólo considerar armor si armorType está en la lista conocida
@@ -1030,5 +1220,3 @@ equipProduct(itemName: string, slot: string): boolean {
     window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
   }
 }
-
-

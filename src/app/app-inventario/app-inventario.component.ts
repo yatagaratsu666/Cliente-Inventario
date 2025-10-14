@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import User from '../domain/user.model';
@@ -55,6 +55,12 @@ import '../app-comentarios/web-components/app-root';
   imports: [CommonModule, FormsModule],
 })
 export class AppInventarioComponent {
+
+   showCommentsModal = false;
+  selectedCommentsItem: any = null;
+
+  // observer para detectar overlays que el web component pueda crear
+  private commentsObserver: MutationObserver | null = null;
   message = '';
   /** ID de la sala actual extraído de la URL */
   roomId!: string;
@@ -133,7 +139,9 @@ limitAlertMessage: string = '';
     private route: ActivatedRoute,
     private router: Router,
     private battleService: BattleService,
-    private userService: UsuarioService
+    private userService: UsuarioService,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) {}
 
 
@@ -165,6 +173,149 @@ limitAlertMessage: string = '';
     this.subs.push(heroSub);
 
     this.showInventory();
+  }
+
+    async openComentariosInline(item: any) {
+    if (!item) return;
+    this.selectedCommentsItem = item;
+    this.showCommentsModal = true;
+
+    // intenta cargar el bundle del webcomponent si es necesario
+    try {
+      await import('../app-comentarios/web-components/app-root/index'); // ajusta ruta si es otra
+    } catch (err) {
+      console.warn('[InlineComments] no se pudo importar webcomponent:', err);
+    }
+
+    // esperar microtick para que el modal se renderice en DOM
+    await new Promise(r => setTimeout(r, 0));
+
+    // contenedor donde queremos insertar el comments-root
+    const wrapper = this.el.nativeElement.querySelector('#inline-comments-container .comments-wrapper') as HTMLElement;
+    if (!wrapper) {
+      console.warn('[InlineComments] wrapper no encontrado');
+      return;
+    }
+
+    // limpiar wrapper antes de montar
+    wrapper.innerHTML = '';
+
+    // si ya existe un comments-root en documento (global), muévelo dentro del wrapper,
+    // sino crea uno nuevo dentro
+    const existingGlobal = document.querySelector('comments-root');
+    let host: HTMLElement;
+    if (existingGlobal) {
+      host = existingGlobal as HTMLElement;
+      wrapper.appendChild(host);
+    } else {
+      host = this.renderer.createElement('comments-root') as HTMLElement;
+      host.setAttribute('minimal', '');
+      wrapper.appendChild(host);
+    }
+
+    // asegúrate que el custom element esté definido (no siempre necesario)
+    try {
+      if ((window as any).customElements && !customElements.get('comments-root')) {
+        await customElements.whenDefined('comments-root');
+      }
+    } catch {}
+
+    // Arranca observer que detecta overlays (.cc-modal-overlay) creados en body
+    this.startCommentsOverlayObserver(wrapper);
+
+    // determina tipo e id como en tu lógica original:
+    const knownArmorTypes = ['HELMET', 'CHEST', 'GLOVERS', 'BRACERS', 'PANTS', 'BOOTS'];
+    let tipo: 'item'|'armor'|'weapon' = 'item';
+    if (item.weaponType) tipo = 'weapon';
+    else if (item.armorType && knownArmorTypes.includes(item.armorType)) tipo = 'armor';
+
+    const id = item.armorId ?? item.weaponId ?? item.itemId ?? item.id ?? item._id;
+    if (!id) {
+      console.warn('[InlineComments] id inválido', item);
+      return;
+    }
+
+    // breve delay para que el web component tenga chance de crear su overlay si lo hace
+    await new Promise(r => setTimeout(r, 50));
+
+    // dispara el evento que el web component escucha para filtrar comentarios
+    window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
+  }
+
+  // inicia el observer que mueve overlays a nuestro wrapper y fuerza sus estilos
+  private startCommentsOverlayObserver(wrapper: HTMLElement) {
+    // si ya existe no duplicar
+    if (this.commentsObserver) return;
+
+    const moveOverlayIfNeeded = (node: Node) => {
+      if (!(node instanceof HTMLElement)) return;
+
+      // si encuentra directamente la overlay que crea el webcomponent
+      if (node.classList && node.classList.contains('cc-modal-overlay')) {
+        // si no está dentro del wrapper, muévelo
+        if (!wrapper.contains(node)) {
+          wrapper.appendChild(node);
+        }
+        // aplica estilos inline para que NO flote fuera
+        Object.assign(node.style, {
+          position: 'relative',
+          inset: 'unset',
+          zIndex: '1',
+          background: 'transparent',
+          pointerEvents: 'auto'
+        });
+
+        // si hay .cc-modal dentro, lo adaptamos
+        const modalInner = node.querySelector('.cc-modal') as HTMLElement | null;
+        if (modalInner) {
+          Object.assign(modalInner.style, {
+            position: 'relative',
+            width: '100%',
+            boxShadow: 'none',
+            background: 'transparent'
+          });
+        }
+      }
+    };
+
+    // revisar overlays ya existentes
+    document.querySelectorAll('.cc-modal-overlay').forEach(n => moveOverlayIfNeeded(n));
+
+    // crear observer sobre el body para detectar nodos añadidos (overlay o comments-root)
+    this.commentsObserver = new MutationObserver(mutations => {
+      for (const mut of mutations) {
+        for (const node of Array.from(mut.addedNodes)) {
+          // si se insertó comments-root global, muévelo
+          if (node instanceof HTMLElement && node.tagName?.toLowerCase() === 'comments-root') {
+            if (!wrapper.contains(node)) wrapper.appendChild(node);
+          }
+          moveOverlayIfNeeded(node);
+          if (node instanceof HTMLElement) {
+            node.querySelectorAll?.('.cc-modal-overlay')?.forEach(n => moveOverlayIfNeeded(n));
+          }
+        }
+      }
+    });
+
+    this.commentsObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // cerrar modal y limpiar observer
+  closeCommentsModal() {
+    // opcional: mover comments-root de vuelta al body o eliminarlo si lo creamos
+    // const global = document.querySelector('comments-root');
+    // if (global) document.body.appendChild(global);
+
+    this.showCommentsModal = false;
+    this.selectedCommentsItem = null;
+    this.stopCommentsObserver();
+  }
+
+  private stopCommentsObserver() {
+    if (this.commentsObserver) {
+      this.commentsObserver.disconnect();
+      this.commentsObserver = null;
+    }
   }
 
     showAlert(
@@ -488,6 +639,7 @@ limitAlertMessage: string = '';
    * @returns {void}
    */
   ngOnDestroy(): void {
+    this.stopCommentsObserver();
     this.subs.forEach((s) => s.unsubscribe());
   }
 

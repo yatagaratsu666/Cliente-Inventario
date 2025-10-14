@@ -214,7 +214,6 @@
   line-height: 1.1;
 }
 
-/* Slots específicos más grandes */
 .chest {
   width: 80px;
   height: 80px;
@@ -235,7 +234,6 @@
   box-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
 }
 
-/* Modal de equipamiento */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -276,15 +274,41 @@
   text-transform: capitalize;
 }
 
+.modal-content.comments-modal {
+  width: 700px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow: hidden;
+}
+
+#inline-comments-container {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.comments-wrapper {
+  width: 100%;
+  max-width: 680px; 
+  height: 100%;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .close-btn {
   background: transparent;
   border: none;
-  color: #f5e6c4;
+  color: #56cfe1;
   font-size: 20px;
   cursor: pointer;
   padding: 5px;
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,8 +317,7 @@
 }
 
 .close-btn:hover {
-  background: rgba(194, 185, 127, 0.2);
-  transform: scale(1.1);
+  background: #152a41;
 }
 
 .equipment-grid {
@@ -307,7 +330,7 @@
   height: 380px;
 
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 

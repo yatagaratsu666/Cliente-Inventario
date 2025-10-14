@@ -19,6 +19,8 @@ import { ToastComponent } from "./toast/toast.component";
 import User from './domain/user.model';
 import { ChatbotService } from './services/chatbot.service';
 import { CuentaComponent } from './app-cuenta/cuenta-component';
+import { AppDetallesComponent } from './app-detalles/app-detalles.component';
+
 
 /**
  * AppComponent
@@ -62,6 +64,7 @@ import { CuentaComponent } from './app-cuenta/cuenta-component';
     FormsModule,
     ToastComponent,
     CuentaComponent,
+    AppDetallesComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -73,6 +76,9 @@ export class AppComponent {
   mostrarCuenta = false;
   jugadorNombre: string = localStorage.getItem('username') || '';
   cantidadTokens = 150;
+
+  selectedItem: any = null; // almacena el elemento que se mostrará
+  isModalVisible: boolean = false; // controla la visibilidad del modal
 
   // datos filtrados (lo que se muestra)
   items: Item[] = [];
@@ -97,18 +103,18 @@ export class AppComponent {
   isAccountPanelVisible = false;
 
   /**
- * Constructor del componente.
- * Se encarga de inyectar servicios y detectar cambios en la ruta.
- * @param {Router} router - Servicio de enrutamiento Angular.
- * @param {ChatService} chatService - Servicio de chat en tiempo real.
- * @param {ChatbotService} chatbotService - Servicio de chatbot conversacional.
- * @param {ItemsService} itemService - Servicio de ítems.
- * @param {HeroesService} heroService - Servicio de héroes.
- * @param {ArmorsService} armorService - Servicio de armaduras.
- * @param {EpicsService} epicsService - Servicio de épicos.
- * @param {WeaponsService} weaponService - Servicio de armas.
- * @param {LoginService} loginService - Servicio de autenticación y roles.
- */
+   * Constructor del componente.
+   * Se encarga de inyectar servicios y detectar cambios en la ruta.
+   * @param {Router} router - Servicio de enrutamiento Angular.
+   * @param {ChatService} chatService - Servicio de chat en tiempo real.
+   * @param {ChatbotService} chatbotService - Servicio de chatbot conversacional.
+   * @param {ItemsService} itemService - Servicio de ítems.
+   * @param {HeroesService} heroService - Servicio de héroes.
+   * @param {ArmorsService} armorService - Servicio de armaduras.
+   * @param {EpicsService} epicsService - Servicio de épicos.
+   * @param {WeaponsService} weaponService - Servicio de armas.
+   * @param {LoginService} loginService - Servicio de autenticación y roles.
+   */
 
   constructor(
     public router: Router,
@@ -131,7 +137,7 @@ export class AppComponent {
   isLoginOpen = false;
 
   openLogin() {
-    this.isLoginOpen = true;
+    this.isLoginOpen = !this.isLoginOpen;
   }
 
   isRole(): boolean {
@@ -143,9 +149,9 @@ export class AppComponent {
   }
 
   /**
- * Inicializa el componente cargando todos los datos base
- * (ítems, héroes, armaduras, épicos y armas).
- */
+   * Inicializa el componente cargando todos los datos base
+   * (ítems, héroes, armaduras, épicos y armas).
+   */
   ngOnInit() {
     // Traer todos los datos una sola vez
     this.itemService.showAllItems().subscribe({
@@ -231,10 +237,20 @@ export class AppComponent {
     this.mostrarCuenta = !this.mostrarCuenta;
   }
 
+  onSelectItem(item: any) {
+    this.selectedItem = item;
+    this.isModalVisible = true;
+  }
+
+  cerrarModal() {
+    this.isModalVisible = false;
+    this.selectedItem = null;
+  }
+
   /**
- * Filtra los datos según el texto ingresado en el buscador.
- * @returns {void}
- */
+   * Filtra los datos según el texto ingresado en el buscador.
+   * @returns {void}
+   */
   onSearchChange(): void {
     const query = this.searchQuery.trim().toLowerCase();
 
@@ -265,10 +281,13 @@ export class AppComponent {
   private async ensureCommentsRoot(): Promise<void> {
     if (document.querySelector('comments-root')) return;
     try {
-      if ((window as any).customElements && !customElements.get('comments-root')) {
+      if (
+        (window as any).customElements &&
+        !customElements.get('comments-root')
+      ) {
         await customElements.whenDefined('comments-root');
       }
-    } catch { }
+    } catch {}
     const host = document.createElement('comments-root');
     host.setAttribute('minimal', '');
     document.body.appendChild(host);
@@ -283,7 +302,14 @@ export class AppComponent {
     if (!item) return;
     // Determinar tipo (más estricto): sólo considerar armor si armorType está en la lista conocida
     let tipo: 'item' | 'armor' | 'weapon' = 'item';
-    const knownArmorTypes = ['HELMET', 'CHEST', 'GLOVERS', 'BRACERS', 'PANTS', 'BOOTS'];
+    const knownArmorTypes = [
+      'HELMET',
+      'CHEST',
+      'GLOVERS',
+      'BRACERS',
+      'PANTS',
+      'BOOTS',
+    ];
     if (item.weaponType) {
       tipo = 'weapon';
     } else if (item.armorType && knownArmorTypes.includes(item.armorType)) {
@@ -305,11 +331,24 @@ export class AppComponent {
       return;
     }
     await this.ensureCommentsRoot();
-    if ((window as any).customElements && !customElements.get('comments-root')) {
-      try { await customElements.whenDefined('comments-root'); } catch { }
+    if (
+      (window as any).customElements &&
+      !customElements.get('comments-root')
+    ) {
+      try {
+        await customElements.whenDefined('comments-root');
+      } catch {}
     }
-    console.debug('[Inventario] abrir comentarios', { tipo, id, nombre: item.name });
-    window.dispatchEvent(new CustomEvent('open-comments', { detail: { tipo, id, name: item.name } }));
+    console.debug('[Inventario] abrir comentarios', {
+      tipo,
+      id,
+      nombre: item.name,
+    });
+    window.dispatchEvent(
+      new CustomEvent('open-comments', {
+        detail: { tipo, id, name: item.name },
+      })
+    );
   }
 
   goToComprar() {
@@ -329,9 +368,9 @@ export class AppComponent {
   }
 
   /**
- * Redirige al módulo de gestión según la opción seleccionada.
- * @param {string} option - Categoría a gestionar.
- */
+   * Redirige al módulo de gestión según la opción seleccionada.
+   * @param {string} option - Categoría a gestionar.
+   */
   goToGestion(option: string) {
     switch (option) {
       case 'heroes':
@@ -360,7 +399,6 @@ export class AppComponent {
     }
   }
 
-
   // Estado del chatbot
   chatbotVisible = false;
   chatbotMessages: { from: 'user' | 'bot'; text: string }[] = [];
@@ -372,7 +410,7 @@ export class AppComponent {
     'colores de la barra de vida',
     'cómo hago una subasta',
     'cómo ganar créditos',
-    'escudo de dragón efectos'
+    'escudo de dragón efectos',
   ];
 
   // --- Chatbot Hover ---
@@ -406,12 +444,14 @@ export class AppComponent {
       },
       error: (err) => {
         console.error('Error en chatbot:', err);
-        this.chatbotMessages.push({ from: 'bot', text: 'Error al conectar con el servidor.' });
+        this.chatbotMessages.push({
+          from: 'bot',
+          text: 'Error al conectar con el servidor.',
+        });
         this.isProcessing = false;
-      }
+      },
     });
   }
-
 
   mostrarNotificaciones = true; // visible por defecto
   notificaciones: string[] = []; // lista de notificaciones
@@ -423,6 +463,4 @@ export class AppComponent {
   abrirNotificaciones() {
     this.mostrarNotificaciones = true;
   }
-
-
 }

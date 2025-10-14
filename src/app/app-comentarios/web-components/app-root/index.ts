@@ -295,10 +295,8 @@ const tplRaw = `<div id="loading-mask" hidden>
         <span>Comentarios</span>
         <div class="header-actions">
           <button id="cc-new">Nuevo comentario</button>
-          <button id="cc-close-modal" aria-label="Cerrar">✕</button>
         </div>
       </div>
-      <div class="cc-modal-body">
         <div class="cc-controls" id="cc-controls">
           <div class="cc-filters">
             <label>Ordenar por
@@ -320,6 +318,7 @@ const tplRaw = `<div id="loading-mask" hidden>
             <span class="cc-score" id="cc-score"></span>
           </div>
         </div>
+      <div class="cc-modal-body">
         <div id="cc-msg" class="msg" style="display:none"></div>
         <div id="cc-loading" class="loading">Cargando comentarios…</div>
         <comments-list id="cc-list" style="display:none"></comments-list>
@@ -403,9 +402,9 @@ button:disabled { opacity:.7; cursor:default }
 /* Flex filler */
 .flex1 { flex:1 }
 /* Modal visuals */
-.cc-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:2147483647; animation: cc-fade .12s ease-out }
+.cc-modal-overlay { inset:0; display:flex; align-items:center; justify-content:center; z-index:2147483647; animation: cc-fade .12s ease-out }
 .cc-modal { width:min(900px, 96vw); max-height:90vh; background:#0d1b2a; border:2px solid #56cfe1; border-radius:10px; box-shadow:0 0 20px rgba(86,207,225,0.3); display:flex; flex-direction:column; color:#eaf6f6; transform:scale(.985); opacity:0; animation: cc-pop .12s ease-out forwards }
-.cc-modal-header { display:flex; justify-content:space-between; align-items:center; padding:12px; color:#eaf6f6; background:linear-gradient(160deg,#0d1b2a,#1b2b43); border-bottom:1px solid #56cfe1; }
+.cc-modal-header { border-radius: 12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; padding:12px; color:#eaf6f6; background:linear-gradient(160deg,#0d1b2a,#1b2b43); border-bottom:1px solid #56cfe1; }
 .cc-modal-header .header-actions { display:flex; gap:8px; align-items:center }
 .cc-modal-body { padding:12px; overflow:auto; }
 .msg { margin: 0 0 10px 0; padding:8px 10px; border-radius:6px; border:1px solid #56cfe1; background:#0d1b2a; }
@@ -413,7 +412,7 @@ button:disabled { opacity:.7; cursor:default }
 .msg.error { border-color:#c43c3c }
 .loading { opacity:0.8; font-style:italic }
 /* Controls layout (grid: filtros | aplicar | resumen) */
-.cc-controls { display:grid; grid-template-columns: 1fr auto auto; align-items:center; column-gap:16px; row-gap:8px; margin:4px 0 12px 0; padding:8px 10px; border:1px solid #56cfe1; border-radius:8px; background:#0d2539; }
+.cc-controls { display:grid; grid-template-columns: 1fr auto auto; align-items:center; column-gap:16px; row-gap:8px; margin:10px; padding:8px 10px; border:1px solid #56cfe1; border-radius:8px; background:#0d2539; }
 .cc-filters { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
 .cc-filters label { display:flex; flex-direction:column; font-size:.7rem; gap:4px; color:#cde9f2; text-transform:uppercase; letter-spacing:.5px }
 .cc-filters select { height:32px; background:#0d1b2a; color:#eaf6f6; border:2px solid #56cfe1; border-radius:6px; padding:0 8px; }
@@ -452,7 +451,30 @@ button:disabled { opacity:.7; cursor:default }
 .img { width:100%; height:120px; object-fit: cover; border-radius:6px; border:2px solid #56cfe1; background:#0d1b2a; }
 /* Animations */
 @keyframes cc-fade { from { background: rgba(0,0,0,0) } to { background: rgba(0,0,0,0.5) } }
-@keyframes cc-pop { from { transform:scale(.985); opacity:0 } to { transform:scale(1); opacity:1 } }`;
+@keyframes cc-pop { from { transform:scale(.985); opacity:0 } to { transform:scale(1); opacity:1 } }
+/* ScrollBar */
+.cc-modal-body::-webkit-scrollbar {
+  width: 6px; /* antes estaba 10px, ahora más delgada */
+  background: transparent;
+}
+
+.cc-modal-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.cc-modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3282b8, #56cfe1);
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(86, 207, 225, 0.4);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cc-modal-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #56cfe1, #80ffdb);
+  box-shadow: 0 0 10px rgba(86, 207, 225, 0.7);
+}
+  `;
 
 function loadTokenFromStorage() {
   // Usa únicamente el token del servicio de comentarios ('token') si existe

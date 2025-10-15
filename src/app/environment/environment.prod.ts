@@ -6,9 +6,9 @@ export const environment = {
   apiUrl: 'http://136.112.163.5:1882', /* 'http://localhost:1882',*/
 
   /** URL base del servicio de batallas. */
-  battleUrl: 'http://35.223.34.220:3000', //'http://34.57.149.206:3000',
+  battleUrl: 'http://146.148.45.124:3000', //'http://34.57.149.206:3000',
 
-  battleSocket: 'http://35.223.34.220:3000',
+  battleSocket: 'http://146.148.45.124:3000',
 
   inventarySocket: 'http://136.112.163.5:1882/',  /*'http://localhost:1882',*/
 
